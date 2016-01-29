@@ -1,3 +1,5 @@
+Storage-QoS readme - 01/28/16
+
 The loadable linux kernel modules are located in /lib/modules.
 And the extension is *.ko
 Loadable kernel modules in Linux are loaded (and unloaded) by the modprobe command.
