@@ -1,31 +1,16 @@
-Storage-QoS readme - 01/28/16
+# Functional Overview  
+The end-to-end storage QoS implementation we will be doing will be based on an out-of-band management server colocated with the storage server that provides soft SLAs to clients in order to provide a more stable storage environment by involving the clients in the QoS process and providing them queuing responsibilities that are traditionally server-side and performance damaging.  
 
-The loadable linux kernel modules are located in /lib/modules.
-And the extension is *.ko
-Loadable kernel modules in Linux are loaded (and unloaded) by the modprobe command.
-The lsmod command lists the loaded kernel modules.
+# Organization  
+The repository is organized based on project components.  
+* Client Kernel Module  
+  * client-kernel
+* Client User Space Application  
+  * client
+* Server User Space Application  
+  * server
 
-We configure our module in: 	/etc/modprobe.conf
-
-/lib/modules/version/modules.dep specifies if other modules must be loaded before our module can be loaded
-
-modules.dep is created by $ depmod -a
-
-Linux distros provide modprobe, insmod and depmod as a package called module-init-tools.
-
-A module compiled for one kernel won't load if you boot a different kernel unless you enable CONFIG_MODVERSIONS in the kernel
-
-Modules can't print to the screen like printf() can, but they can log information and warnings.
-
-Logs are stored here: /var/log/messages via printk().
-
-Each printk() statement comes with a priority, which is the <1>.
-There are 8 priorities and the kernel has macros for them, so you don't have to use cryptic numbers, 
-and you can view them (and their meanings) in linux/kernel.h. 
-If the priority is less than int console_loglevel, the message is printed on your current terminal.
-
-Compiling:
- linux/Documentation/kbuild/modules.txt
-
-You can insert your module into the kernel by running: $ insmod <file_name>
-You can remove your module by running: $ rmmod <file_name>
+# Resources
+* [Interim Progress Report](https://docs.google.com/document/d/1e-yBIyU6_mPGu4V_0TCLIj2AEByg0GGijpINTlQL9S4/edit?usp=sharing)
+* [GitHub Wiki](https://github.ncsu.edu/engr-csc-sdc/2016springTeam28/wiki)
+* [GitHub Issues](https://github.ncsu.edu/engr-csc-sdc/2016springTeam28/issues)
