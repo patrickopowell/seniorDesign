@@ -21,6 +21,12 @@ struct qos_monitor
 	ssize_t qosbyteswritten;
 	// time elapsed
 	time_t timeelapsed;
+	
+	// read operations count
+	int rops;
+	// write operations count
+	int wops;
+	
 }
 
 /**
@@ -50,6 +56,8 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 		ret = vfs_read(file, buf, count, pos);
 	}
 	
+	if (ret > 0) rops++;
+	
 	return ret;
 }
 
@@ -69,6 +77,8 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 	if (file) {
 		ret = vfs_write(file, buf, count, pos);
 	}
+	
+	if (ret > 0) wops++;
 	
 	return ret;
 }
