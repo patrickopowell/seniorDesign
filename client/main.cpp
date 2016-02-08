@@ -74,7 +74,7 @@ void log_json(char *); */
 /** BEGIN CLIENT PROGRAM **/
 int main(int argc, char *argv[])
 {
-	setupCleanKill();
+	setup_clean_kill();
 	setup_logging();
 	load_client_info();
 	pthread_t threads[RESPONSIBILITIES];
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
  * Setup clean kill hook on ctrl+c, etc.
  * On sigaction, perform runhandler() method.
  */
-void setupCleanKill() {
+void setup_clean_kill() {
 	struct sigaction act;
 	act.sa_handler = runhandler;
 	sigemptyset(&(act.sa_mask));
