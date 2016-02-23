@@ -21,6 +21,12 @@ struct qos_monitor
 	ssize_t qosbyteswritten;
 	// time elapsed
 	time_t timeelapsed;
+	
+	// read operations count
+	int rops;
+	// write operations count
+	int wops;
+	
 }
 
 /**
@@ -48,7 +54,10 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 	
 	if (file) {
 		ret = vfs_read(file, buf, count, pos);
+		printk("qos_read executed\n");
 	}
+	
+	if (ret > 0) rops++;
 	
 	return ret;
 }
@@ -70,26 +79,27 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 		ret = vfs_write(file, buf, count, pos);
 	}
 	
+	if (ret > 0) wops++;
+	
 	return ret;
 }
 
 /*
  * Start function
  */
-int init_module(void)
+static int __init qos_init(void)
 {
+	printk(KERN_INFO "Storage QoS\n");
 	return 0;
 }
-///////// Start our project-specific code //////////
 
-
-
-
-//////// End project-specific code //////////////////
 /*
  * End function
  */
-void cleanup_module(void)
+static void __exit qos_exit(void)
 {
 	
 }
+
+module_init(qos_init);
+module_exit(qos_exit);
