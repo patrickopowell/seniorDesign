@@ -1,9 +1,9 @@
 /* Set the number of connected clients. */
 void setNumClients(int);
 /* Increment the number of connected clients. */
-void incrementNumClients(void);
+void incrementNumClients(int);
 /* Decrement the number of connected clients. */
-void decrementNumClients(void);
+void decrementNumClients(int);
 /* Set the maximum bandwidth capacity. */
 void setBandwidth(int);
 /* Set arbitrary maximum bandwidth of client. */

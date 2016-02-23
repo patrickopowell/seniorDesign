@@ -54,22 +54,22 @@
     /************************* GETTERS **********************************/
     /* Return the number of connected clients. */
     int getNumClients(void){
-        return 0;
+        return NULL;
     }
 
     /* Return the maximum bandwidth capacity. */
     int getBandwidth(void){
-        return 0;
+        return NULL;
     }
 
     /* Return arbitrary maximum bandwidth of client. */
     int getArbitrary(void){
-        return 0;
+        return NULL;
     }
 
     /* Return bandwidth being used. */
     int getUsage(void){
-        return 0;
+        return NULL;
     }
 
     /* Return SLA min bandwidth guaranteed. */
