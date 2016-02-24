@@ -24,13 +24,6 @@
 #include <sstream>
 #include <fstream>
 
-/**
- * Setup number of threads based on program responsibilities.
- * 1: SLA receipt and handoff to kernel.
- * 2: Updates to server of parsed kernel metrics.
- */
-#define RESPONSIBILITIES 2
-
 // In case we want to do simulation.
 #define SERVERIP "192.168.0.101"
 // This should be statically set once determined.
@@ -38,3 +31,15 @@
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 1000
+
+ /** FORWARD DECLARATIONS **/
+void failure(bool);
+void runhandler(int);
+void load_client_info();
+void *client_to_server_start(void *);
+void *server_to_client_start(void *);
+int construct_json(char *);
+/* void setup_logging();
+void log_sensor(unsigned long, float, float);
+void log_network(const char *, unsigned long, float, float);
+void log_json(char *); */
