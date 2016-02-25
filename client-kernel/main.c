@@ -62,7 +62,7 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 		printk("qos_read executed\n");
 	}
 	
-	if (ret > 0) rops++;
+	if (ret > 0) monitor->rops++;
 	
 	return ret;
 }
@@ -85,7 +85,7 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 		printk("qos_write executed\n");
 	}
 	
-	if (ret > 0) wops++;
+	if (ret > 0) monitor->wops++;
 	
 	return ret;
 }
