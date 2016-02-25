@@ -6,40 +6,33 @@
  * Communicates to the client kernel module by [undetermined, syscall?].
  * Communicates to the QoS server via TCP/IP connection
  */
-#include <iostream>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <string>
+
+/** Standard includes **/
+#include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
 #include <signal.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <sstream>
-#include <fstream>
 
-// In case we want to do simulation.
-#define SERVERIP "192.168.0.101"
+/** Library includes **/
+//#include <jansson.h>
+//#include "../lib/logging.c"
+
 // This should be statically set once determined.
 #define SERVERPORT "1337"
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 1000
 
- /** FORWARD DECLARATIONS **/
-void failure(bool);
+/** FORWARD DECLARATIONS **/
+void setup_clean_kill();
 void runhandler(int);
 void load_client_info();
-void *client_to_server_start(void *);
-void *server_to_client_start(void *);
-int construct_json(char *);
-/* void setup_logging();
-void log_sensor(unsigned long, float, float);
-void log_network(const char *, unsigned long, float, float);
-void log_json(char *); */
+int receive_slas();
