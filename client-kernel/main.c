@@ -6,8 +6,10 @@
 
 int init_module(void);
 void cleanup_module(void);
-ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos);
-ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_t *pos);
+static ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos);
+static ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_t *pos);
+static int qos_open(struct inode *inode, struct file *file);
+static int qos_release(struct inode *inode, struct file *file);
 
 struct qos_monitor monitor;
 
@@ -16,7 +18,7 @@ struct qos_monitor monitor;
 * qos_monitor will keep track of client I/O performance
 *
 */
-struct qos_monitor
+static struct qos_monitor
 {
 	// bytes read
 	ssize_t qosbytesread;
@@ -30,7 +32,7 @@ struct qos_monitor
 	// write operations count
 	int wops;
 	
-}
+};
 
 /**
 *
@@ -62,7 +64,7 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 		printk("qos_read executed\n");
 	}
 	
-	if (ret > 0) monitor->rops++;
+	if (ret > 0) monitor.rops++;
 	
 	return ret;
 }
@@ -85,9 +87,19 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 		printk("qos_write executed\n");
 	}
 	
-	if (ret > 0) monitor->wops++;
+	if (ret > 0) monitor.wops++;
 	
 	return ret;
+}
+
+static int qos_open(struct inode *inode, struct file *file)
+{
+	return 0;
+}
+
+static int qos_release(struct inode *inode, struct file *file)
+{
+	return 0;
 }
 
 /*
