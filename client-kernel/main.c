@@ -2,11 +2,14 @@
 #include <linux/kernel.h>	/* Needed for KERN_INFO */
 #include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
 #include <linux/time.h>		/* Needed for tracking storage operation performance */
+#include <linux/fs.h>
 
 int init_module(void);
 void cleanup_module(void);
 ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos);
 ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_t *pos);
+
+struct qos_monitor monitor;
 
 /**
 *
@@ -35,8 +38,10 @@ struct qos_monitor
 *
 */
 static struct file_operations File_Ops_4_Storage_Qos = {
-	.read = qos_read,
-	.write = qos_write,
+	read: qos_read,
+	write: qos_write,
+	open: qos_open,
+	release: qos_release
 };
 
 /**
@@ -77,6 +82,7 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 	
 	if (file) {
 		ret = vfs_write(file, buf, count, pos);
+		printk("qos_write executed\n");
 	}
 	
 	if (ret > 0) wops++;
@@ -90,6 +96,9 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 static int __init qos_init(void)
 {
 	printk(KERN_INFO "Storage QoS\n");
+	
+	
+	
 	return 0;
 }
 
