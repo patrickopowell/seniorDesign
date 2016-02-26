@@ -1,3 +1,4 @@
+/** Dummy program pulled from CodeProject that fits Zwick's demo code. **/
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
