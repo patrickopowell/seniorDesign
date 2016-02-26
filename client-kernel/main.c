@@ -39,7 +39,7 @@ static struct qos_monitor
 * create new pointers for file operation functions
 *
 */
-static struct file_operations File_Ops_4_Storage_Qos = {
+static struct file_operations qos_fops = {
 	read: qos_read,
 	write: qos_write,
 	open: qos_open,
@@ -109,7 +109,11 @@ static int __init qos_init(void)
 {
 	printk(KERN_INFO "Storage QoS\n");
 	
-	
+	Major = register_chrdev(0, DEVICE_NAME, &qos_fops);
+	if (Major < 0) {
+		printk(KERN_ALERT "Registering char device failed with %d\n", Major);
+		return Major;
+	}
 	
 	return 0;
 }
@@ -119,7 +123,9 @@ static int __init qos_init(void)
  */
 static void __exit qos_exit(void)
 {
-	
+	int ret = unregister_chrdev(Major, DEVICE_NAME);
+	if (ret < 0)
+		printk(KERN_ALERT "Error in unregister_chrdev: %d\n", ret);
 }
 
 module_init(qos_init);
