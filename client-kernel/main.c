@@ -2,7 +2,7 @@
 #include <linux/kernel.h>	/* Needed for KERN_INFO */
 #include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
 #include <linux/time.h>		/* Needed for tracking storage operation performance */
-#include <linux/fs.h>
+#include <linux/fs.h>		/* Needed for VFS functions */
 
 int init_module(void);
 void cleanup_module(void);
@@ -128,9 +128,7 @@ static int __init qos_init(void)
  */
 static void __exit qos_exit(void)
 {
-	int ret = unregister_chrdev(Major, DEVICE_NAME);
-	if (ret < 0)
-		printk(KERN_ALERT "Error in unregister_chrdev: %d\n", ret);
+	unregister_chrdev(Major, DEVICE_NAME);
 }
 
 module_init(qos_init);
