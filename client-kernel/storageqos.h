@@ -11,7 +11,7 @@ static ssize_t qos_write(struct file *file, const char __user *buf, size_t count
 static int qos_open(struct inode *inode, struct file *file);
 static int qos_release(struct inode *inode, struct file *file);
 
-#define DEVICE_NAME "storage_qos"
+#define DEVICE_NAME "storage-qos-kernel-client"
 
 struct qos_monitor monitor;
 
@@ -45,6 +45,8 @@ static struct qos_monitor
 *
 */
 static struct file_operations qos_fops = {
+	owner: THIS_MODULE,
+	//readdir: qos_readdir,
 	read: qos_read,
 	write: qos_write,
 	open: qos_open,

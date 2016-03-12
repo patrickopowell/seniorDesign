@@ -13,6 +13,6 @@ clean:
 else
 
 $(info Building with KERNELRELEASE = ${KERNELRELEASE})
-obj-m :=    main.o
+obj-m :=    storage-qos-kernel-client.o
 
 endif

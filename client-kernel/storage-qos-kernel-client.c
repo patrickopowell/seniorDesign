@@ -48,11 +48,13 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 
 static int qos_open(struct inode *inode, struct file *file)
 {
+	printk("qos_open executed\n");
 	return 0;
 }
 
 static int qos_release(struct inode *inode, struct file *file)
 {
+	printk("qos_release executed\n");
 	return 0;
 }
 
