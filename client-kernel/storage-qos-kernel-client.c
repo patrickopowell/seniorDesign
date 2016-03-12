@@ -1,4 +1,4 @@
-#include <storageqos.h>
+#include "storageqos.h"
 
 /**
 *
@@ -63,7 +63,7 @@ static int qos_release(struct inode *inode, struct file *file)
  */
 static int __init qos_init(void)
 {
-	printk(KERN_INFO "Storage QoS\n");
+	printk(KERN_INFO "Storage QoS Initialized\n");
 	
 	Major = register_chrdev(0, DEVICE_NAME, &qos_fops);
 	if (Major < 0) {
@@ -79,6 +79,7 @@ static int __init qos_init(void)
  */
 static void __exit qos_exit(void)
 {
+	printk(KERN_INFO "Storage QoS Closed\n");
 	unregister_chrdev(Major, DEVICE_NAME);
 }
 
