@@ -11,11 +11,12 @@ static ssize_t qos_write(struct file *file, const char __user *buf, size_t count
 static int qos_open(struct inode *inode, struct file *file);
 static int qos_release(struct inode *inode, struct file *file);
 
-#define DEVICE_NAME "storageqos_kernel_client"
+#define DEVICE_NAME "storage_qos_kernel_client"
 
 struct qos_monitor monitor;
 
 static int Major;
+static int Device_Open = 0;
 
 
 /**

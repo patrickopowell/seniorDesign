@@ -10,12 +10,13 @@
 
 ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 {
+	printk(KERN_INFO "qos_read() called\n");
 	// set initial return to error
 	ssize_t ret = -EBADF;
 	
 	if (file) {
 		ret = vfs_read(file, buf, count, pos);
-		printk("qos_read executed\n");
+		printk(KERN_INFO "qos_read executed\n");
 	}
 	
 	if (ret > 0) monitor.rops++;
@@ -38,7 +39,7 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 	
 	if (file) {
 		ret = vfs_write(file, buf, count, pos);
-		printk("qos_write executed\n");
+		printk(KERN_INFO "qos_write executed\n");
 	}
 	
 	if (ret > 0) monitor.wops++;
@@ -48,13 +49,23 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 
 static int qos_open(struct inode *inode, struct file *file)
 {
-	printk("qos_open executed\n");
+	printk(KERN_INFO "qos_open executed\n");
+	
+	if (Device_Open) return -EBUSY;
+
+	Device_Open++;
+	try_module_get(THIS_MODULE);
+	
 	return 0;
 }
 
 static int qos_release(struct inode *inode, struct file *file)
 {
-	printk("qos_release executed\n");
+	printk(KERN_INFO "qos_release executed\n");
+	
+	Device_Open--;
+	module_put(THIS_MODULE);
+	
 	return 0;
 }
 

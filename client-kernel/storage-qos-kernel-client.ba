@@ -1,6 +1,6 @@
 su
 
-rmmod -f storageqos_kernel_client
+rmmod -f storage_qos_kernel_client
 
 make clean
 
