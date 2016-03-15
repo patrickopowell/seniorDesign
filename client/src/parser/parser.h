@@ -24,17 +24,8 @@
 #include <sstream>
 #include <fstream>
 
-/**
- * Setup number of threads based on program responsibilities.
- * 1: SLA receipt and handoff to kernel.
- * 2: Updates to server of parsed kernel metrics.
- */
-#define RESPONSIBILITIES 2
-
-// In case we want to do simulation.
-#define SERVERIP "192.168.0.101"
 // This should be statically set once determined.
-#define SERVERPORT "1337"
+#define SERVERPORT "15555"
 
 // Size of network send/receive buffers.
-#define BUFFERLENGTH 1000
+#define BUFFERLENGTH 5000

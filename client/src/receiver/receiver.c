@@ -55,7 +55,8 @@ void load_client_info()
 /**
  * Receive SLAs 
  */
-int receive_slas() {
+int receive_slas()
+{
 	struct sockaddr_in listen_addr;
 	char recv_buff[1025];
 	int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -64,7 +65,7 @@ int receive_slas() {
 	memset(recvBuff, 0, sizeof recvBuff);
 	listen_addr.sin_family = AF_INET;
 	listen_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	listen_addr.sin_port = htons(1337);
+	listen_addr.sin_port = htons(LISTENPORT);
 	bind(listen_fd, (struct sockaddr*)&listen_addr, sizeof listen_addr);
 	if (listen(listen_fd, 10) == -1) {
 		printf("Failed to listen on socket.\n");

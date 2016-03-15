@@ -21,16 +21,12 @@ void load_client_info();
 void *client_to_server_start(void *);
 void *server_to_client_start(void *);
 int construct_json(char *);
-/* void setup_logging();
-void log_sensor(unsigned long, float, float);
-void log_network(const char *, unsigned long, float, float);
-void log_json(char *); */
 
 /** BEGIN CLIENT PROGRAM **/
 int main(int argc, char *argv[])
 {
 	setup_clean_kill();
-	setup_logging();
+	qos_setup_logging();
 	load_client_info();
 	pthread_t threads[RESPONSIBILITIES];
 	if (pthread_create(&threads[0], NULL, &server_to_client_start, NULL))
@@ -74,14 +70,7 @@ void runhandler(int sig)
 
 void load_client_info()
 {
-	ifstream client_file;
-	// Need to determine client config file storage location.
-	client_file.open("client.txt");
-	stringstream str_stream;
-	str_stream << client_file.rdbuf();
-	// Need to handle parsing here into client_info struct.
-	string temp = str_stream.str();
-	printf("ID Loaded: %s\n", temp.c_str());
+	return;
 }
 
 /**
