@@ -26,10 +26,10 @@
 //#include "../lib/logging.c"
 
 // This should be statically set once determined.
-#define SERVERPORT "1337"
+#define LISTENPORT 15555
 
 // Size of network send/receive buffers.
-#define BUFFERLENGTH 1000
+#define BUFFERLENGTH 5000
 
 /** FORWARD DECLARATIONS **/
 void setup_clean_kill();

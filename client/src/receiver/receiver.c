@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	printf("Starting QoS receiver.\n");
 	setup_clean_kill();
 	qos_setup_logging();
-	load_client_info();
+	//load_client_info();
 	receive_slas();
 	qos_halt_logging();
 	printf("Exiting QoS receiver.\n");
@@ -55,16 +55,17 @@ void load_client_info()
 /**
  * Receive SLAs 
  */
-int receive_slas() {
+int receive_slas()
+{
 	struct sockaddr_in listen_addr;
-	char recv_buff[1025];
+	char recv_buff[BUFFERLENGTH];
 	int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 	printf("Grabbed a socket.\n");
 	memset(&listen_addr, 0, sizeof listen_addr);
 	memset(recvBuff, 0, sizeof recvBuff);
 	listen_addr.sin_family = AF_INET;
 	listen_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	listen_addr.sin_port = htons(1337);
+	listen_addr.sin_port = htons(LISTENPORT);
 	bind(listen_fd, (struct sockaddr*)&listen_addr, sizeof listen_addr);
 	if (listen(listen_fd, 10) == -1) {
 		printf("Failed to listen on socket.\n");
