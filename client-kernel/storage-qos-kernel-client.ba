@@ -1,0 +1,9 @@
+su
+
+rmmod -f storage_qos_kernel_client
+
+make clean
+
+make
+
+insmod ./storage-qos-kernel-client.ko
