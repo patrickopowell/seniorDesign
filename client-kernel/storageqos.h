@@ -18,7 +18,8 @@ struct qos_monitor monitor;
 static int Major;
 static int Device_Open = 0;
 
-
+// Create RedirFS filter for all mount points
+{"/mnt", RFS_PATH_SUBTREE | RFS_PATH_INCLUDE}
 
 
 /**
@@ -33,7 +34,7 @@ static struct qos_monitor
 	// bytes written
 	ssize_t qosbyteswritten;
 	// time elapsed
-	time_t timeelapsed;
+	unsigned int timeelapsed;
 	
 	// read operations count
 	int rops;
