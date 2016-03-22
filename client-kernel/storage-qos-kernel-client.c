@@ -4,15 +4,21 @@
 *
 * Storage QoS manage function - called from kernel space
 *
-* @return void
+* @return bool true if operation may be sent immediately
 *
 */
 
-void qos_manage () {
+bool qos_manage () {
 	
 	unsigned int credit_use = (monitor.rops + monitor.wops) / monitor.timeelapsed;
 	
-	if (credit_use >= monitor.iocredits) opsqueued++; // add to queue or return false that spinlock operation cannot be terminated
+	if (credit_use >= monitor.iocredits) {
+		opsqueued++; // add to queue or return false that spinlock operation cannot be terminated
+		
+		return false;
+	} 
+	
+	else return true;
 	
 }
 

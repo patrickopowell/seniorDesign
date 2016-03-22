@@ -19,6 +19,8 @@ static int Major;
 static int Device_Open = 0;
 
 
+
+
 /**
 *
 * qos_monitor will keep track of client I/O performance
@@ -37,6 +39,8 @@ static struct qos_monitor
 	int rops;
 	// write operations count
 	int wops;
+	// meta operations count
+	int mops;
 	
 	unsigned int opsqueued;
 	
