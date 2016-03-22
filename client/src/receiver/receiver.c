@@ -84,5 +84,6 @@ int receive_slas()
 		if (n_byte < 0)
 			printf("Read error.");
 	}
+	close(listen_fd);
 	return 0;
 }
