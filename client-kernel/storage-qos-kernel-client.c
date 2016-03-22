@@ -12,7 +12,7 @@ void qos_manage () {
 	
 	unsigned int credit_use = (monitor.rops + monitor.wops) / monitor.timeelapsed;
 	
-	if (credit_use >= monitor.iocredits) ; // add to queue or return false that spinlock operation cannot be terminated
+	if (credit_use >= monitor.iocredits) opsqueued++; // add to queue or return false that spinlock operation cannot be terminated
 	
 }
 
