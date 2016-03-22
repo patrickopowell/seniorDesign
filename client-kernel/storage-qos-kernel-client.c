@@ -2,6 +2,23 @@
 
 /**
 *
+* Storage QoS manage function - called from kernel space
+*
+* @return void
+*
+*/
+
+void qos_manage () {
+	
+	unsigned int credit_use = (monitor.rops + monitor.wops) / monitor.timeelapsed;
+	
+	if (credit_use >= monitor.iocredits) ; // add to queue or return false that spinlock operation cannot be terminated
+	
+}
+
+
+/**
+*
 * Storage QoS read function - called from user space
 *
 * @return number of bytes transferred in function call
@@ -56,7 +73,9 @@ static int qos_open(struct inode *inode, struct file *file)
 	Device_Open++;
 	try_module_get(THIS_MODULE);
 	
-	return 0;
+	printk(KERN_INFO "qos_open completed\n");
+	
+	return -2;
 }
 
 static int qos_release(struct inode *inode, struct file *file)

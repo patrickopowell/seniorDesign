@@ -38,6 +38,10 @@ static struct qos_monitor
 	// write operations count
 	int wops;
 	
+	unsigned int opsqueued;
+	
+	unsigned int iocredits;
+	
 };
 
 /**
@@ -47,7 +51,7 @@ static struct qos_monitor
 */
 static struct file_operations qos_fops = {
 	owner: THIS_MODULE,
-	//readdir: qos_readdir,
+	//iterate: qos_iterate,
 	read: qos_read,
 	write: qos_write,
 	open: qos_open,
