@@ -59,27 +59,9 @@ int qos_validate_sla(json_t *curr_sla)
 		return 0;
 	int sla_length = sizeof(sla_fields) / sizeof(protocol_tuple);
 	int errors = 0;
-	for (int i = 0; i < sla_length; i++) {
-		char *sla_field_name = sla_fields[i].name;
-		int sla_field_type = sla_fields[i].type;
-		if (sla_field_type == STRING_TYPE)
-			errors += qos_test_string(curr_sla, sla_field_name);
-		else if (sla_field_type == INTEGER_TYPE)
-			errors += qos_test_integer(curr_sla, sla_field_name);
-		else if (sla_field_type == ARRAY_TYPE) {
-			is_array = qos_test_array(curr_sla, sla_field_name);
-			if (!is_array) {
-				errors += 1;
-				continue;
-			}
-			protocol_tuple sub_tuples[] = sla_fields[i].sub_tuples;
-		}
-	}
+	for (int i = 0; i < sla_length; i++)
+		errors += qos_test_tuple(curr_sla, sla_fields[i]);
 	return errors;
-}
-
-int qos_validate_tuple(protocol_tuple *tuple) {
-
 }
 
 int qos_release_sla(json_t *curr_sla)
@@ -94,25 +76,81 @@ int qos_release_sla(json_t *curr_sla)
 
 /** GENERAL PARSING FUNCTIONS **/
 
+/**
+ * Test an SLA for validity in accordance with the supplied tuple.
+ * The tuple contains the name and type of information expected.
+ * If the SLA field is not present or not of the expected type...
+ * Return errors.
+ * Return 0 means SLA information is valid.
+ * Return > 0 means at least 1 error is present.
+ */
+int qos_test_tuple(json_t *curr_sla, protocol_tuple *tuple)
+{
+	char *sla_field_name = tuple.name;
+	int sla_field_type = tuple.type;
+	if (sla_field_type == STRING_TYPE)
+		errors += qos_test_string(curr_sla, sla_field_name);
+	else if (sla_field_type == INTEGER_TYPE)
+		errors += qos_test_integer(curr_sla, sla_field_name);
+	else if (sla_field_type == ARRAY_TYPE) {
+		int is_array = qos_test_array(curr_sla, sla_field_name);
+		if (!is_array) {
+			errors += 1;
+			continue;
+		}
+		json_t *sub_tuples = json_object_get(curr_sla, sla_field_name);
+		protocol_tuple sub_tuples[] = tuple.sub_tuples;
+		errors += qos_test_array_tuples(curr_sla, sla_field_name, sub_tuples);
+	}
+}
+
+/**
+ * Test whether or not a JSON object by a name is an integer.
+ * Return whether or not it is an integer. (0, 1)
+ */
 int qos_test_integer(json_t *curr_sla, char *item)
 {
-	test_obj = json_object_get(curr_sla, item);
+	json_t test_obj = json_object_get(curr_sla, item);
 	int result = json_is_integer(test_obj);
 	json_decref(test_obj);
 	return result;
 }
 
+/**
+ * Test whether or not a JSON object by a name is a string.
+ * Return whether or not it is a string. (0, 1)
+ */
 int qos_test_string(json_t *curr_sla, char *item)
 {
-	test_obj = json_object_get(curr_sla, item);
+	json_t test_obj = json_object_get(curr_sla, item);
 	int result = json_is_string(test_obj);
 	json_decref(test_obj);
 	return result;
 }
 
+/**
+ * Test whether or not a JSON object by a name is an array.
+ * Return whether or not it is an array. (0, 1)
+ */
 int qos_test_array(json_t *curr_sla, char *item) {
-	test_obj = json_object_get(curr_sla, item);
+	json_t test_obj = json_object_get(curr_sla, item);
 	int result = json_is_array(test_obj);
 	json_decref(test_obj);
 	return result;
+}
+
+/**
+ * Test the tuples inside of an existing array.
+ * Requires array elements to be in protocol_tuple format.
+ * Return number of errors encountered.
+ */
+int qos_test_array_tuples(json_t *array, protocol_tuple *sub_tuples) {
+	int errors = 0;
+	if (qos_test_array(curr_sla, item)) {
+		int length = sizeof(sub_tuples) / sizeof(protocol_tuple);
+		for (int i = 0; i < length; i++)
+			errors += qos_test_tuple(array, sub_tuples[i]);
+	} else
+		errors++;
+	return errors;
 }
