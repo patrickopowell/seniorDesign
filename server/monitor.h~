@@ -1,9 +1,9 @@
 /* Set the number of connected clients. */
 void setNumClients(int);
 /* Increment the number of connected clients. */
-void incrementNumClients(int);
+void incrementNumClients(void);
 /* Decrement the number of connected clients. */
-void decrementNumClients(int);
+void decrementNumClients(void);
 /* Set the maximum bandwidth capacity. */
 void setBandwidth(int);
 /* Set arbitrary maximum bandwidth of client. */
@@ -28,6 +28,13 @@ int getUsage(void);
 int getSLA_min(void);
 /* Return unused bandwidth. */
 int getUnused(void);
+
+/////////////////// New as of March 15, 2016 /////////////////////
+char *getMinThru(void); // min throughput
+char *getMaxThru(void); // max throughput
+char *getMinIOPS(void); // min IOPS
+char *getMaxIOPS(void); // max IOPS
+////////////////////// End March 15, 2016 ////////////////////////
 
 
 /* Watch for client non-compliance. */

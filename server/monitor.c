@@ -82,6 +82,25 @@
         return 5;
     }
     
+/////////////////// New as of March 15, 2016 /////////////////////
+    int getMinThru(void){
+        return 20;
+    }
+    int getMaxThru(void){
+        return 50;
+    }
+    int getMinIOPS(void){
+        return 10;
+    }
+    int getMaxIOPS(void){
+        return 20;
+    }
+////////////////////// End March 15, 2016 ////////////////////////
+    
+    
+    
+    
+    
     /********************** Watch for client compliance. *******************/
     
     /* Alert if unused bandwidth is less than zero. */

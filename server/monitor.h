@@ -29,6 +29,13 @@ int getSLA_min(void);
 /* Return unused bandwidth. */
 int getUnused(void);
 
+/////////////////// New as of March 15, 2016 /////////////////////
+int getMinThru(void); // min throughput
+int getMaxThru(void); // max throughput
+int getMinIOPS(void); // min IOPS
+int getMaxIOPS(void); // max IOPS
+////////////////////// End March 15, 2016 ////////////////////////
+
 
 /* Watch for client non-compliance. */
 int alert(int);

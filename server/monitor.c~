@@ -54,22 +54,22 @@
     /************************* GETTERS **********************************/
     /* Return the number of connected clients. */
     int getNumClients(void){
-        return NULL;
+        return 0;
     }
 
     /* Return the maximum bandwidth capacity. */
     int getBandwidth(void){
-        return NULL;
+        return 0;
     }
 
     /* Return arbitrary maximum bandwidth of client. */
     int getArbitrary(void){
-        return NULL;
+        return 0;
     }
 
     /* Return bandwidth being used. */
     int getUsage(void){
-        return NULL;
+        return 0;
     }
 
     /* Return SLA min bandwidth guaranteed. */
@@ -81,6 +81,25 @@
     int getUnused(void){
         return 5;
     }
+    
+/////////////////// New as of March 15, 2016 /////////////////////
+    int getMinThru(void){
+        return 20;
+    }
+    int getMaxThru(void){
+        return 50;
+    }
+    int getMinIOPS(void){
+        return 10;
+    }
+    int getMaxIOPS(void){
+        return 20;
+    }
+////////////////////// End March 15, 2016 ////////////////////////
+    
+    
+    
+    
     
     /********************** Watch for client compliance. *******************/
     
