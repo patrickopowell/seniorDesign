@@ -16,8 +16,8 @@
 /* Global variables. */
 struct sockaddr_in local_addr; // my address
 struct sockaddr_in client_addr; // client address
-char buffer[1024];
-char SLA[1024];
+char client_string[1024]; // stores stuff the client sends me with connection request... ID, IOPS, etc.
+char SLA[1024]; // sends to Client 
 socklen_t sin_size = NULL;
 int sock; // Socket for listening.
 int new_sock; // Socket for connect()/accept()
@@ -71,6 +71,10 @@ void setup()
 	}
 }
 
+/*****************************************************************************************************
+ * Accepts a connection. Reads information from the client for SLA negotiation.
+ * 
+ ****************************************************************************************************/
 int getClient()
 {
 	// Start accepting connections
@@ -79,6 +83,7 @@ int getClient()
     if(new_sock < 0){
         return 0; // failure
     } else{
+        recv(new_sock, &client_string, 1024, 0);
         incrementNumClients();
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         return 1; // success
@@ -88,9 +93,10 @@ int getClient()
 /*******************************************************************************************************
  * Making the JSON string is too nasty to appear in my main function. So I'm making
  * this helper function to interact with the monitor and create the SLA JSON string.
- * The parameters are things that the server either gets from the user of keeps track 
+ * The parameters are things that the server either gets from the user or keeps track 
  * of in the main function. Everything else in the SLA is determined by the monitor.
  * @param protocol_version - Determined in main.
+ * @param SLA_version      - Determined in monitor.
  * @param client_id        - Received from the client.
  * @param storage_type     - Received from the client.
  ******************************************************************************************************/
@@ -102,8 +108,7 @@ void makeSLA( int protocol_version, int SLA_version, char *client_id, char *stor
     int SLA_unused = getUnused();
     //char SLA[1024];
 	snprintf(SLA, sizeof(SLA), \
-	    "{\"SLA\" : [ { \
-	        \"protocol_version_number\":%d, \
+	    "{\"protocol_version_number\":%d, \
 	        \"version\":%d, \
 	        \"client_id\":%s, \
 	        \"storage_type\":%s, \
@@ -111,24 +116,24 @@ void makeSLA( int protocol_version, int SLA_version, char *client_id, char *stor
 	        \"iops_min\":%d, \
 	        \"throughput_max\":%d, \
 	        \"throughput_min\":%d, \
-	        \"SLA_unused\":%d} \
-	    ]}",
+	        \"SLA_unused\":%d}",
 	    protocol_version, SLA_version, client_id, storage_type, iops_max, iops_min, thru_max, thru_min, SLA_unused);
     //return SLA;
 }
 
 void sendSLA()
 {
-    //recv(new_sock, &buffer, 1024, 0);
-    send(new_sock, buffer, sizeof(buffer), 0); // just a random string for testing.
+    send(new_sock, SLA, sizeof(SLA), 0); // just a random string for testing.
 }
 
 int main(void)
 {
     setup();
+    //makeSLA(3, 3, "Hello", "World!"); // for testing purposes
+    //printf("%s\n", SLA); // Also for the test
 	if(getClient()){
-	    // makeSLA();
-	    // send SLA
+	    makeSLA(3, 3, "Hello", "World!");
+	    sendSLA();
 	}
     return 0;
 }
