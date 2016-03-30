@@ -1,0 +1,2 @@
+/home/popowell/redirfs/redirfs.ko
+/home/popowell/redirfs/rfs_path.o /home/popowell/redirfs/rfs_root.o /home/popowell/redirfs/rfs_info.o /home/popowell/redirfs/rfs_file.o /home/popowell/redirfs/rfs_dentry.o /home/popowell/redirfs/rfs_inode.o /home/popowell/redirfs/rfs_dcache.o /home/popowell/redirfs/rfs_chain.o /home/popowell/redirfs/rfs_ops.o /home/popowell/redirfs/rfs_data.o /home/popowell/redirfs/rfs_flt.o /home/popowell/redirfs/rfs_sysfs.o /home/popowell/redirfs/rfs.o

@@ -1,0 +1,1 @@
+cmd_/home/popowell/redirfs/redirfs.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/popowell/redirfs/redirfs.ko /home/popowell/redirfs/redirfs.o /home/popowell/redirfs/redirfs.mod.o
