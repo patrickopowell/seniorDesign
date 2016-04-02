@@ -7,29 +7,20 @@
  * Communicates to the QoS server via TCP/IP connection
  */
 
-/** Standard includes **/
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <errno.h>
-#include <signal.h>
-#include <unistd.h>
-#include <sys/time.h>
-
 /** Library includes **/
 //#include <jansson.h>
 //#include "../lib/logging.c"
+
+#include <netinet/in.h>
 
 // This should be statically set once determined.
 #define LISTENPORT 15555
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 5000
+
+// Number of potential SLA connections to queue
+#define SLA_BACKLOG 5
 
 /** FORWARD DECLARATIONS **/
 void setup_clean_kill();
