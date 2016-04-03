@@ -167,6 +167,41 @@ enum redirfs_rv qos_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
+int device_ioctl(struct inode *inode, /* see include/linux/fs.h */
+ struct file *file, /* ditto */
+ unsigned int ioctl_num, /* number and param for ioctl */
+ unsigned long ioctl_param)
+ {
+	 
+	 
+	 
+ }
+ 
+int device_open (struct inode *inode, struct file *file)
+{
+	printk(KERN_INFO "device_open executed\n");
+	
+	if (Device_Open) return -EBUSY;
+
+	Device_Open++;
+	try_module_get(THIS_MODULE);
+	
+	printk(KERN_INFO "device_open completed\n");
+	
+	return 0;
+}
+
+int device_release (struct inode *inode, struct file *file)
+{
+	printk(KERN_INFO "device_release executed\n");
+	
+	Device_Open--;
+	module_put(THIS_MODULE);
+	
+	return 0;
+}
+	
+	
 /*
  * Start function
  */
@@ -216,6 +251,12 @@ static int __init qos_init(void)
 	
 	redirfs_put_path(path);*/
 	
+	Major = register_chrdev(0, DEVICE_NAME, &qos_fops);
+	if (Major < 0) {
+		printk(KERN_ALERT "Registering char device failed with %d\n", Major);
+		return Major;
+	}
+	
 	return 0;
 }
 
@@ -227,6 +268,7 @@ static void __exit qos_exit(void)
 	redirfs_unregister_filter(storageqosflt);
 	redirfs_delete_filter(storageqosflt);
 	printk(KERN_INFO "Storage QoS Closed\n");
+	unregister_chrdev(Major, DEVICE_NAME);
 }
 
 module_init(qos_init);

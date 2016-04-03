@@ -28,6 +28,10 @@ void qos_throttle (void);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 
+int device_ioctl(struct inode *inode, struct file *file,  unsigned int ioctl_num, unsigned long ioctl_param);
+int device_open (struct inode *inode, struct file *file);
+int device_release (struct inode *inode, struct file *file);
+
 #define DEVICE_NAME "storage_qos_kernel_client"
 
 struct qos_monitor monitor;
@@ -83,6 +87,13 @@ static struct redirfs_filter_info storageqos_info = {
 * create new pointers for file operation functions
 *
 */
+
+static struct file_operations qos_fops = {
+	.ioctl = device_ioctl,
+	.open = device_open,
+	.release = device_release
+};
+
 /*static struct redirfs_filter_info qos_fops = {
 	owner: THIS_MODULE,
 	//readdir: qos_readdir,
