@@ -17,8 +17,8 @@ void qos_manage (void);
 
 struct qos_monitor monitor;
 
-static int Major;
-static int Device_Open = 0;
+//static int Major;
+//static int Device_Open = 0;
 
 static redirfs_filter storageqosflt;
 
@@ -44,19 +44,28 @@ static struct qos_monitor
 	ssize_t qosbytesread;
 	// bytes written
 	ssize_t qosbyteswritten;
-	// time elapsed
-	time_t timeelapsed;
 	
 	// read operations count
-	int rops;
+	uint32_t rops;
 	// write operations count
-	int wops;
+	uint32_t wops;
 	
-	unsigned int opsqueued;
-	
-	unsigned int iocredits;
+	uint32_t opsqueued;
 	
 };
+
+typedef struct ratebucket {
+	// generic ID to use when you have multiple ratebuckets
+	int32_t rb_id; 
+	// Rate at which tokens are generated per second
+	int32_t rb_rate; 
+	// Think of this as the number of requests that can be handle "right now"
+	int32_t rb_tokens; 
+	// Depth of bucket. i.e. maximum number of tokens that can accumulate
+ 	int32_t rb_token_cap; 
+	// Timestamp when tokens were last updated. I recommend microsecond granularity  
+	uint64_t rb_ts; 
+} ratebucket_t;
 
 static struct redirfs_filter_info storageqos_info = {
 	.owner = THIS_MODULE,

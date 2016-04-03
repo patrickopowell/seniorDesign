@@ -2,18 +2,88 @@
 
 /**
 *
-* Storage QoS manage function - called from kernel space
+* Storage QoS update tokens function - called from kernel space when out of tokens
 *
 * @return void
 *
 */
 
-void qos_manage (void) {
-	
-	unsigned int credit_use = (monitor.rops + monitor.wops) / monitor.timeelapsed;
-	
-	if (credit_use >= monitor.iocredits) monitor.opsqueued++; // add to queue or return false that spinlock operation cannot be terminated
-	
+void update_tokens(ratebucket_t *rb_ptr)
+{
+uint64_t current_ts = now();
+uint64_t time_diff;
+int32_t tokens;
+
+	time_diff = current_ts - rb_ptr->rb_ts;
+        
+	// This check here prevents overflow if too much time has passed
+	if (time_diff > 1000000) { // More than 1 second has passed
+		tokens = rb_ptr->rb_rate;
+	} else {
+		// time_diff is in usecs. Rate is in ops per second.
+		tokens = ((int32_t)time_diff * rb_ptr->rb_rate)/1000000;
+	}
+
+	if (tokens > 0) {
+		rb_ptr->rb_tokens += tokens;
+		// Check credit, do not allow it to exceed cap. 
+		if (rb_ptr->rb_tokens > rb_ptr->rb_token_cap) {
+			rb_ptr->rb_tokens = rb_ptr->rb_token_cap;
+			rb_ptr->rb_ts = current_ts;
+		} else {
+			// This is a tricky part. Due to rounding, we do not get the full credit we are due.
+			// Advance the ratebucket timestamp based on the number of tokens generated.
+			rb_ptr->rb_ts += (tokens * 1000000)/rb_ptr->rb_rate;
+		}
+	}
+}
+
+/**
+*
+* Storage QoS can send function - called from kernel space to verify token availability
+*
+* @return bool true if request can be sent
+*
+*/
+
+
+bool can_send(ratebucket_t *rb_ptr)
+{
+
+	if (rb_ptr->rb_tokens > 0) {
+		rb_ptr->rb_tokens--;
+		return true;
+	}
+	// Out of tokens. Update ratebucket and try again
+	update_tokens(rb_ptr);
+	if (rb_ptr->rb_tokens > 0) {
+		rb_ptr->rb_tokens--;
+		return true;
+	}
+
+	return false;
+}
+
+
+// For completeness, will check for interrupted call.
+/**
+*
+* Storage QoS throttle function - Throttling function. Will return when caller can proceed.
+*
+* @return void
+*
+*/
+
+void throttle(request_t *req)
+{
+
+	while(!can_send(&rb)) {
+		sleep_us(1000); // Some sleep function. Linux has lots to choose from.
+		if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
+			return;
+		}
+	}
+	return;
 }
 
 
@@ -30,6 +100,9 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 	printk(KERN_INFO "qos_read() called\n");
 	// set initial return to error
 	ssize_t ret = -EBADF;
+	
+	//continue when tokens available
+	throttle();
 	
 	if (file) {
 		ret = vfs_read(file, buf, count, pos);
@@ -54,6 +127,9 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
 	// set initial return to error
     ssize_t ret = -EBADF;
 	
+	//continue when tokens available
+	throttle();
+	
 	if (file) {
 		ret = vfs_write(file, buf, count, pos);
 		printk(KERN_INFO "qos_write executed\n");
@@ -69,6 +145,9 @@ enum redirfs_rv qos_open(struct inode *inode, struct file *file)
 	printk(KERN_INFO "qos_open executed\n");
 	
 	if (Device_Open) return -EBUSY;
+	
+	//continue when tokens available
+	throttle();
 
 	Device_Open++;
 	try_module_get(THIS_MODULE);
@@ -114,6 +193,14 @@ static int __init qos_init(void)
 	}
 	
 	else printk(KERN_ALERT "Operations set!\n");
+	
+	rb.rb_rate = 2000; // replace with value passed through control
+	
+    rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
+	
+    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
+	
+    rb.rb_ts = now();
 	
 	
 	//storageqos_path_info = redirfs_get_path_info(storageqosflt, {"/home/popowell/dummyQoS", RFS_PATH_SUBTREE | RFS_PATH_INCLUDE});
