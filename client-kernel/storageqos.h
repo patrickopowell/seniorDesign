@@ -3,6 +3,7 @@
 #include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
 #include <linux/time.h>		/* Needed for tracking storage operation performance */
 #include <linux/fs.h>		/* Needed for VFS functions */
+#include <linux/unistd.h>
 #include "/home/popowell/2016springTeam28/client-kernel/redirfs/redirfs.h"		/* Include RedirFS */
 
 static struct ratebucket {
@@ -18,6 +19,10 @@ static struct ratebucket {
 	uint64_t rb_ts; 
 };
 
+//int nanosleep(const struct timespec *req, struct timespec *rem);
+//int timespec_get(struct timespec *ts, int base);
+//#define TIME_UTC 1
+
 int init_module(void);
 void cleanup_module(void);
 static ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos);
@@ -27,6 +32,7 @@ enum redirfs_rv  qos_release(struct inode *inode, struct file *file);
 void qos_throttle (void);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
+static long qos_get_uptime(void);
 
 int device_ioctl(struct inode *inode, struct file *file,  unsigned int ioctl_num, unsigned long ioctl_param);
 int device_open (struct inode *inode, struct file *file);
@@ -89,7 +95,7 @@ static struct redirfs_filter_info storageqos_info = {
 */
 
 static struct file_operations qos_fops = {
-	.ioctl = device_ioctl,
+	//.ioctl = device_ioctl,
 	.open = device_open,
 	.release = device_release
 };

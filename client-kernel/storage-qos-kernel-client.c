@@ -10,7 +10,7 @@
 
 void update_tokens (struct ratebucket *rb_ptr)
 {
-uint64_t current_ts = now();
+uint64_t current_ts = qos_get_uptime();
 uint64_t time_diff;
 int32_t tokens;
 
@@ -78,7 +78,9 @@ void qos_throttle (void)
 {
 
 	while(!qos_can_send(&rb)) {
-		sleep_us(1000); // Some sleep function. Linux has lots to choose from.
+		struct timespec ts;
+		ts.tv_nsec = 1000000;
+		nanosleep(&ts, NULL); // Some sleep function. Linux has lots to choose from.
 		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
 		//	return;
 		//}
@@ -200,6 +202,22 @@ int device_release (struct inode *inode, struct file *file)
 	
 	return 0;
 }
+
+/**
+*
+* Get time since system boot
+*
+* @return long system uptime
+*
+*/
+
+static long qos_get_uptime(void)
+{
+    struct timespec t_info;
+    timespec_get(&t_info, TIME_UTC);
+    
+    return t_info.tv_nsec;
+}
 	
 	
 /*
@@ -235,7 +253,7 @@ static int __init qos_init(void)
 	
     rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
 	
-    rb.rb_ts = now();
+    rb.rb_ts = qos_get_uptime();
 	
 	printk(KERN_ALERT "RateBucket config set!\n");
 	
