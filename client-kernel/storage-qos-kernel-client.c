@@ -8,7 +8,7 @@
 *
 */
 
-void update_tokens(ratebucket_t *rb_ptr)
+void update_tokens (struct ratebucket *rb_ptr)
 {
 uint64_t current_ts = now();
 uint64_t time_diff;
@@ -46,8 +46,7 @@ int32_t tokens;
 *
 */
 
-
-bool can_send(ratebucket_t *rb_ptr)
+bool can_send (struct ratebucket *rb_ptr)
 {
 
 	if (rb_ptr->rb_tokens > 0) {
@@ -74,7 +73,8 @@ bool can_send(ratebucket_t *rb_ptr)
 *
 */
 
-void throttle(request_t *req)
+//void throttle(request_t *req)
+void qos_throttle (void)
 {
 
 	while(!can_send(&rb)) {
@@ -102,7 +102,7 @@ ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 	ssize_t ret = -EBADF;
 	
 	//continue when tokens available
-	throttle();
+	qos_throttle();
 	
 	if (file) {
 		ret = vfs_read(file, buf, count, pos);
@@ -128,7 +128,7 @@ ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_
     ssize_t ret = -EBADF;
 	
 	//continue when tokens available
-	throttle();
+	qos_throttle();
 	
 	if (file) {
 		ret = vfs_write(file, buf, count, pos);
@@ -147,7 +147,7 @@ enum redirfs_rv qos_open(struct inode *inode, struct file *file)
 	if (Device_Open) return -EBUSY;
 	
 	//continue when tokens available
-	throttle();
+	qos_throttle();
 
 	Device_Open++;
 	try_module_get(THIS_MODULE);

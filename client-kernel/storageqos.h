@@ -3,7 +3,7 @@
 #include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
 #include <linux/time.h>		/* Needed for tracking storage operation performance */
 #include <linux/fs.h>		/* Needed for VFS functions */
-#include "/home/popowell/redirfs/redirfs.h"		/* Include RedirFS */
+#include "/home/popowell/2016springTeam28/client-kernel/redirfs/redirfs.h"		/* Include RedirFS */
 
 int init_module(void);
 void cleanup_module(void);
@@ -11,16 +11,18 @@ static ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_
 static ssize_t qos_write(struct file *file, const char __user *buf, size_t count, loff_t *pos);
 enum redirfs_rv  qos_open(struct inode *inode, struct file *file);
 enum redirfs_rv  qos_release(struct inode *inode, struct file *file);
-void qos_manage (void);
+void qos_throttle (void);
+void update_token (struct ratebucket *rb_ptr);
+bool can_send (struct ratebucket *rb_ptr);
 
 #define DEVICE_NAME "storage_qos_kernel_client"
 
 struct qos_monitor monitor;
 
-ratebucket_t rb;
+struct ratebucket rb;
 
-//static int Major;
-//static int Device_Open = 0;
+static int Major;
+static int Device_Open = 0;
 
 static redirfs_filter storageqosflt;
 
@@ -56,7 +58,7 @@ static struct qos_monitor
 	
 };
 
-typedef struct ratebucket {
+static struct ratebucket {
 	// generic ID to use when you have multiple ratebuckets
 	int32_t rb_id; 
 	// Rate at which tokens are generated per second
@@ -67,7 +69,7 @@ typedef struct ratebucket {
  	int32_t rb_token_cap; 
 	// Timestamp when tokens were last updated. I recommend microsecond granularity  
 	uint64_t rb_ts; 
-} ratebucket_t;
+};
 
 static struct redirfs_filter_info storageqos_info = {
 	.owner = THIS_MODULE,
