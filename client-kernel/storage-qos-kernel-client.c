@@ -46,21 +46,21 @@ int32_t tokens;
 *
 */
 
-bool can_send (struct ratebucket *rb_ptr)
+int qos_can_send (struct ratebucket *rb_ptr)
 {
 
 	if (rb_ptr->rb_tokens > 0) {
 		rb_ptr->rb_tokens--;
-		return true;
+		return 1;
 	}
 	// Out of tokens. Update ratebucket and try again
 	update_tokens(rb_ptr);
 	if (rb_ptr->rb_tokens > 0) {
 		rb_ptr->rb_tokens--;
-		return true;
+		return 1;
 	}
 
-	return false;
+	return 0;
 }
 
 
@@ -77,7 +77,7 @@ bool can_send (struct ratebucket *rb_ptr)
 void qos_throttle (void)
 {
 
-	while(!can_send(&rb)) {
+	while(!qos_can_send(&rb)) {
 		sleep_us(1000); // Some sleep function. Linux has lots to choose from.
 		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
 		//	return;

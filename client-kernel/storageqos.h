@@ -5,6 +5,19 @@
 #include <linux/fs.h>		/* Needed for VFS functions */
 #include "/home/popowell/2016springTeam28/client-kernel/redirfs/redirfs.h"		/* Include RedirFS */
 
+static struct ratebucket {
+	// generic ID to use when you have multiple ratebuckets
+	int32_t rb_id; 
+	// Rate at which tokens are generated per second
+	int32_t rb_rate; 
+	// Think of this as the number of requests that can be handle "right now"
+	int32_t rb_tokens; 
+	// Depth of bucket. i.e. maximum number of tokens that can accumulate
+ 	int32_t rb_token_cap; 
+	// Timestamp when tokens were last updated. I recommend microsecond granularity  
+	uint64_t rb_ts; 
+};
+
 int init_module(void);
 void cleanup_module(void);
 static ssize_t qos_read(struct file *file, char __user *buf, size_t count, loff_t *pos);
@@ -13,7 +26,7 @@ enum redirfs_rv  qos_open(struct inode *inode, struct file *file);
 enum redirfs_rv  qos_release(struct inode *inode, struct file *file);
 void qos_throttle (void);
 void update_token (struct ratebucket *rb_ptr);
-bool can_send (struct ratebucket *rb_ptr);
+int qos_can_send (struct ratebucket *rb_ptr);
 
 #define DEVICE_NAME "storage_qos_kernel_client"
 
@@ -56,19 +69,6 @@ static struct qos_monitor
 	
 	uint32_t opsqueued;
 	
-};
-
-static struct ratebucket {
-	// generic ID to use when you have multiple ratebuckets
-	int32_t rb_id; 
-	// Rate at which tokens are generated per second
-	int32_t rb_rate; 
-	// Think of this as the number of requests that can be handle "right now"
-	int32_t rb_tokens; 
-	// Depth of bucket. i.e. maximum number of tokens that can accumulate
- 	int32_t rb_token_cap; 
-	// Timestamp when tokens were last updated. I recommend microsecond granularity  
-	uint64_t rb_ts; 
 };
 
 static struct redirfs_filter_info storageqos_info = {
