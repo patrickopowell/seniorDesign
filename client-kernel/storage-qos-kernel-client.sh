@@ -1,4 +1,4 @@
-cd /home/popowell/redirfs/
+cd /home/popowell/2016springTeam28/client-kernel/redirfs/
 
 make clean
 
@@ -14,10 +14,10 @@ cd /home/popowell/2016springTeam28/client-kernel/
 
 make clean
 
-cp /home/popowell/redirfs/Module.symvers .
+cp /home/popowell/2016springTeam28/client-kernel/redirfs/Module.symvers .
 
 make
 
-sudo make -C /lib/modules/`uname -r`/build M=`pwd` EXTRA_CFLAGS=-I/home/popowell/redirfs modules_install
+sudo make -C /lib/modules/`uname -r`/build M=`pwd` EXTRA_CFLAGS=-I/home/popowell/2016springTeam28/client-kernel/redirfs modules_install
 
 sudo insmod ./storage-qos-kernel-client.ko

@@ -6,7 +6,7 @@ PWD := $(shell pwd)
 .PHONY: build clean
 
 build:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) EXTRA_CFLAGS=-I/home/popowell/redirfs modules
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) EXTRA_CFLAGS=-I/home/popowell/2016springTeam28/client-kernel/redirfs modules
 
 clean:
 	rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c Module.symvers modules.order

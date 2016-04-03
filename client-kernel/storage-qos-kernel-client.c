@@ -79,9 +79,9 @@ void throttle(request_t *req)
 
 	while(!can_send(&rb)) {
 		sleep_us(1000); // Some sleep function. Linux has lots to choose from.
-		if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
-			return;
-		}
+		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
+		//	return;
+		//}
 	}
 	return;
 }
@@ -202,6 +202,7 @@ static int __init qos_init(void)
 	
     rb.rb_ts = now();
 	
+	printk(KERN_ALERT "RateBucket config set!\n");
 	
 	//storageqos_path_info = redirfs_get_path_info(storageqosflt, {"/home/popowell/dummyQoS", RFS_PATH_SUBTREE | RFS_PATH_INCLUDE});
 	
@@ -215,12 +216,6 @@ static int __init qos_init(void)
 	
 	redirfs_put_path(path);*/
 	
-	/*Major = register_chrdev(0, DEVICE_NAME, &qos_fops);
-	if (Major < 0) {
-		printk(KERN_ALERT "Registering char device failed with %d\n", Major);
-		return Major;
-	}*/
-	
 	return 0;
 }
 
@@ -229,8 +224,9 @@ static int __init qos_init(void)
  */
 static void __exit qos_exit(void)
 {
+	redirfs_unregister_filter(storageqosflt);
+	redirfs_delete_filter(storageqosflt);
 	printk(KERN_INFO "Storage QoS Closed\n");
-	unregister_chrdev(Major, DEVICE_NAME);
 }
 
 module_init(qos_init);

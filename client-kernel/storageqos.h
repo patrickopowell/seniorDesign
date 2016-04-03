@@ -17,6 +17,8 @@ void qos_manage (void);
 
 struct qos_monitor monitor;
 
+ratebucket_t rb;
+
 //static int Major;
 //static int Device_Open = 0;
 
