@@ -78,9 +78,8 @@ void qos_throttle (void)
 {
 
 	while(!qos_can_send(&rb)) {
-		struct timespec ts;
-		ts.tv_nsec = 1000000;
-		nanosleep(&ts, NULL); // Some sleep function. Linux has lots to choose from.
+		unsigned long ts = 1000;
+		msleep(ts); // Some sleep function. Linux has lots to choose from.
 		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
 		//	return;
 		//}
@@ -214,7 +213,7 @@ int device_release (struct inode *inode, struct file *file)
 static long qos_get_uptime(void)
 {
     struct timespec t_info;
-    timespec_get(&t_info, TIME_UTC);
+    getnstimeofday(&t_info);
     
     return t_info.tv_nsec;
 }

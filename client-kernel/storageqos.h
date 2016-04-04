@@ -1,9 +1,10 @@
 #include <linux/module.h>	/* Needed by all modules */
 #include <linux/kernel.h>	/* Needed for KERN_INFO */
-#include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
-#include <linux/time.h>		/* Needed for tracking storage operation performance */
+//#include <linux/sched.h>	/* Needed for putting processes to sleep and waking them up */
+#include <linux/timekeeping.h>		/* Needed for tracking storage operation performance */
 #include <linux/fs.h>		/* Needed for VFS functions */
-#include <linux/unistd.h>
+#include <linux/delay.h>
+//#include <linux/unistd.h>
 #include "/home/popowell/2016springTeam28/client-kernel/redirfs/redirfs.h"		/* Include RedirFS */
 
 static struct ratebucket {
