@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 void setup_clean_kill()
 {
 	struct sigaction act;
-	act.sa_handler = runhandler;
+	act.sa_handler = run_handler;
 	sigemptyset(&(act.sa_mask));
 	act.sa_flags = 0;
 	sigaction(SIGINT, &act, 0);
@@ -34,9 +34,13 @@ void setup_clean_kill()
  * Sets running to 0 to indicate threads should quit.
  * Provides a clean death.
  */
-void runhandler(int sig)
+void run_handler(int sig)
 {
 	running = 0;
+}
+
+int check_running() {
+	return running;
 }
 
 void failure(int is_thread)

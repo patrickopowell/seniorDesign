@@ -73,7 +73,6 @@ int qos_release_sla(json_t *curr_sla)
 /** CLIENT FEEDBACK CONSTRUCTION **/
 
 
-
 /** GENERAL PARSING FUNCTIONS **/
 
 /**

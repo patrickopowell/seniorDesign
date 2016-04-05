@@ -7,7 +7,7 @@
 	Needs to be atomic.
 */
 
-int receiver_start()
+int qos_receiver_start()
 {
 	char recvbuffer[BUFFERLENGTH];
 	int sockfd;
@@ -26,7 +26,25 @@ int receiver_start()
 	listen(receiver_socket, SLA_BACKLOG);
 	struct sockaddr_storage server_addr;
 	socklen_t addr_size;
-	accept_fd = accept(receiver_socket, (struct sockaddr *)&server_adr, &addr_size);
+	while(check_running() != 0) {
+		// probably want to use select(s) instead
+		accept_fd = accept(receiver_socket, (struct sockaddr *)&server_adr, &addr_size);
+		if (recv(accept_fd, recvbuffer, BUFFERLENGTH, 0) != 0) {
+			fprintf(stdout, "%s\n", recvbuffer);
+			void *sla = qos_load_sla(recvbuffer);
+			if (sla == NULL) {
+				fprintf(stderr, "Invalid SLA received, failed JSON object construction.");
+				continue;
+			}
+			if (qos_validate_sla(sla) > 0) {
+				fprintf(stderr, "Invalid SLA received, failed validation.");
+				continue;
+			}
+			// pass that ish to the kernel
+			qos_release_sla(sla);
+		}
+		close(accept_fd);
+	}
 	freeaddrinfo(servinfo);
 }
 
