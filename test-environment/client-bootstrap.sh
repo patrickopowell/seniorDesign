@@ -11,6 +11,7 @@ if [ $? -gt 0 ]; then
 	printf "Mirrorlist download failed, not replacing!\n"
 else
 	printf "Mirrorlist download successful!\n"
+	sed -i 's/^#Server/Server/g' mirrorlist
 	mv mirrorlist /etc/pacman.d/mirrorlist
 fi
 printf "Force updating system...\n"
@@ -18,15 +19,17 @@ pacman -Syyu --noconfirm
 printf "Installing packages...\n"
 pacman -S --noconfirm --needed base-devel linux-headers kmod git
 printf "Manual package installation...\n"
-mkdir builds
+buildexist=$(mkdir builds)
 cd builds
-printf "Installing Jansson...\n"
-curl -L -O http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
-tar -xvf jansson-2.7.tar.gz
+if [ -z "$buildexist" ]; then
+	printf "Downloading Jansson...\n"
+	curl -L -O http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
+	tar -xvf jansson-2.7.tar.gz
+fi
 cd jansson-2.7
+printf "Installing Jansson...\n"
 ./configure
 make
 make check
 make install
 cd ..
-rm -rf jansson-2.7

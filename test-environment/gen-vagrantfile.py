@@ -27,7 +27,7 @@ class Generator:
                 #    vb.customize ["storageattach", :id, "--storagectl", "SATA", "--port", 1, "--device", 0, "--type", "hdd", "--medium", machine[:hdd_name]]
                 #end
             end
-            node.vm.provision :shell, path: "temp_setup/client-bootstrap.sh"
+            node.vm.provision :shell, path: "client-bootstrap.sh"
         end
     end
 end"""
