@@ -1,6 +1,4 @@
-SUBDIRS = example html src
-
-EXTRA_DIST = autogen.sh index.html
+EXTRA_DIST = callbacks.html files.html index.html init.html private.html running.html security.html thanks.html unclear.html
 
 # these are overrides for a bunch of targets I don't want to be created
 install install-data install-exec uninstall installdirs check installcheck:
