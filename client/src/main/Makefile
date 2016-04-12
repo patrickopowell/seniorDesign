@@ -3,8 +3,9 @@ CC=gcc
 #OPT = -g
 WARN = -Wall
 ERR = -Werror
+STD = -std=c99
 
-CFLAGS = $(OPT) $(WARN) $(ERR)
+CFLAGS = $(OPT) $(WARN) $(ERR) $(STD)
 
 all: clean main
 

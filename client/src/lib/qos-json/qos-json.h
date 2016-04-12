@@ -10,6 +10,8 @@ struct protocol_tuple {
 	protocol_tuple sub_tuples[];
 };
 
+typedef protocol_tuple protocol_tuple;
+
 /** SLA PARSING **/
 int qos_load_sla(char *);
 int qos_validate_sla(json_t *);

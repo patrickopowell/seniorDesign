@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 {
 	setup_clean_kill();
 	pthread_t threads[RESPONSIBILITIES];
-	if (pthread_create(&threads[0], NULL, &receiver_start, NULL))
+	if (pthread_create(&threads[0], NULL, &qos_receiver_start, NULL))
 		perror("Could not create receiver thread!\n");
-	if (pthread_create(&threads[1], NULL, &parser_start, NULL))
+	if (pthread_create(&threads[1], NULL, &qos_parser_start, NULL))
 		perror("Could not create parser thread!\n");
 	for (int i = 0; i < RESPONSIBILITIES; i++)
 		pthread_join(threads[i], NULL);
