@@ -8,6 +8,7 @@
 /** INCLUDE MODULES **/
 #include "receiver/receiver.h"
 #include "parser/parser.h"
+#include "../lib/qos-json/qos-json.h"
 
 #define RESPONSIBILITIES 2
 #define BUFFERLENGTH 5000
