@@ -2,21 +2,14 @@ CC=gcc
 #OPT = -O3
 #OPT = -g
 WARN = -Wall
-#ERR = -Werror
+ERR = -Werror
 
-CFLAGS = $(OPT) $(WARN) $(ERR) $(INC) $(LIB)
-
-SRC = qos_throttle.c
-OBJ = qos_throttle.o
+CFLAGS = $(OPT) $(WARN) $(ERR)
 
 all: clean main
-	@echo "\nCompilation Complete!"
 
 main: main.o receiver.o parser.o qos-json.o
 	$(CC) $(CFLAGS) main.o receiver.o parser.o qos-json.o -o main -ljansson
-	@echo "---------------------------------------------------------------"
-	@echo "-----------    Storage QoS Client Compiled!     -----------"
-	@echo "---------------------------------------------------------------"
 
 main.o: main.c
 	$(CC) -c main.c

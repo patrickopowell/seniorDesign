@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <stdio.h>
 
 /** INCLUDE MODULES **/
 #include "receiver/receiver.h"

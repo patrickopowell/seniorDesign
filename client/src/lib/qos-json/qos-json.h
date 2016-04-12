@@ -1,5 +1,4 @@
 #include <jansson.h>
-#include <stdio.h>
 
 #define STRING_TYPE 0
 #define INTEGER_TYPE 1

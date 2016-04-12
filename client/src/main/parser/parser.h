@@ -6,23 +6,6 @@
  * Communicates to the client kernel module by [undetermined, syscall?].
  * Communicates to the QoS server via TCP/IP connection
  */
-#include <iostream>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <string>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <errno.h>
-#include <signal.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <sstream>
-#include <fstream>
 
 // This should be statically set once determined.
 #define SERVERPORT "15555"
