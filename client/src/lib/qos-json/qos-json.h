@@ -4,13 +4,13 @@
 #define INTEGER_TYPE 1
 #define ARRAY_TYPE 2
 
+typedef struct protocol_tuple protocol_tuple;
+
 struct protocol_tuple {
 	char *name;
 	int type;
 	protocol_tuple sub_tuples[];
 };
-
-typedef protocol_tuple protocol_tuple;
 
 /** SLA PARSING **/
 int qos_load_sla(char *);

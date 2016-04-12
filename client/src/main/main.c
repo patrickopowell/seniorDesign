@@ -39,7 +39,8 @@ void run_handler(int sig)
 	running = 0;
 }
 
-int check_running() {
+int check_running()
+{
 	return running;
 }
 

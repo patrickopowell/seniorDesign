@@ -23,7 +23,4 @@
 #define SLA_BACKLOG 5
 
 /** FORWARD DECLARATIONS **/
-void setup_clean_kill();
-void runhandler(int);
-void load_client_info();
-int receive_slas();
+int qos_receiver_start();

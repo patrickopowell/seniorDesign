@@ -14,3 +14,9 @@
 #define RESPONSIBILITIES 2
 #define BUFFERLENGTH 5000
 #define SERVERPORT "15555"
+
+int main(int argc, char *argv[]);
+void setup_clean_kill();
+void run_handler(int sig);
+int check_running();
+void failure(int is_thread);
