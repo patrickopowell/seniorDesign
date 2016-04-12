@@ -2,17 +2,21 @@ CC=gcc
 #OPT = -O3
 #OPT = -g
 WARN = -Wall
-ERR = -Werror
+#ERR = -Werror
 
 CFLAGS = $(OPT) $(WARN) $(ERR) $(INC) $(LIB)
 
-SIM_SRC = qos_throttle.c
-SIM_OBJ = qos_throttle.o
+SRC = qos_throttle.c
+OBJ = qos_throttle.o
 
-all: qos_throttle
+all: clean qos_throttle
+	@echo "\nCompilation Complete!"
 
-qos_throttle: $(SIM_OBJ)
-	$(CC) -o qos_throttle $(CFLAGS) $(SIM_OBJ)
+qos_throttle: $(OBJ)
+	$(CC) -o qos_throttle $(CFLAGS) $(OBJ)
 	@echo "---------------------------------------------------------------"
 	@echo "-----------    Storage QoS Throttle Compiled!     -----------"
 	@echo "---------------------------------------------------------------"
+	
+clean:
+	rm -rf *.o qos_throttle
