@@ -14,6 +14,7 @@
 
 // This should be statically set once determined.
 #define SERVERPORT "15555"
+#define DEBUG_SERVER "192.168.1.5"
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 5000
