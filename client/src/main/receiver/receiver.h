@@ -12,8 +12,7 @@
 #include "../../lib/qos-json/qos-json.h"
 #endif
 
-// This should be statically set once determined.
-#define LISTENPORT 15555
+#define LISTENPORT "15555"
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 5000

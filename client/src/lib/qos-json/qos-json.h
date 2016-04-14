@@ -14,13 +14,13 @@ struct protocol_tuple {
 };
 
 /** SLA PARSING **/
-int qos_load_sla(char *);
+void *qos_load_sla(char *);
 int qos_validate_sla(json_t *);
 int qos_release_sla(json_t *);
 
 /** GENERAL PARSING FUNCTIONS **/
-int qos_test_tuple(json_t *, protocol_tuple *);
+int qos_test_tuple(json_t *curr_sla, protocol_tuple tuple);
 int qos_test_integer(json_t *, char *);
 int qos_test_string(json_t *, char *);
 int qos_test_array(json_t *, char *);
-int qos_test_array_tuples(json_t *, protocol_tuple *);
+int qos_test_array_tuples(json_t *curr_sla, char *item, protocol_tuple *sub_tuples);

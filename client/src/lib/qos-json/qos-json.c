@@ -39,10 +39,8 @@ const protocol_tuple feedback_fields[] = {
 
 /** SLA PARSING **/
 
-int qos_load_sla(char *sla)
+void *qos_load_sla(char *sla)
 {
-	if (sla_loaded > 0)
-		release_sla();
 	json_error_t error;
 	json_t *curr_sla = json_loads(sla, 0, &error);
 	free(sla);
@@ -83,10 +81,11 @@ int qos_release_sla(json_t *curr_sla)
  * Return 0 means SLA information is valid.
  * Return > 0 means at least 1 error is present.
  */
-int qos_test_tuple(json_t *curr_sla, protocol_tuple *tuple)
+int qos_test_tuple(json_t *curr_sla, protocol_tuple tuple)
 {
 	char *sla_field_name = tuple.name;
 	int sla_field_type = tuple.type;
+	int errors = 0;
 	if (sla_field_type == STRING_TYPE)
 		errors += qos_test_string(curr_sla, sla_field_name);
 	else if (sla_field_type == INTEGER_TYPE)
@@ -95,12 +94,12 @@ int qos_test_tuple(json_t *curr_sla, protocol_tuple *tuple)
 		int is_array = qos_test_array(curr_sla, sla_field_name);
 		if (!is_array) {
 			errors += 1;
-			continue;
+		} else {
+			protocol_tuple *sub_tuples = tuple.sub_tuples;
+			errors += qos_test_array_tuples(curr_sla, sla_field_name, sub_tuples);
 		}
-		json_t *sub_tuples = json_object_get(curr_sla, sla_field_name);
-		protocol_tuple sub_tuples[] = tuple.sub_tuples;
-		errors += qos_test_array_tuples(curr_sla, sla_field_name, sub_tuples);
 	}
+	return errors;
 }
 
 /**
@@ -109,8 +108,10 @@ int qos_test_tuple(json_t *curr_sla, protocol_tuple *tuple)
  */
 int qos_test_integer(json_t *curr_sla, char *item)
 {
-	json_t test_obj = json_object_get(curr_sla, item);
-	int result = json_is_integer(test_obj);
+	json_t *test_obj = json_object_get(curr_sla, item);
+	int result = 0;
+	if (!json_is_integer(test_obj))
+		result++;
 	json_decref(test_obj);
 	return result;
 }
@@ -121,8 +122,10 @@ int qos_test_integer(json_t *curr_sla, char *item)
  */
 int qos_test_string(json_t *curr_sla, char *item)
 {
-	json_t test_obj = json_object_get(curr_sla, item);
-	int result = json_is_string(test_obj);
+	json_t *test_obj = json_object_get(curr_sla, item);
+	int result = 0;
+	if (!json_is_string(test_obj))
+		result++;
 	json_decref(test_obj);
 	return result;
 }
@@ -132,8 +135,10 @@ int qos_test_string(json_t *curr_sla, char *item)
  * Return whether or not it is an array. (0, 1)
  */
 int qos_test_array(json_t *curr_sla, char *item) {
-	json_t test_obj = json_object_get(curr_sla, item);
-	int result = json_is_array(test_obj);
+	json_t *test_obj = json_object_get(curr_sla, item);
+	int result = 0;
+	if (!json_is_array(test_obj))
+		result++;
 	json_decref(test_obj);
 	return result;
 }
@@ -143,12 +148,14 @@ int qos_test_array(json_t *curr_sla, char *item) {
  * Requires array elements to be in protocol_tuple format.
  * Return number of errors encountered.
  */
-int qos_test_array_tuples(json_t *array, protocol_tuple *sub_tuples) {
+int qos_test_array_tuples(json_t *curr_sla, char *item, protocol_tuple *sub_tuples) {
 	int errors = 0;
 	if (qos_test_array(curr_sla, item)) {
 		int length = sizeof(sub_tuples) / sizeof(protocol_tuple);
+		json_t *array = json_object_get(curr_sla, item);
 		for (int i = 0; i < length; i++)
 			errors += qos_test_tuple(array, sub_tuples[i]);
+		json_decref(array);
 	} else
 		errors++;
 	return errors;

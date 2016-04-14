@@ -6,3 +6,5 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <netdb.h>
+#include <string.h>

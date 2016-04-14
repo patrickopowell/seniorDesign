@@ -17,7 +17,7 @@ void *qos_receiver_start(void *in)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if ((status = getaddrinfo(NULL, SERVERPORT, &hints, &receiver_info)) != 0) {
+	if ((status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info)) != 0) {
 		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
 		exit(1);
 	}
@@ -28,9 +28,10 @@ void *qos_receiver_start(void *in)
 	socklen_t addr_size;
 	while(check_running() != 0) {
 		// probably want to use select(s) instead
-		accept_fd = accept(receiver_socket, (struct sockaddr *)&server_adr, &addr_size);
+		int accept_fd = accept(receiver_socket, (struct sockaddr *)&server_addr, &addr_size);
 		if (recv(accept_fd, recvbuffer, BUFFERLENGTH, 0) != 0) {
 			fprintf(stdout, "%s\n", recvbuffer);
+			/*
 			void *sla = qos_load_sla(recvbuffer);
 			if (sla == NULL) {
 				fprintf(stderr, "Invalid SLA received, failed JSON object construction.");
@@ -42,9 +43,10 @@ void *qos_receiver_start(void *in)
 			}
 			// pass that ish to the kernel
 			qos_release_sla(sla);
+			*/
 		}
 		close(accept_fd);
 	}
-	freeaddrinfo(servinfo);
+	freeaddrinfo(receiver_info);
 }
 
