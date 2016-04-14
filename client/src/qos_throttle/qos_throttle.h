@@ -8,7 +8,11 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-static struct ratebucket {
+
+#define SEC_PER_YEAR 31557600
+#define MSEC_PER_SEC 1000000
+
+typedef struct ratebucket {
 	// generic ID to use when you have multiple ratebuckets
 	unsigned int rb_id; 
 	// Rate at which tokens are generated per second
@@ -18,14 +22,14 @@ static struct ratebucket {
 	// Depth of bucket. i.e. maximum number of tokens that can accumulate
  	unsigned int rb_token_cap; 
 	// Timestamp when tokens were last updated. I recommend microsecond granularity  
-	unsigned int rb_ts; 
-};
+	unsigned long rb_ts; 
+} ratebucket_t;
 
 void qos_throttle (void);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
-static long qos_get_uptime(void);
+static unsigned long qos_get_uptime(void);
 
-struct qos_monitor monitor;
+//struct qos_monitor monitor;
 
-struct ratebucket rb;
+ratebucket_t rb;
