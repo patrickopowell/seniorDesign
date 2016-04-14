@@ -1,6 +1,6 @@
 #include "parser.h"
 
-int qos_parser_start()
+void *qos_parser_start(void *in)
 {
 	return 0;
 }

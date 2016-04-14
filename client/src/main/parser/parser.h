@@ -13,4 +13,4 @@
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 5000
 
-int qos_parser_start();
+void *qos_parser_start(void *in);

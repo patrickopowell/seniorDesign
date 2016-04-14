@@ -9,7 +9,7 @@ typedef struct protocol_tuple protocol_tuple;
 struct protocol_tuple {
 	char *name;
 	int type;
-	protocol_tuple sub_tuples[];
+	protocol_tuple *sub_tuples;
 };
 
 /** SLA PARSING **/

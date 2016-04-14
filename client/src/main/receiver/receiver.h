@@ -23,4 +23,4 @@
 #define SLA_BACKLOG 5
 
 /** FORWARD DECLARATIONS **/
-int qos_receiver_start();
+void *qos_receiver_start(void *in);

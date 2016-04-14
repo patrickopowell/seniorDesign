@@ -7,7 +7,7 @@
 	Needs to be atomic.
 */
 
-int qos_receiver_start()
+void *qos_receiver_start(void *in)
 {
 	char recvbuffer[BUFFERLENGTH];
 	int sockfd;
