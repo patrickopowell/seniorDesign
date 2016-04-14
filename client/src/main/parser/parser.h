@@ -7,6 +7,9 @@
  * Communicates to the QoS server via TCP/IP connection
  */
 
+#include "../common."
+#include "../../lib/qos-json/qos-json.h"
+
 // This should be statically set once determined.
 #define SERVERPORT "15555"
 

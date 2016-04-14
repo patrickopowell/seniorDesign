@@ -9,8 +9,8 @@ CFLAGS = $(OPT) $(WARN) $(ERR) $(STD)
 
 all: clean main
 
-main: main.o receiver.o parser.o qos-json.o
-	$(CC) $(CFLAGS) main.o receiver.o parser.o qos-json.o -o main -ljansson -lpthread
+main: main.o qos-json.o receiver.o parser.o
+	$(CC) $(CFLAGS) main.o qos-json.o receiver.o parser.o -o main -ljansson -lpthread
 
 main.o: main.c
 	$(CC) $(STD) -c main.c

@@ -7,11 +7,8 @@
  * Communicates to the QoS server via TCP/IP connection
  */
 
-/** Library includes **/
-//#include <jansson.h>
-//#include "../lib/logging.c"
-
-#include <netinet/in.h>
+#include "../common.h"
+#include "../../lib/qos-json/qos-json.h"
 
 // This should be statically set once determined.
 #define LISTENPORT 15555
