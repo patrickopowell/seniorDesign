@@ -1,4 +1,5 @@
 #include <jansson.h>
+#define JANSSON_INCLUDE
 
 #define STRING_TYPE 0
 #define INTEGER_TYPE 1
