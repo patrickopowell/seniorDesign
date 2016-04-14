@@ -98,12 +98,20 @@ void qos_throttle (void)
 *
 */
 
-static long qos_get_uptime(void)
+static unsigned long qos_get_uptime(void)
 {
     struct timespec t_info;
     clock_gettime(CLOCK_REALTIME, &t_info);
+	
+	unsigned long seconds;
+
+	seconds = SEC_PER_YEAR * 30;
+	
+	seconds = t_info.tv_sec - seconds;
+	
+	unsigned long microseconds = (seconds*MSEC_PER_SEC) + (t_info.tv_nsec/1000);
     
-    return t_info.tv_nsec;
+    return microseconds;
 }
 
 /**
@@ -123,4 +131,6 @@ int main (int argc, char *argv[])
     rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
+	
+	return 1;
 }
