@@ -16,14 +16,10 @@ make
 
 sudo make install
 
-cd ../
+cd ../bbfs
 
 # End FUSE install
 # Install BBFS
-
-cd ../lib/bbfs
-
-pwd
 
 sudo sh ./autogen.sh
 
@@ -31,7 +27,7 @@ sudo ./configure CC=c99 CFLAGS=-g LIBS=-lposix
 
 make
 
-cd ../../qos_throttle
+cd ../
 
 make
 
