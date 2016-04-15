@@ -30,7 +30,7 @@ typedef struct ratebucket {
 	unsigned long rb_ts; 
 } ratebucket_t;
 
-static struct qos_monitor
+typedef struct
 {
 	unsigned int bytes_read;
 	unsigned int bytes_written;
@@ -42,7 +42,7 @@ static struct qos_monitor
 	unsigned int writes_queued;
 	
 	unsigned int suspensions;
-};
+} qos_monitor;
 
 void qos_throttle (unsigned int mountID, int req);
 void inc_queue(int req);
@@ -50,6 +50,6 @@ void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 static unsigned long qos_get_uptime(void);
 
-struct qos_monitor monitor;
+qos_monitor monitor;
 
 ratebucket_t rb;

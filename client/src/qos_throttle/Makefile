@@ -1,6 +1,7 @@
 CC=gcc
 #OPT = -O3
 #OPT = -g
+OPT = -lpthread
 WARN = -Wall
 ERR = -Werror
 

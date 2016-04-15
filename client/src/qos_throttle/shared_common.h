@@ -70,11 +70,11 @@ void init_mem()
 	
 	key_t stat_key = ftok( MEMORY_ID_STAT, 1 );
 
-	int shmid_stat = shmget( stat_key, sizeof( stat_info_memory ), 0600 | IPC_CREAT );
+	int shmid_stat = shmget( stat_key, sizeof( struct stat_info_memory ), 0600 | IPC_CREAT );
 	if ( shmid_stat == -1 )
 		fail( "Can't create shared memory" );
 
-	stat_mem_info = (struct stat_info_memory *)shmat( shmid, 0, 0 );
+	stat_mem_info = (struct stat_info_memory *)shmat( shmid_stat, 0, 0 );
 	if ( stat_mem_info == (void *)-1 )
 		fail( "Can't map shared memory segment into address space" );
 
@@ -86,11 +86,11 @@ void init_mem()
 	
 	key_t sla_key = ftok( MEMORY_ID_SLA, 1 );
 
-	int shmid_sla = shmget( sla_key, sizeof( sla_info_memory ), 0600 | IPC_CREAT );
+	int shmid_sla = shmget( sla_key, sizeof( struct sla_info_memory ), 0600 | IPC_CREAT );
 	if ( shmid_sla == -1 )
 		fail( "Can't create shared memory" );
 
-	sla_mem_info = (struct sla_info_memory *)shmat( shmid, 0, 0 );
+	sla_mem_info = (struct sla_info_memory *)shmat( shmid_sla, 0, 0 );
 	if ( sla_mem_info == (void *)-1 )
 		fail( "Can't map shared memory segment into address space" );
 
