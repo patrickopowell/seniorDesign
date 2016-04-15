@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <semaphore.h>
 
-#include "common.c"
+//#include "common.c"
 
 #define MEMORY_ID_SLA "/qualiqueue/sla"
 #define MEMORY_ID_STAT "/qualiqueue/stats"
@@ -18,7 +18,7 @@
 
 #define MAX_NUM_SERVERS 5
 
-typedef sla_info sla_info;
+//typedef sla_info sla_info;
 
 struct sla_info {
 	int sla_id;
@@ -30,12 +30,12 @@ struct sla_info {
 	int throughput_max;
 };
 
-struct {
+struct sla_info_memory {
 	sla_info slas[MAX_NUM_SERVERS];
 	int count;
-} sla_info_memory;
+};
 
-typedef stat_info stat_info;
+//typedef stat_info stat_info;
 
 struct stat_info {
 	int s_dev;
@@ -47,13 +47,63 @@ struct stat_info {
 	int throughput;
 };
 
-struct {
+struct stat_info_memory {
 	stat_info stats[MAX_NUM_SERVERS];
 	int count;
-} stat_info_memory;
+};
 
 static sem_t *stat_lock;
 static sem_t *sla_lock;
 
-stat_info_memory *stat_info;
-sla_info_memory *sla_info;
+stat_info_memory *stat_mem_info;
+sla_info_memory *sla_mem_info;
+
+// Print out an error message and exit.
+static void fail( char const *message ) {
+  fprintf( stderr, "%s\n", message );
+  exit( 1 );
+}
+
+void init_mem()
+{
+	// initialize stat memory
+	
+	key_t stat_key = ftok( MEMORY_ID_STAT, 1 );
+
+	int shmid = shmget( stat_key, sizeof( stat_info_memory ), 0600 | IPC_CREAT );
+	if ( shmid == -1 )
+		fail( "Can't create shared memory" );
+
+	stat_info = (stat_info_memory *)shmat( shmid, 0, 0 );
+	if ( stat_info == (void *)-1 )
+		fail( "Can't map shared memory segment into address space" );
+
+	stat_lock = sem_open( STAT_LOCK, O_CREAT, 0600, 1 );
+	if ( stat_lock == SEM_FAILED )
+		fail( "Can't make semaphore" );
+	
+	// initialize sla shared memory
+	
+	key_t sla_key = ftok( MEMORY_ID_SLA, 1 );
+
+	int shmid = shmget( sla_key, sizeof( sla_info_memory ), 0600 | IPC_CREAT );
+	if ( shmid == -1 )
+		fail( "Can't create shared memory" );
+
+	sla_info = (sla_info_memory *)shmat( shmid, 0, 0 );
+	if ( sla_info == (void *)-1 )
+		fail( "Can't map shared memory segment into address space" );
+
+	sla_lock = sem_open( SLA_LOCK, O_CREAT, 0600, 1 );
+	if ( sla_lock == SEM_FAILED )
+		fail( "Can't make semaphore" );
+}
+
+void close_mem()
+{
+	sem_close( stat_lock );
+	shmdt( stat_info );
+	
+	sem_close( sla_lock );
+	shmdt( sla_info );
+}
