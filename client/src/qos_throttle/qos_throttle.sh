@@ -1,8 +1,8 @@
 # FUSE - update & install
 
-sudo apt-get install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
+sudo pacman -S build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
 
-sudo apt-get install pkg-config libssl-dev
+sudo pacman -S install pkg-config libssl-dev
 
 git clone https://github.com/s3fs-fuse/s3fs-fuse
 
