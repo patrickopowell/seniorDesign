@@ -77,7 +77,7 @@ int qos_can_send (struct ratebucket *rb_ptr)
 void qos_throttle (unsigned int mountID, int req)
 {
 	
-	get_bucket(mountID);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	//get_bucket(mountID);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
 
 	while(!qos_can_send(&rb)) {
 		struct timespec ts, ts2;

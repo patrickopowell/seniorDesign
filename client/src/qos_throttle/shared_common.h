@@ -74,7 +74,7 @@ void init_mem()
 	if ( shmid_stat == -1 )
 		fail( "Can't create shared memory" );
 
-	stat_mem_info = (stat_info_memory *)shmat( shmid, 0, 0 );
+	stat_mem_info = (struct stat_info_memory *)shmat( shmid, 0, 0 );
 	if ( stat_mem_info == (void *)-1 )
 		fail( "Can't map shared memory segment into address space" );
 
@@ -90,7 +90,7 @@ void init_mem()
 	if ( shmid_sla == -1 )
 		fail( "Can't create shared memory" );
 
-	sla_mem_info = (sla_info_memory *)shmat( shmid, 0, 0 );
+	sla_mem_info = (struct sla_info_memory *)shmat( shmid, 0, 0 );
 	if ( sla_mem_info == (void *)-1 )
 		fail( "Can't map shared memory segment into address space" );
 
@@ -102,8 +102,8 @@ void init_mem()
 void close_mem()
 {
 	sem_close( stat_lock );
-	shmdt( stat_info );
+	shmdt( stat_mem_info );
 	
 	sem_close( sla_lock );
-	shmdt( sla_info );
+	shmdt( sla_mem_info );
 }
