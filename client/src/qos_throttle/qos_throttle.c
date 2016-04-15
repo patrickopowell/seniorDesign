@@ -74,7 +74,7 @@ int qos_can_send (struct ratebucket *rb_ptr)
 */
 
 //void throttle(request_t *req)
-void qos_throttle (unsigned int mountID)
+void qos_throttle (unsigned int mountID, int req)
 {
 	
 	get_bucket(mountID);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
@@ -82,6 +82,9 @@ void qos_throttle (unsigned int mountID)
 	while(!qos_can_send(&rb)) {
 		struct timespec ts, ts2;
 		ts.tv_nsec = 1000;
+		
+		inc_queue(req);
+		
 		if( nanosleep(&ts,&ts2) < 0 ) {
 			printf("sleep failed\n");
 		} // Some sleep function. Linux has lots to choose from.
@@ -90,6 +93,27 @@ void qos_throttle (unsigned int mountID)
 		//}
 	}
 	return;
+}
+
+void inc_queue(int req)
+{
+	
+	switch(req)
+	{
+		// Read operations
+		case QOS_READ_OPS:
+			monitor.reads_queued++;
+			
+			break;
+		// Write operations
+		case QOS_WRITE_OPS:
+			monitor.writes_queued++;
+			
+			break;
+	}
+	
+	monitor.suspensions++;
+	
 }
 
 /**
@@ -126,6 +150,8 @@ static unsigned long qos_get_uptime(void)
 
 int main (int argc, char *argv[]) 
 {
+	init_mem();
+	
 	rb.rb_rate = 2000; // replace with value passed through control
 	
     rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
@@ -133,6 +159,8 @@ int main (int argc, char *argv[])
     rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
+	
+	close_mem();
 	
 	return 1;
 }

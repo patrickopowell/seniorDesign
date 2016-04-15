@@ -338,6 +338,8 @@ int bb_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_
 	    path, buf, size, offset, fi);
     // no need to get fpath on this one, since I work from fi->fh not the path
     log_fi(fi);
+	
+	qos_throttle(10000, QOS_READ_OPS);
 
     return log_syscall("pread", pread(fi->fh, buf, size, offset), 0);
 }
@@ -362,6 +364,8 @@ int bb_write(const char *path, const char *buf, size_t size, off_t offset,
 	    );
     // no need to get fpath on this one, since I work from fi->fh not the path
     log_fi(fi);
+	
+	qos_throttle(10000, QOS_WRITE_OPS);
 
     return log_syscall("pwrite", pwrite(fi->fh, buf, size, offset), 0);
 }
