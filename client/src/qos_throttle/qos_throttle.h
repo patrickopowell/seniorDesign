@@ -42,7 +42,7 @@ static struct qos_monitor
 	unsigned int writes_queued;
 	
 	unsigned int suspensions;
-}
+};
 
 void qos_throttle (unsigned int mountID, int req);
 void inc_queue(int req);

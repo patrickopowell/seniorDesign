@@ -23,9 +23,9 @@ cd ../bbfs
 
 sudo sh ./autogen.sh
 
-sudo ./configure CC=c99 LIBS=-lposix
+sudo ./configure
 
-make
+sudo make
 
 cd ../
 
