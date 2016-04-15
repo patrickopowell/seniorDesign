@@ -898,6 +898,9 @@ int main(int argc, char *argv[])
     // Pull the rootdir out of the argument list and save it in my
     // internal data
     bb_data->rootdir = realpath(argv[argc-2], NULL);
+	
+	// Get mount point
+	
     argv[argc-2] = argv[argc-1];
     argv[argc-1] = NULL;
     argc--;
