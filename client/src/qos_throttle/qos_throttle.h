@@ -44,7 +44,8 @@ static struct qos_monitor
 	unsigned int suspensions;
 }
 
-void qos_throttle (void);
+void qos_throttle (unsigned int mountID, int req);
+void inc_queue(int req);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 static unsigned long qos_get_uptime(void);

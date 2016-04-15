@@ -10,9 +10,9 @@ cd s3fs-fuse/
 
 sudo sh ./autogen.sh
 
-./configure --prefix=/usr --with-openssl
+sudo ./configure --prefix=/usr --with-openssl
 
-make
+sudo make
 
 sudo make install
 
@@ -23,7 +23,7 @@ cd ../bbfs
 
 sudo sh ./autogen.sh
 
-sudo ./configure CC=c99 CFLAGS=-g LIBS=-lposix
+sudo ./configure CC=c99 LIBS=-lposix
 
 make
 
