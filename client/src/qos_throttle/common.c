@@ -1,4 +1,4 @@
-
+#include "shared_common.h"
 
 // Print out an error message and exit.
 static void fail( char const *message ) {
