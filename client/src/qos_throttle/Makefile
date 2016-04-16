@@ -11,7 +11,8 @@ SRC = qos_throttle.c
 OBJ = qos_throttle.o
 
 all: clean qos_throttle
-	@echo "\nCompilation Complete!"
+	@echo ""
+	@echo "Compilation Complete!"
 
 qos_throttle: $(OBJ)
 	$(CC) -o qos_throttle $(CFLAGS) $(OBJ)
