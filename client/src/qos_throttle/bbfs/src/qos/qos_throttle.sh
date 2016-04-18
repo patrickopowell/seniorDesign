@@ -16,7 +16,7 @@ sudo make
 
 sudo make install
 
-cd ../../
+cd ../../../
 
 # End FUSE install
 # Install BBFS
