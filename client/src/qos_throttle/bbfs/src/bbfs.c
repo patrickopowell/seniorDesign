@@ -43,7 +43,8 @@
 
 #include "log.h"
 
-#include "../../qos_throttle.c"
+//#include "./qos/qos_throttle.c"
+#include "./qos/qos_throttle.h"
 
 //  All the paths I see are relative to the root of the mounted
 //  filesystem.  In order to get to the underlying filesystem, I need to
@@ -898,6 +899,8 @@ int main(int argc, char *argv[])
 	perror("main calloc");
 	abort();
     }
+
+	qos_init();
 
     // Pull the rootdir out of the argument list and save it in my
     // internal data
