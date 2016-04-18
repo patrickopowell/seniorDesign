@@ -21,13 +21,13 @@ cd ../../../
 # End FUSE install
 # Install BBFS
 
-sudo sh ./autogen.sh
+sudo sh autogen.sh
 
 sudo ./configure
 
 sudo make
 
-cd ./src/qos
+#cd ./src/qos
 
-make
+#make
 
