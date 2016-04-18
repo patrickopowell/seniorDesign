@@ -27,7 +27,7 @@ sudo ./configure
 
 sudo make
 
-cd ../
+cd ./src/qos
 
 make
 
