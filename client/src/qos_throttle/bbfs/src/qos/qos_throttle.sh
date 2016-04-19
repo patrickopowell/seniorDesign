@@ -16,9 +16,9 @@ sudo make
 
 sudo make install
 
-cd ../../../../../lib/CUnit-2.1-3
+cd ../../../../../lib/CUnit-2.1-2
 
-sudo ./configure
+sudo ./configure --prefix=/usr
 
 sudo make
 

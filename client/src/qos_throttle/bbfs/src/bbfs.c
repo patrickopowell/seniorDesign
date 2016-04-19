@@ -342,7 +342,7 @@ int bb_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_
 	
 	qos_throttle(10000, QOS_READ_OPS);
 
-	log_msg("\nqos_throttle(10000, QOS_READ_OPS\n");
+	log_msg("\nqos_throttle(10000, QOS_READ_OPS)\n");
 
     return log_syscall("pread", pread(fi->fh, buf, size, offset), 0);
 }
@@ -370,7 +370,7 @@ int bb_write(const char *path, const char *buf, size_t size, off_t offset,
 	
 	qos_throttle(10000, QOS_WRITE_OPS);
 
-	log_msg("\nqos_throttle(10000, QOS_WRITE_OPS\n");
+	log_msg("\nqos_throttle(10000, QOS_WRITE_OPS)\n");
 
     return log_syscall("pwrite", pwrite(fi->fh, buf, size, offset), 0);
 }
