@@ -81,7 +81,7 @@ void qos_throttle (unsigned int mountID, int req)
 
 	if (req == 3) {
 		struct timespec ts3, ts4;
-		ts.tv_nsec = 10000000000;
+		ts3.tv_nsec = 10000000000;
 		
 		if (nanosleep(&ts3,&ts4) < 0) printf("sleep failed\n");
 	}

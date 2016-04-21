@@ -18,11 +18,11 @@ sudo make install
 
 cd ../../../../../lib/CUnit-2.1-2
 
-sudo ./configure --prefix=/usr
+#sudo ./configure --prefix=/usr
 
-sudo make
+#sudo make
 
-sudo make install
+#sudo make install
 
 cd ../../qos_throttle/bbfs
 
