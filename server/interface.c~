@@ -132,7 +132,7 @@ int main(void)
     //makeSLA(3, 3, "Hello", "World!"); // for testing purposes
     //printf("%s\n", SLA); // Also for the test
 	if(getClient()){
-	    makeSLA(3, 3, "Hello", "World!");
+	    makeSLA();
 	    sendSLA();
 	}
     return 0;

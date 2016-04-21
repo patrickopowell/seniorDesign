@@ -30,10 +30,10 @@ int getSLA_min(void);
 int getUnused(void);
 
 /////////////////// New as of March 15, 2016 /////////////////////
-int getMinThru(void); // min throughput
-int getMaxThru(void); // max throughput
-int getMinIOPS(void); // min IOPS
-int getMaxIOPS(void); // max IOPS
+char *getMinThru(void); // min throughput
+char *getMaxThru(void); // max throughput
+char *getMinIOPS(void); // min IOPS
+char *getMaxIOPS(void); // max IOPS
 ////////////////////// End March 15, 2016 ////////////////////////
 
 
