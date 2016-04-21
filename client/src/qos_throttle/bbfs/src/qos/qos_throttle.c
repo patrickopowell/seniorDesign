@@ -79,6 +79,13 @@ void qos_throttle (unsigned int mountID, int req)
 	
 	//get_bucket(mountID);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
 
+	if (req == 3) {
+		struct timespec ts3, ts4;
+		ts.tv_nsec = 10000000000;
+		
+		if (nanosleep(&ts3,&ts4) < 0) printf("sleep failed\n");
+	}
+	
 	while(!qos_can_send(&rb)) {
 		struct timespec ts, ts2;
 		ts.tv_nsec = 1000;
