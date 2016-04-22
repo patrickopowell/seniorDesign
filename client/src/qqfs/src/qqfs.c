@@ -1,4 +1,17 @@
 /*
+  QualiQueue File System
+  
+  This code is modified from standard Big Brother File System code to log and 
+  activate the QualiQueue storage Quality-of-Service File System application.
+  This file was modified 29 April 2016 by Patrick Powell <popowell89@gmail.com>,
+  NCSU Senior Design Team 28.
+  
+  This program directory has been modified to name the application "qqfs" 
+  (QualiQueue File System) instead of "bbfs" (Big Brother File System).
+  This file was modified 29 April 2016 by Patrick Powell <popowell89@gmail.com>,
+  NCSU Senior Design Team 28.  
+
+  
   Big Brother File System
   Copyright (C) 2012 Joseph J. Pfeiffer, Jr., Ph.D. <pfeiffer@cs.nmsu.edu>
 
@@ -9,10 +22,6 @@
   Copyright (C) 2001-2007  Miklos Szeredi <miklos@szeredi.hu>
   His code is licensed under the LGPLv2.
   A copy of that code is included in the file fuse.h
-  
-  This code is modified from standard Big Brother File System code to log and 
-  activate the QualiQueue storage Quality-of-Service File System application.
-  This file was modified 29 April 2016 by Patrick Powell <popowell89@gmail.com>.
   
   The point of this FUSE filesystem is to provide an introduction to
   FUSE.  It was my first FUSE filesystem as I got to know the
@@ -47,7 +56,6 @@
 
 #include "log.h"
 
-//#include "./qos/qos_throttle.c"
 #include "qos_throttle.h"
 
 //  All the paths I see are relative to the root of the mounted
