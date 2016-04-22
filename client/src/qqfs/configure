@@ -585,7 +585,7 @@ PACKAGE_STRING='fuse-tutorial 2016-03-25'
 PACKAGE_BUGREPORT='joseph@pfeifferfamily.net'
 PACKAGE_URL=''
 
-ac_unique_file="src/bbfs.c"
+ac_unique_file="src/qqfs.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = bbfs$(EXEEXT)
+bin_PROGRAMS = qqfs$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -99,10 +99,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_bbfs_OBJECTS = bbfs.$(OBJEXT) log.$(OBJEXT)
-bbfs_OBJECTS = $(am_bbfs_OBJECTS)
-bbfs_LDADD = $(LDADD)
-bbfs_DEPENDENCIES =
+am_qqfs_OBJECTS = qqfs.$(OBJEXT) log.$(OBJEXT)
+qqfs_OBJECTS = $(am_qqfs_OBJECTS)
+qqfs_LDADD = $(LDADD)
+qqfs_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -131,8 +131,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(bbfs_SOURCES)
-DIST_SOURCES = $(bbfs_SOURCES)
+SOURCES = $(qqfs_SOURCES)
+DIST_SOURCES = $(qqfs_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -254,7 +254,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-bbfs_SOURCES = bbfs.c log.c log.h  params.h
+qqfs_SOURCES = qqfs.c log.c log.h  params.h
 AM_CFLAGS = @FUSE_CFLAGS@
 LDADD = @FUSE_LIBS@
 all: config.h
@@ -349,9 +349,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-bbfs$(EXEEXT): $(bbfs_OBJECTS) $(bbfs_DEPENDENCIES) $(EXTRA_bbfs_DEPENDENCIES) 
-	@rm -f bbfs$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(bbfs_OBJECTS) $(bbfs_LDADD) $(LIBS)
+qqfs$(EXEEXT): $(qqfs_OBJECTS) $(qqfs_DEPENDENCIES) $(EXTRA_qqfs_DEPENDENCIES) 
+	@rm -f qqfs$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(qqfs_OBJECTS) $(qqfs_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -359,7 +359,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bbfs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/qqfs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log.Po@am__quote@
 
 .c.o:
