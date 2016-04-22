@@ -48,7 +48,7 @@ void qos_throttle (unsigned int mountID, int req);
 void inc_queue(int req);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
-static unsigned long qos_get_uptime(void);
+unsigned long qos_get_uptime(void);
 int qos_init(void);
 void init_mem(void);
 void close_mem(void);

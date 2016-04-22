@@ -141,7 +141,7 @@ void inc_queue(int req)
 *
 */
 
-static unsigned long qos_get_uptime(void)
+unsigned long qos_get_uptime(void)
 {
     struct timespec t_info;
     clock_gettime(CLOCK_REALTIME, &t_info);
