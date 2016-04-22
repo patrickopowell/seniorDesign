@@ -48,7 +48,7 @@
 #include "log.h"
 
 //#include "./qos/qos_throttle.c"
-#include "./qos/qos_throttle.h"
+#include "qos_throttle.h"
 
 //  All the paths I see are relative to the root of the mounted
 //  filesystem.  In order to get to the underlying filesystem, I need to

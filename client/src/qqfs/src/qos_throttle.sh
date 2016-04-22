@@ -16,6 +16,8 @@ sudo pacman -S install pkg-config libssl-dev
 
 #sudo make install
 
+#cd ../
+
 #cd ../../../../../lib/CUnit-2.1-2
 
 #sudo ./configure --prefix=/usr
@@ -24,7 +26,7 @@ sudo pacman -S install pkg-config libssl-dev
 
 #sudo make install
 
-cd ../../
+cd ../
 
 # End FUSE install
 # Install BBFS
