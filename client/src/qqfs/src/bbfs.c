@@ -304,9 +304,6 @@ int bb_open(const char *path, struct fuse_file_info *fi)
     log_msg("\nbb_open(path\"%s\", fi=0x%08x)\n",
 	    path, fi);
     bb_fullpath(fpath, path);
-	
-	qos_throttle(10000, 3);
-	log_msg("\nqos_throttle() - long open\n");
 
     // if the open call succeeds, my retstat is the file descriptor,
     // else it's -errno.  I'm making sure that in that case the saved
