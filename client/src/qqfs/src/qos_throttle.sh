@@ -18,14 +18,6 @@ sudo pacman -S install pkg-config libssl-dev
 
 #cd ../
 
-#cd ../../../../../lib/CUnit-2.1-2
-
-#sudo ./configure --prefix=/usr
-
-#sudo make
-
-#sudo make install
-
 cd ../
 
 # End FUSE install
@@ -36,8 +28,4 @@ sudo sh autogen.sh
 sudo ./configure
 
 sudo make
-
-#cd ./src/qos
-
-#make
 
