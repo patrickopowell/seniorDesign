@@ -16,7 +16,7 @@ sudo make
 
 sudo make install
 
-cd ../../../../../lib/CUnit-2.1-2
+#cd ../../../../../lib/CUnit-2.1-2
 
 #sudo ./configure --prefix=/usr
 
@@ -24,7 +24,7 @@ cd ../../../../../lib/CUnit-2.1-2
 
 #sudo make install
 
-cd ../../qos_throttle/bbfs
+cd ../../../
 
 # End FUSE install
 # Install BBFS
