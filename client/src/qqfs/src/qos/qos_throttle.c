@@ -1,3 +1,13 @@
+/*
+
+	QualiQueue File System (QQFS)
+	
+	This program is a modification to the Big Brother File System (BBFS).
+	This code and its included files implement the storage Quality-of-Service
+	functionality to paths mounted in the Quality-of-Service File System.
+
+*/
+
 #include "qos_throttle.h"
 
 /**

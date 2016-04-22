@@ -10,6 +10,10 @@
   His code is licensed under the LGPLv2.
   A copy of that code is included in the file fuse.h
   
+  This code is modified from standard Big Brother File System code to log and 
+  activate the QualiQueue storage Quality-of-Service File System application.
+  This file was modified 29 April 2016 by Patrick Powell <popowell89@gmail.com>.
+  
   The point of this FUSE filesystem is to provide an introduction to
   FUSE.  It was my first FUSE filesystem as I got to know the
   software; hopefully, the comments in this code will help people who
