@@ -84,7 +84,7 @@ int qos_can_send (struct ratebucket *rb_ptr)
 */
 
 //void throttle(request_t *req)
-void qos_throttle (char *path, int req)
+void qos_throttle (const char *path, int req)
 {
 	
 	//get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
