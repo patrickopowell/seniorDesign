@@ -23,7 +23,7 @@ struct sla_info {
 	int sla_id;
 	int s_dev;
 	int i_ino;
-	char path[80];
+	//char path[80];
 	int iops_min;
 	int iops_max;
 	int throughput_min;
@@ -40,7 +40,7 @@ struct sla_info_memory {
 struct stat_info {
 	int s_dev;
 	int i_ino;
-	char path[80];
+	//char path[80];
 	int iops_sec;
 	int reads_queued;
 	int writes_queued;
@@ -73,15 +73,15 @@ static void init_mem()
 
         int shmid_stat = shmget( stat_key, sizeof( struct stat_info_memory ), 0600 | IPC_CREAT );
         if ( shmid_stat == -1 )
-                fail( "Can't create shared memory" );
+                fail( "Can't create stat shared memory" );
 
         stat_mem_info = (struct stat_info_memory *)shmat( shmid_stat, 0, 0 );
         if ( stat_mem_info == (void *)-1 )
-                fail( "Can't map shared memory segment into address space" );
+                fail( "Can't map stat shared memory segment into address space" );
 
         stat_lock = sem_open( STAT_LOCK, O_CREAT, 0600, 1 );
         if ( stat_lock == SEM_FAILED )
-                fail( "Can't make semaphore" );
+                fail( "Can't make stat semaphore" );
 
         // initialize sla shared memory
 
@@ -89,15 +89,15 @@ static void init_mem()
 
         int shmid_sla = shmget( sla_key, sizeof( struct sla_info_memory ), 0600 | IPC_CREAT );
         if ( shmid_sla == -1 )
-                fail( "Can't create shared memory" );
+                fail( "Can't create sla shared memory" );
 
         sla_mem_info = (struct sla_info_memory *)shmat( shmid_sla, 0, 0 );
         if ( sla_mem_info == (void *)-1 )
-                fail( "Can't map shared memory segment into address space" );
+                fail( "Can't map sla shared memory segment into address space" );
 
         sla_lock = sem_open( SLA_LOCK, O_CREAT, 0600, 1 );
         if ( sla_lock == SEM_FAILED )
-                fail( "Can't make semaphore" );
+                fail( "Can't make sla semaphore" );
 
 }
 
