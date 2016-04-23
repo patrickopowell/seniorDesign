@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include <semaphore.h>
 
-//#include "common.c"
 
 #define MEMORY_ID_SLA "/qualiqueue/sla"
 #define MEMORY_ID_STAT "/qualiqueue/stats"
@@ -24,6 +23,7 @@ struct sla_info {
 	int sla_id;
 	int s_dev;
 	int i_ino;
+	char path[80];
 	int iops_min;
 	int iops_max;
 	int throughput_min;
@@ -40,6 +40,7 @@ struct sla_info_memory {
 struct stat_info {
 	int s_dev;
 	int i_ino;
+	char path[80];
 	int iops_sec;
 	int reads_queued;
 	int writes_queued;
