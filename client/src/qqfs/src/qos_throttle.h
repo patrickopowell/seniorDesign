@@ -44,7 +44,7 @@ typedef struct
 	unsigned int suspensions;
 } qos_monitor;
 
-void qos_throttle (unsigned int mountID, int req);
+void qos_throttle (char *path, int req);
 void inc_queue(int req);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
