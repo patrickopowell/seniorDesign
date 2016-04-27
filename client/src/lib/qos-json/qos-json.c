@@ -70,6 +70,32 @@ int qos_release_sla(json_t *curr_sla)
 
 /** CLIENT FEEDBACK CONSTRUCTION **/
 
+/**
+ * Construct client feedback JSON object from client_feedback
+ * input struct.
+ */
+void *qos_construct_client_feedback(client_feedback *cf)
+{
+	json_t *cf_json = json_pack("{sisis[sisi]sisisisisisisi}",
+		"version", cf->version,
+		"sla_version", cf->sla_version,
+		"storage_id",
+			"s_dev", cf->s_dev,
+			"i_ino", cf->i_ino,
+		"storage_type", cf->storage_type,
+		"current_throughput", cf->current_throughput,
+		"writes_queued", cf->writes_queued,
+		"reads_queued", cf->reads_queued,
+		"suspensions", cf->suspensions,
+		"sla_check", cf->sla_check,
+		"critical_request", cf->critical_request
+	);
+	return cf_json;
+}
+
+char *qos_obj_to_string(json_t *obj) {
+	return json_dumps(obj);
+}
 
 /** GENERAL PARSING FUNCTIONS **/
 
