@@ -48,7 +48,7 @@ void *qos_receiver_start(void *in)
 		int accept_fd = accept(receiver_socket, (struct sockaddr *)&server_addr, &addr_size);
 		if (recv(accept_fd, recvbuffer, BUFFERLENGTH, 0) != 0) {
 			fprintf(stdout, "%s\n", recvbuffer);
-			void *sla = qos_load_sla(recvbuffer);
+			/*void *sla = qos_load_sla(recvbuffer);
 			if (sla == NULL) {
 				fprintf(stderr, "Invalid SLA received, failed JSON object construction.");
 				continue;
@@ -58,7 +58,7 @@ void *qos_receiver_start(void *in)
 				continue;
 			}
 			// pass that ish to the kernel
-			qos_release_sla(sla);
+			qos_release_sla(sla);*/
 		}
 		close(accept_fd);
 	}

@@ -20,4 +20,9 @@ struct storage_server {
 	storage_server *next;
 };
 
-storage_server *server_list = NULL;
+storage_server *server_list;
+
+int running;
+
+int check_running();
+void failure(int is_thread);

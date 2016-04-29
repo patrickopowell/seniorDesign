@@ -2,32 +2,22 @@
 
 void *qos_parser_start(void *in)
 {
-	pthread_t threads[2];
-	//	find mount thread
-	//		send handshake
-	if (pthread_create(&threads[0], NULL, &qos_mount_listen, NULL))
-		perror("Could not create mount listener thread!\n");
+	pthread_t threads[1];
 	//	timer thread
 	//		get stats from filesystem
 	//		send client feedback to qos servers
 	if (pthread_create(&threads[1], NULL, &qos_feedback_timer, NULL))
 		perror("Could not create feedback timer thread!\n");
+	for (int i = 0; i < RESPONSIBILITIES; i++)
+		pthread_join(threads[i], NULL);
+	printf("Exiting Parser Thread.\n");
 	return 0;
-}
-
-void *qos_mount_listen(void *in)
-{
-	// listen for mounts, continuously
-	// for now, just know what's happening
-	client_feedback *handshake = (client_feedback *)qos_construct_handshake();
-	qos_send_feedback(handshake);
 }
 
 void qos_send_feedback(client_feedback *cf)
 {
 	char *server_qos_ip = get_qos_ip(cf->s_dev, cf->i_ino);
 	char *fb = qos_obj_to_string(qos_construct_client_feedback(cf));
-	
 }
 
 char *get_qos_ip(int s_dev, int i_ino)
@@ -69,5 +59,6 @@ void *qos_construct_handshake()
 
 void *qos_feedback_timer(void *in)
 {
-	// timer that fires off feedback
+	while(check_running() != 0)
+		usleep(1000000);
 }
