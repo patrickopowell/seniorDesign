@@ -8,9 +8,7 @@
  */
 
 #include "../common.h"
-#ifndef JANSSON_INCLUDE
 #include "../../lib/qos-json/qos-json.h"
-#endif
 
 // This should be statically set once determined.
 #define SERVERPORT "15555"

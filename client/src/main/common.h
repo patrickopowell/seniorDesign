@@ -1,3 +1,4 @@
+#ifndef COMMON_INCLUDE
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <signal.h>
@@ -26,3 +27,5 @@ int running;
 
 int check_running();
 void failure(int is_thread);
+#define COMMON_INCLUDE
+#endif

@@ -1,5 +1,5 @@
+#ifndef JANSSON_INCLUDE
 #include <jansson.h>
-#define JANSSON_INCLUDE
 
 #define STRING_TYPE 0
 #define INTEGER_TYPE 1
@@ -60,3 +60,5 @@ int qos_test_integer(json_t *, char *);
 int qos_test_string(json_t *, char *);
 int qos_test_array(json_t *, char *);
 int qos_test_array_tuples(json_t *curr_sla, char *item, protocol_tuple *sub_tuples);
+#define JANSSON_INCLUDE
+#endif
