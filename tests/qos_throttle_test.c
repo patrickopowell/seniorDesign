@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "client/src/qos_throttle/bbfs/src/qos/qos_throttle.h"
+#include "../qqfs/src/qos_throttle.h"
 
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
@@ -12,6 +12,8 @@ ratebucket_t rb;
 
 void test_token_bucket(void)
 {
+	unsigned int current_ts = qos_get_uptime();
+	
 	rb.rb_rate = 2000; // replace with value passed through control
 	
     rb.rb_tokens = 0;
@@ -20,7 +22,7 @@ void test_token_bucket(void)
 	
     rb.rb_ts = qos_get_uptime();
 
-	unsigned int time_diff = current_ts - rb_ptr->rb_ts;
+	unsigned int time_diff = current_ts - rb.rb_ts;
 
 	CU_ASSERT(qos_can_send(&rb) == 0);
 }
@@ -35,15 +37,11 @@ void test_throttle(void)
 	
     rb.rb_ts = qos_get_uptime();
 
-	qos_throttle(1,1);
+	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
 
-	if (uptime > 900000 || uptime < 1100000)
-		CU_PASS("qos_throttle() waited 1 second\n");
-
-	else
-		CU_FAIL("qos_throttle() waited too long\n");
+	CU_ASSERT(uptime > 900000);// && uptime < 1100000);
 }
 
 void test_update_tokens(void)
