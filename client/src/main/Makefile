@@ -5,12 +5,14 @@ WARN=-Wall
 ERR=-Werror
 STD=-std=gnu99
 
-CFLAGS = $(OPT) $(WARN) $(ERR) $(STD)
+CFLAGS=$(OPT) $(WARN) $(ERR) $(STD)
+COPTS=-ljansson -lpthread
+CLINKS=main.o logging.o qos-json.o receiver.o parser.o
 
 all: clean main
 
-main: main.o qos-json.o receiver.o parser.o
-	$(CC) $(CFLAGS) main.o qos-json.o receiver.o parser.o -o main -ljansson -lpthread
+main: main.o logging.o qos-json.o receiver.o parser.o
+	$(CC) $(CFLAGS) $(CLINKS) -o qqclient $(COPTS)
 
 main.o: main.c
 	$(CC) $(STD) -c main.c
@@ -23,6 +25,9 @@ parser.o: parser/parser.c
 
 qos-json.o: ../lib/qos-json/qos-json.c
 	$(CC) $(STD) -c ../lib/qos-json/qos-json.c
+
+logging.o: ../lib/logging/logging.c
+	$(CC) $(STD) -c ../lib/logging/logging.c
 
 clean:
 	rm -rf *.o main

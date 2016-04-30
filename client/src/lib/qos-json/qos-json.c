@@ -80,8 +80,8 @@ void *qos_construct_client_feedback(client_feedback *cf)
 		"version", cf->version,
 		"sla_version", cf->sla_version,
 		"storage_id",
-			"s_dev", cf->s_dev,
-			"i_ino", cf->i_ino,
+			"s_dev", cf->storage_id.s_dev,
+			"i_ino", cf->storage_id.i_ino,
 		"storage_type", cf->storage_type,
 		"current_throughput", cf->current_throughput,
 		"writes_queued", cf->writes_queued,
@@ -94,7 +94,7 @@ void *qos_construct_client_feedback(client_feedback *cf)
 }
 
 char *qos_obj_to_string(json_t *obj) {
-	return json_dumps(obj);
+	return json_dumps(obj, 0);
 }
 
 /** GENERAL PARSING FUNCTIONS **/

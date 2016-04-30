@@ -18,3 +18,4 @@
 #define BUFFERLENGTH 5000
  
 void *qos_parser_start(void *in);
+void *qos_feedback_timer(void *in);

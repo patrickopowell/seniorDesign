@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
+#include "../lib/logging/logging.h"
 #include "shared_common.h"
 
 typedef storage_server storage_server;

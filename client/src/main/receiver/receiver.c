@@ -9,14 +9,16 @@
 
 void *qos_receiver_start(void *in)
 {
+	qos_log_info("Starting Receiver.");
 	char recvbuffer[BUFFERLENGTH];
-	int status;
 	struct addrinfo hints, *receiver_info;
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if ((status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info)) != 0) {
+	int status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info);
+	if (status != 0) {
+		qos_log_error("Could not getaddrinfo.");
 		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
 		exit(1);
 	}
@@ -36,6 +38,7 @@ void *qos_receiver_start(void *in)
 
 	while(check_running() != 0) {
 		if (select(receiver_socket+1, &read_fd, NULL, NULL, &stTimeOut) == -1) {
+			qos_log_error("Could not obtain select for socket.");
 			perror("Could not obtain select for socket.\n");
 			continue;
 		}
@@ -44,10 +47,11 @@ void *qos_receiver_start(void *in)
 			usleep(1000000);
 			continue;
 		}
-		printf("SLA incoming!\n");
+		qos_log_info("Receiving SLA.");
 		int accept_fd = accept(receiver_socket, (struct sockaddr *)&server_addr, &addr_size);
 		if (recv(accept_fd, recvbuffer, BUFFERLENGTH, 0) != 0) {
 			fprintf(stdout, "%s\n", recvbuffer);
+			qos_log_info(recvbuffer);
 			/*void *sla = qos_load_sla(recvbuffer);
 			if (sla == NULL) {
 				fprintf(stderr, "Invalid SLA received, failed JSON object construction.");
@@ -63,26 +67,8 @@ void *qos_receiver_start(void *in)
 		close(accept_fd);
 	}
 	freeaddrinfo(receiver_info);
-}
-
-void qos_new_mgmt(char *ip, int s_dev, int i_ino)
-{
-	storage_server *s = get_last_mgmt_server();
-	storage_server *new_s = calloc(sizeof storage_server, 0);
-	new_s->s_dev = s_dev;
-	new_s->i_ino = i_ino;
-	strcpy(new_s->qos_ip, ip);
-	new_s->connection_fd = generate_mgmt_connection(ip);
-	s->next = new_s;
-}
-
-storage_server *get_last_mgmt_server() {
-	if (server_list == NULL)
-		return NULL;
-	storage_server *s = server_list;
-	while (s->next != NULL)
-		s = s->next;
-	return s;
+	qos_log_info("Receiver exiting.");
+	return 0;
 }
 
 int generate_mgmt_connection(char *ip)
@@ -92,7 +78,8 @@ int generate_mgmt_connection(char *ip)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if ((status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info)) != 0) {
+	int status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info);
+	if (status != 0) {
 		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
 		exit(1);
 	}

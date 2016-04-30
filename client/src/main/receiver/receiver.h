@@ -8,9 +8,7 @@
  */
 
 #include "../common.h"
-#ifndef JANSSON_INCLUDE
 #include "../../lib/qos-json/qos-json.h"
-#endif
 
 #define LISTENPORT "15555"
 

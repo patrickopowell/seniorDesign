@@ -16,14 +16,19 @@ int main(int argc, char *argv[])
 	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
+	setup_instance();
+	qos_setup_logging();
 	pthread_t threads[RESPONSIBILITIES];
 	if (pthread_create(&threads[0], NULL, &qos_receiver_start, NULL))
-		perror("Could not create receiver thread!\n");
+		qos_log_critical("Could not create receiver thread.");
 	if (pthread_create(&threads[1], NULL, &qos_parser_start, NULL))
-		perror("Could not create parser thread!\n");
+		qos_log_critical("Could not create parser thread.");
 	for (int i = 0; i < RESPONSIBILITIES; i++)
 		pthread_join(threads[i], NULL);
-	printf("Exiting main thread.\n");
+	qos_log_info("Exiting qqclient.");
+	qos_halt_logging();
+	flock(QQCLIENT_LOCK, LOCK_UN);
+	return 0;
 }
 
 /**
@@ -39,6 +44,18 @@ void setup_clean_kill()
 	sigaction(SIGINT, &act, 0);
 }
 
+void setup_instance()
+{
+	int fd = open(QQCLIENT_LOCK, OWRONLY | O_CREAT, 0600);
+	int rc = flock(fd, LOCK_EX | LOCK_NB);
+	if (rc == -1) {
+		qos_log_critical("Existing qqclient instance running.");
+		// add server
+		exit(1);
+	}
+	running = 1;
+}
+
 /**
  * Sets running to 0 to indicate threads should quit.
  * Provides a clean death.
@@ -51,14 +68,6 @@ void run_handler(int sig)
 int check_running()
 {
 	return running;
-}
-
-void failure(int is_thread)
-{
-	if (is_thread > 0)
-		pthread_exit(NULL);
-	else
-		exit(1);
 }
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
