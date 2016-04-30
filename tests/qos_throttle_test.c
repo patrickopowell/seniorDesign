@@ -23,7 +23,10 @@ void test_token_bucket(void)
     rb.rb_ts = qos_get_uptime();
 
 	unsigned int time_diff = current_ts - rb.rb_ts;
-
+	
+	printf("test_token_bucket() - time_diff = %lu\n", time_diff);
+	
+	CU_ASSERT(time_diff < 1000000);
 	CU_ASSERT(qos_can_send(&rb) == 0);
 }
 
