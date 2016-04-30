@@ -10,6 +10,8 @@ int clean_suite(void) { return 0; }
 
 ratebucket_t rb;
 
+char *spacer = "";
+
 void test_token_bucket(void)
 {
     rb.rb_ts = qos_get_uptime();
@@ -24,12 +26,12 @@ void test_token_bucket(void)
 
 	unsigned int time_diff = current_ts - rb.rb_ts;
 	
-	printf("\ntest_token_bucket() - time_diff = %lu\n", time_diff);
+	printf("\n%40stest_token_bucket() - time_diff = %lu\n", time_diff);
 	
 	CU_ASSERT(time_diff < 1000000);
 	CU_ASSERT(qos_can_send(&rb) == 0);
 	
-	printf("\ntest_token_bucket() - tokens = %lu\n", rb.rb_tokens);
+	printf("\n%40stest_token_bucket() - tokens = %lu\n", rb.rb_tokens);
 }
 
 void test_throttle(void)
@@ -42,15 +44,15 @@ void test_throttle(void)
 	
     rb.rb_ts = qos_get_uptime();
 	
-	printf("\ntest_throttle() - rb_ts = %lu\n", rb.rb_ts);
+	printf("\n%40stest_throttle() - rb_ts = %lu\n", rb.rb_ts);
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
 	
-	printf("test_throttle() - uptime = %lu\n", uptime);
+	printf("%40stest_throttle() - uptime = %lu\n", uptime);
 
-	CU_ASSERT(uptime > 900000) && uptime < 1100000);
+	CU_ASSERT(uptime > 900000 && uptime < 1100000);
 }
 
 void test_update_tokens(void)
@@ -63,11 +65,11 @@ void test_update_tokens(void)
 	
     rb.rb_ts = qos_get_uptime();
 	
-	printf("\ntest_update_tokens() - rb_ts = %lu\n", rb.rb_ts);
+	printf("\n%40stest_update_tokens() - rb_ts = %lu\n", rb.rb_ts);
 
 	update_tokens(&rb);
 	
-	printf("\ntest_update_tokens() - tokens = %lu\n", rb.rb_tokens);
+	printf("\n%40stest_update_tokens() - tokens = %lu\n", rb.rb_tokens);
 
 	CU_ASSERT(rb.rb_tokens > 0);
 }
