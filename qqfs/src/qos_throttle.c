@@ -65,10 +65,10 @@ int qos_can_send (struct ratebucket *rb_ptr)
 	}
 	// Out of tokens. Update ratebucket and try again
 	update_tokens(rb_ptr);
-	if (rb_ptr->rb_tokens > 0) {
+	/*if (rb_ptr->rb_tokens > 0) {
 		rb_ptr->rb_tokens--;
 		return 1;
-	}
+	}*/
 
 	return 0;
 }

@@ -62,6 +62,8 @@ void test_update_tokens(void)
     rb.rb_ts = qos_get_uptime();
 
 	update_tokens(&rb);
+	
+	printf("\ntest_update_tokens() - tokens = %lu\n", rb.rb_tokens);
 
 	CU_ASSERT(rb.rb_tokens > 0);
 }
