@@ -41,12 +41,14 @@ void test_throttle(void)
     rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
+	
+	printf("\ntest_throttle() - rb_ts = %lu\n", rb.rb_ts);
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
 	
-	printf("\ntest_throttle() - uptime = %lu\n", uptime);
+	printf("test_throttle() - uptime = %lu\n", uptime);
 
 	CU_ASSERT(uptime > 900000);// && uptime < 1100000);
 }

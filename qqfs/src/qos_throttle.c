@@ -90,16 +90,16 @@ void qos_throttle (const char *path, int req)
 	//get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
 	
 	while(!qos_can_send(&rb)) {
-		struct timespec ts, ts2;
-		ts.tv_nsec = 1000;
+		//struct timespec ts, ts2;
+		//ts.tv_nsec = 1000;
 		
 		sleep(1);
 		
 		inc_queue(req);
 		
-		if( nanosleep(&ts,&ts2) < 0 ) {
+		/*if( nanosleep(&ts,&ts2) < 0 ) {
 			printf("sleep failed\n");
-		} // Some sleep function. Linux has lots to choose from.
+		}*/ // Some sleep function. Linux has lots to choose from.
 		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
 		//	return;
 		//}
