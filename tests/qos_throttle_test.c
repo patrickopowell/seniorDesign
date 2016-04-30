@@ -14,11 +14,11 @@ void test_token_bucket(void)
 {
 	unsigned int current_ts = qos_get_uptime();
 	
-	rb.rb_rate = 2000; // replace with value passed through control
+	rb.rb_rate = 200000; // replace with value passed through control
 	
     rb.rb_tokens = 0;
 	
-    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
+    rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
 
@@ -29,11 +29,11 @@ void test_token_bucket(void)
 
 void test_throttle(void)
 {
-	rb.rb_rate = 2000; // replace with value passed through control
+	rb.rb_rate = 200000; // replace with value passed through control
 	
     rb.rb_tokens = 0;
 	
-    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
+    rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
 
@@ -46,11 +46,11 @@ void test_throttle(void)
 
 void test_update_tokens(void)
 {
-	rb.rb_rate = 2000; // replace with value passed through control
+	rb.rb_rate = 200000; // replace with value passed through control
 	
     rb.rb_tokens = 0;
 	
-    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
+    rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
 
@@ -69,8 +69,8 @@ int main(void)
 	pSuite = CU_add_suite("qos_throttle_test", init_suite, clean_suite);
 	
 	if ( (NULL == CU_add_test(pSuite, "test_token_bucket", test_token_bucket)) ||
-		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle)) ||
-		(NULL == CU_add_test(pSuite, "test_update_tokens", test_update_tokens))
+		(NULL == CU_add_test(pSuite, "test_update_tokens", test_update_tokens)) ||
+		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle))
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();		
