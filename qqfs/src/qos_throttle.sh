@@ -18,10 +18,23 @@ sudo pacman -S install pkg-config libssl-dev
 
 #cd ../
 
-cd ../
-
 # End FUSE install
-# Install BBFS
+# Install CUnit
+
+cd ../../client/lib/CUnit-2.1-2
+ 
+sudo ./configure --prefix=/usr
+ 
+sudo make
+ 
+sudo make install
+
+cd ../../../qqfs/src
+ 
+# End CUnit install
+
+cd ../
+# Install QQFS
 
 sudo sh autogen.sh
 
