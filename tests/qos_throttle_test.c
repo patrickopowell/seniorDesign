@@ -50,7 +50,7 @@ void test_throttle(void)
 	
 	printf("test_throttle() - uptime = %lu\n", uptime);
 
-	CU_ASSERT(uptime > 900000);// && uptime < 1100000);
+	CU_ASSERT(uptime > 900000) && uptime < 1100000);
 }
 
 void test_update_tokens(void)
@@ -62,6 +62,8 @@ void test_update_tokens(void)
     rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
     rb.rb_ts = qos_get_uptime();
+	
+	printf("\ntest_update_tokens() - rb_ts = %lu\n", rb.rb_ts);
 
 	update_tokens(&rb);
 	
