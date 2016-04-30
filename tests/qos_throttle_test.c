@@ -12,7 +12,7 @@ ratebucket_t rb;
 
 void test_token_bucket(void)
 {
-	unsigned int current_ts = qos_get_uptime();
+    rb.rb_ts = qos_get_uptime();
 	
 	rb.rb_rate = 200000; // replace with value passed through control
 	
@@ -20,7 +20,7 @@ void test_token_bucket(void)
 	
     rb.rb_token_cap = 20000; // 10 percent of rate. Controls size of bursts
 	
-    rb.rb_ts = qos_get_uptime();
+	unsigned int current_ts = qos_get_uptime();
 
 	unsigned int time_diff = current_ts - rb.rb_ts;
 	
