@@ -130,6 +130,21 @@ void inc_queue(int req)
 
 /**
 *
+* Get token bucket for specific mountpoint
+*
+* @return ratebucket_t mountpoint ratebucket
+*
+*/
+
+ratebucket_t get_bucket(const char *path)
+{
+	
+	
+    return rb;
+}
+
+/**
+*
 * Get time since system boot
 *
 * @return long system uptime

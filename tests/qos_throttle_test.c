@@ -24,12 +24,12 @@ void test_token_bucket(void)
 
 	unsigned int time_diff = current_ts - rb.rb_ts;
 	
-	printf("test_token_bucket() - time_diff = %lu\n", time_diff);
+	printf("\ntest_token_bucket() - time_diff = %lu\n", time_diff);
 	
 	CU_ASSERT(time_diff < 1000000);
 	CU_ASSERT(qos_can_send(&rb) == 0);
 	
-	printf("test_token_bucket() - tokens = %lu\n", rb.rb_tokens);
+	printf("\ntest_token_bucket() - tokens = %lu\n", rb.rb_tokens);
 }
 
 void test_throttle(void)
@@ -46,7 +46,7 @@ void test_throttle(void)
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
 	
-	printf("test_throttle() - uptime = %lu\n", uptime);
+	printf("\ntest_throttle() - uptime = %lu\n", uptime);
 
 	CU_ASSERT(uptime > 900000);// && uptime < 1100000);
 }
