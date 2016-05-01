@@ -21,7 +21,7 @@
 #### End FUSE install
 #### Install CUnit
 
-#cd ../../client/src/lib/CUnit-2.1-2
+#cd ../../tests/CUnit-2.1-2
  
 #sudo ./configure --prefix=/usr
  
@@ -29,7 +29,7 @@
  
 #sudo make install
 
-#cd ../../../../qqfs/src
+#cd ../../qqfs/src
  
 #### End CUnit install
 
