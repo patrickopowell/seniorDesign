@@ -183,9 +183,9 @@ int get_bucket(const char *path)
 void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
-	#if UNSAFE
+	/*#if UNSAFE
 	com_lock_sla();
-	#endif
+	#endif*/
 	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
 	
@@ -196,9 +196,9 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 	//rb_mounts[pos].rb_ts = qos_get_uptime();
 	
 
-	#if UNSAFE
+	/*#if UNSAFE
 	com_unlock_sla();
-	#endif
+	#endif*/
 }
 
 /**
