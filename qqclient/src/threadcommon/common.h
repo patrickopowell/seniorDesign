@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
+#include "../../libcommon/logging/logging.h"
 #include "../../libcommon/client/communication.h"
 
 typedef struct storage_server storage_server;

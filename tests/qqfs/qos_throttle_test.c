@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "../qqfs/src/qos_throttle.h"
+#include "qos_throttle.h"
 
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
@@ -45,10 +45,22 @@ void test_throttle(void)
     rb.rb_ts = qos_get_uptime();
 	
 	printf("\n%5stest_throttle() - rb_ts = %lu\n", spacer, rb.rb_ts);
+	
+	sleep(2);
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
+	
+	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
+
+	CU_ASSERT(uptime > 900000 && uptime < 1100000);
+	
+    rb.rb_tokens = 0;
+
+	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
+
+	uptime = qos_get_uptime() - rb.rb_ts;
 	
 	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
 
@@ -72,6 +84,22 @@ void test_update_tokens(void)
 	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
 
 	CU_ASSERT(rb.rb_tokens > 0);
+	
+    rb.rb_ts = qos_get_uptime();
+	
+	rb.rb_tokens = 25000;
+
+	update_tokens(&rb);	
+	
+	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
+
+	CU_ASSERT(rb.rb_tokens <= 20000);
+	
+}
+
+void test_init(void)
+{
+	CU_ASSERT(qos_init() == 1);
 }
 
 int main(void)
@@ -85,7 +113,8 @@ int main(void)
 	
 	if ( (NULL == CU_add_test(pSuite, "test_token_bucket", test_token_bucket)) ||
 		(NULL == CU_add_test(pSuite, "test_update_tokens", test_update_tokens)) ||
-		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle))
+		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle)) ||
+		(NULL == CU_add_test(pSuite, "test_init", test_init))
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();		

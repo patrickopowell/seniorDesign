@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-#include "shared_common.h"
+#include "../../client/src/main/shared_common.h"
 
 
 #define SEC_PER_YEAR 31557600
@@ -48,14 +48,17 @@ typedef struct
 
 void qos_throttle (const char *path, int req);
 void inc_queue(int req);
-ratebucket_t get_bucket(const char *path);
+int get_bucket(const char *path);
+void add_bucket(const char *path, unsigned int index, unsigned int rate);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 unsigned long qos_get_uptime(void);
-int qos_init(void);
+int qos_init(const char *path);
 //void init_mem(void);
 //void close_mem(void);
 
 qos_monitor monitor;
 
 ratebucket_t rb;
+
+ratebucket_t rb_mounts[5];

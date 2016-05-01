@@ -8,7 +8,6 @@
 #include <sys/shm.h>
 #include <fcntl.h>
 #include <semaphore.h>
-#include "../lib/logging/logging.h"
 
 #define COM_SLA_MEM "/qualiqueue/sla"
 #define COM_STAT_MEM "/qualiqueue/stats"

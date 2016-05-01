@@ -1,4 +1,4 @@
-SUBDIRS = example html src
+SUBDIRS = example src
 
 EXTRA_DIST = autogen.sh index.html
 

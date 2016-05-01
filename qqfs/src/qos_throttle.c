@@ -87,7 +87,7 @@ int qos_can_send (struct ratebucket *rb_ptr)
 void qos_throttle (const char *path, int req)
 {
 	
-	//get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	if(!get_bucket(path)) return;//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
 	
 	while(!qos_can_send(&rb)) {
 		//struct timespec ts, ts2;
@@ -132,15 +132,63 @@ void inc_queue(int req)
 *
 * Get token bucket for specific mountpoint
 *
-* @return ratebucket_t mountpoint ratebucket
+* @return void
 *
 */
 
-ratebucket_t get_bucket(const char *path)
+int get_bucket(const char *path)
 {
+	int pos = 0;
+	#if UNSAFE
+	shr_lock_sla();
+	#endif
+	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 )
+    pos++;
+
+	if(pos == 4 && strcmp( shr_stat_list->stats[pos].path, path ) != 0) return 0;
 	
+	if (strcmp( rb_mounts[pos]->rb_path, "" ) != 0) add_bucket(path, pos, shr_stat_list->stats[pos].iops_sec);
 	
-    return rb;
+	rb = rb_mounts[pos];
+	
+	rb.rb_path = path;
+	rb.rb_rate = shr_stat_list->stats[pos].iops_sec;
+	rb.rb_token_cap = rb.rb_rate / 10;
+	
+
+	#if UNSAFE
+	shr_unlock_sla();
+	#endif
+	return 1;
+}
+
+/**
+*
+* Add token bucket for specific mountpoint
+*
+* @return void
+*
+*/
+
+void add_bucket(const char *path, unsigned int index, unsigned int rate)
+{
+	int pos = 0;
+	#if UNSAFE
+	shr_lock_sla();
+	#endif
+	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 || strcmp( shr_stat_list->stats[pos].path, "" ) != 0 )
+    pos++;
+	
+	rb_mounts[pos].rb_path = path[pos];
+	rb_mounts[pos].rb_rate = shr_stat_list->stats[pos]->iops_sec;
+	rb_mounts[pos].rb_token_cap = rate / 10;
+	rb_mounts[pos].rb_tokens = rate / 10;
+	rb_mounts[pos].rb_ts = qos_get_uptime();
+	
+
+	#if UNSAFE
+	shr_unlock_sla();
+	#endif
 }
 
 /**
@@ -175,19 +223,21 @@ unsigned long qos_get_uptime(void)
 *
 */
 
-int qos_init() 
+int qos_init(const char *path) 
 {
-	init_mem();
+	shr_init_mem();
 	
-	rb.rb_rate = 2000; // replace with value passed through control
+	//rb.rb_rate = 2000; // replace with value passed through control
 	
-    rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
+    //rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
 	
-    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
+    //rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
 	
-    rb.rb_ts = qos_get_uptime();
+    //rb.rb_ts = qos_get_uptime();
 	
-	close_mem();
+	get_bucket(path);
+	
+	shr_close_mem();
 	
 	return 1;
 }
