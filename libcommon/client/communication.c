@@ -1,4 +1,4 @@
-#include "shared_common.h"
+#include "communication.h"
 
 static key_t stat_key;
 static key_t sla_key;
