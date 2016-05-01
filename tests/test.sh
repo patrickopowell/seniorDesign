@@ -2,9 +2,9 @@ cp ../qqfs/src/qos_throttle.c ./qqfs
 
 cp ../qqfs/src/qos_throttle.h ./qqfs
 
-cp ../client/src/main/shared_common.h .
+cp ../client/src/main/shared_common.h ./qqfs
 
-cp ../client/src/main/shared_common.c .
+cp ../client/src/main/shared_common.c ./qqfs
 
 cd ./qqfs
 
