@@ -54,7 +54,7 @@ void test_throttle(void)
 	
 	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
 
-	CU_ASSERT(uptime > 900000 && uptime < 1100000);
+	CU_ASSERT(uptime > 900000 && uptime < 2000000);
 	
     rb.rb_tokens = 0;
 	
