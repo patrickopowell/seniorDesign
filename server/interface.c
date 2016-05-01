@@ -126,6 +126,14 @@ void sendSLA()
     send(new_sock, SLA, sizeof(SLA), 0); // just a random string for testing.
 }
 
+/**
+ * Takes the string received from client, and parses it
+ * into useful information for updating the client info.
+ */
+int updateClient(char *str){
+
+}
+
 int main(void)
 {
     setup();
