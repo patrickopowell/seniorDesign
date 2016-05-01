@@ -46,7 +46,7 @@ unsigned int tokens;
 			rb_ptr->rb_ts += (tokens * 1000000)/rb_ptr->rb_rate;
 		}
 	}
-	
+	// overflow safety check
 	if (rb_ptr->rb_tokens > rb_ptr->rb_token_cap) {
 		rb_ptr->rb_tokens = rb_ptr->rb_token_cap;
 	}	
