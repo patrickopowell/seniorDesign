@@ -87,7 +87,9 @@ int qos_can_send (struct ratebucket *rb_ptr)
 void qos_throttle (const char *path, int req)
 {
 	
-	if(!get_bucket(path)) return;//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	int index = get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	
+	if (index < 0) return;
 	
 	while(!qos_can_send(&rb)) {
 		//struct timespec ts, ts2;
@@ -95,7 +97,7 @@ void qos_throttle (const char *path, int req)
 		
 		sleep(1);
 		
-		inc_queue(req);
+		inc_queue(index, req);
 		
 		/*if( nanosleep(&ts,&ts2) < 0 ) {
 			printf("sleep failed\n");
@@ -107,25 +109,33 @@ void qos_throttle (const char *path, int req)
 	return;
 }
 
-void inc_queue(int req)
+void inc_queue(int index, int req)
 {
+	#if UNSAFE
+	com_lock_stat();
+	#endif
+	
+	com_stat_list->stats[index].iops_suspended++;
 	
 	switch(req)
 	{
 		// Read operations
 		case QOS_READ_OPS:
 			monitor.reads_queued++;
-			
+			com_stat_list->stats[index].reads_queued++;
 			break;
 		// Write operations
 		case QOS_WRITE_OPS:
 			monitor.writes_queued++;
-			
+			com_stat_list->stats[index].reads_queued++;
 			break;
 	}
 	
 	monitor.suspensions++;
 	
+	#if UNSAFE
+	com_unlock_stat();
+	#endif
 }
 
 /**
@@ -142,24 +152,24 @@ int get_bucket(const char *path)
 	#if UNSAFE
 	com_lock_sla();
 	#endif
-	while (pos<5 && strcmp( com_stat_list->stats[pos].path, path ) != 0 )
+	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     pos++;
 
-	if(pos == 4 && strcmp( com_stat_list->stats[pos].path, path ) != 0) return 0;
+	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
 	
-	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_stat_list->stats[pos].iops_sec);
+	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_sec);
 	
 	rb = rb_mounts[pos];
 	
 	strcpy(rb.rb_path, path);
-	rb.rb_rate = com_stat_list->stats[pos].iops_sec;
+	rb.rb_rate = com_sla_list->slas[pos].iops_sec;
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 
 	#if UNSAFE
 	com_unlock_sla();
 	#endif
-	return 1;
+	return pos;
 }
 
 /**
@@ -176,11 +186,11 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 	#if UNSAFE
 	com_lock_sla();
 	#endif
-	while ((pos<5 && strcmp( com_stat_list->stats[pos].path, path ) != 0) || strcmp( com_stat_list->stats[pos].path, "" ) != 0 )
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
 	
 	strcpy(rb_mounts[pos].rb_path, path);
-	rb_mounts[pos].rb_rate = com_stat_list->stats[pos].iops_sec;
+	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_sec;
 	rb_mounts[pos].rb_token_cap = rate / 10;
 	rb_mounts[pos].rb_tokens = rate / 10;
 	//rb_mounts[pos].rb_ts = qos_get_uptime();

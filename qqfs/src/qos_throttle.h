@@ -47,7 +47,7 @@ typedef struct
 } qos_monitor;
 
 void qos_throttle (const char *path, int req);
-void inc_queue(int req);
+void inc_queue(int index, int req);
 int get_bucket(const char *path);
 void add_bucket(const char *path, unsigned int index, unsigned int rate);
 void update_token (struct ratebucket *rb_ptr);
