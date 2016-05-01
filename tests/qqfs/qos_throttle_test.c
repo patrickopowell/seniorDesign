@@ -92,6 +92,7 @@ void test_update_tokens(void)
 	update_tokens(&rb);	
 	
 	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
+	printf("%5stest_update_tokens() - token_cap = %u\n", spacer, rb.rb_token_cap);
 
 	CU_ASSERT(rb.rb_tokens <= 20000);
 	
@@ -104,6 +105,8 @@ void test_init(void)
 
 int main(void)
 {
+	shr_init_mem();
+	
 	CU_pSuite pSuite = NULL;
 	
 	if (CUE_SUCCESS != CU_initialize_registry())
@@ -128,6 +131,8 @@ int main(void)
 	printf("\n\n");
 	
 	CU_cleanup_registry();
+	
+	shr_close_mem();
 	
 	return CU_get_error();
 
