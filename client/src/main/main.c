@@ -18,16 +18,16 @@ int main(int argc, char *argv[])
 	setup_clean_kill();
 	qos_setup_logging("qqclient");
 	int lockid = qos_setup_instance();
-	pthread_t threads[RESPONSIBILITIES];
+	pthread_t threads[2];
 	if (pthread_create(&threads[0], NULL, &qos_receiver_start, NULL))
 		qos_log_critical("Could not create receiver thread.");
 	if (pthread_create(&threads[1], NULL, &qos_parser_start, NULL))
 		qos_log_critical("Could not create parser thread.");
-	for (int i = 0; i < RESPONSIBILITIES; i++)
+	for (int i = 0; i < 2; i++)
 		pthread_join(threads[i], NULL);
-	qos_log_info("Exiting qqclient.");
 	qos_halt_logging();
 	qos_destroy_instance(lockid);
+	qos_log_info("Exiting qqclient.");
 	return 0;
 }
 
@@ -55,7 +55,7 @@ int qos_setup_instance()
 		// add server
 		exit(1);
 	} else {
-		qos_log_info("No qqclients detected, starting.");
+		qos_log_info("No qqclient instance detected, starting.");
 	}
 	running = 1;
 	return lockid;
@@ -63,6 +63,7 @@ int qos_setup_instance()
 
 void qos_destroy_instance(int lockid)
 {
+	qos_log_info("Destroying qqclient instance.");
 	shr_close_mem();
 	flock(lockid, LOCK_UN);
 }

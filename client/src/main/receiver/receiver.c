@@ -66,7 +66,7 @@ void *qos_receiver_start(void *in)
 		}
 	}
 	freeaddrinfo(receiver_info);
-	qos_log_info("Receiver exiting.");
+	qos_log_info("Exiting Receiver.");
 	return 0;
 }
 

@@ -3,7 +3,6 @@
 #include "receiver/receiver.h"
 #include "parser/parser.h"
 
-#define RESPONSIBILITIES 2
 #define BUFFERLENGTH 5000
 #define QQCLIENT_LOCK "/etc/qqclient.lock"
 
