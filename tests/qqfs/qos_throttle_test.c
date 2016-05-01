@@ -112,6 +112,9 @@ int main(void)
 	strcpy(com_stat_list->stats[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
 	com_stat_list->stats[0].iops_sec = 20000;
 	
+	strcpy(com_sla_list->slas[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
+	com_sla_list->slas[0].iops_max = 20000;
+	
 	CU_pSuite pSuite = NULL;
 	
 	if (CUE_SUCCESS != CU_initialize_registry())
