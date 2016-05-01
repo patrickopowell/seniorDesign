@@ -1,8 +1,8 @@
-#include "zlog.h"
+#include <syslog.h>
 
-#define ZLOG_CONF_LOCATION "/etc/zlog.conf"
-
-int qos_setup_logging();
-void qos_log_info(char *);
-void qos_log_error(char *);
+void qos_setup_logging(const char *id);
+void qos_log_info(const char *message);
+void qos_log_error(const char *message);
+void qos_log_critical(const char *message);
+void qos_log_debug(const char *message);
 void qos_halt_logging();
