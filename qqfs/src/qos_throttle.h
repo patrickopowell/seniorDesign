@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-#include "shared_common.h"
+#include "../../libcommon/client/communication.h"
 
 
 #define SEC_PER_YEAR 31557600
@@ -20,6 +20,8 @@
 typedef struct ratebucket {
 	// generic ID to use when you have multiple ratebuckets
 	unsigned int rb_id; 
+	// ratebucket mountpoint path
+	char rb_path[80];
 	// Rate at which tokens are generated per second
 	unsigned int rb_rate; 
 	// Think of this as the number of requests that can be handle "right now"
@@ -45,14 +47,17 @@ typedef struct
 } qos_monitor;
 
 void qos_throttle (const char *path, int req);
-void inc_queue(int req);
+void inc_queue(int index, int req);
+int get_bucket(const char *path);
+void add_bucket(const char *path, unsigned int index, unsigned int rate);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 unsigned long qos_get_uptime(void);
-int qos_init(void);
-//void init_mem(void);
-//void close_mem(void);
+int qos_init(const char *path);
+int qos_release(void);
 
 qos_monitor monitor;
 
 ratebucket_t rb;
+
+ratebucket_t rb_mounts[5];

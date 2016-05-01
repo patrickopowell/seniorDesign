@@ -33,7 +33,7 @@ unsigned int tokens;
 		// time_diff is in usecs. Rate is in ops per second.
 		tokens = (time_diff * rb_ptr->rb_rate)/1000000;
 	}
-
+	
 	if (tokens > 0) {
 		rb_ptr->rb_tokens += tokens;
 		// Check credit, do not allow it to exceed cap. 
@@ -46,6 +46,10 @@ unsigned int tokens;
 			rb_ptr->rb_ts += (tokens * 1000000)/rb_ptr->rb_rate;
 		}
 	}
+	// overflow safety check
+	if (rb_ptr->rb_tokens > rb_ptr->rb_token_cap) {
+		rb_ptr->rb_tokens = rb_ptr->rb_token_cap;
+	}	
 }
 
 /**
@@ -65,10 +69,6 @@ int qos_can_send (struct ratebucket *rb_ptr)
 	}
 	// Out of tokens. Update ratebucket and try again
 	update_tokens(rb_ptr);
-	if (rb_ptr->rb_tokens > 0) {
-		rb_ptr->rb_tokens--;
-		return 1;
-	}
 
 	return 0;
 }
@@ -83,49 +83,104 @@ int qos_can_send (struct ratebucket *rb_ptr)
 *
 */
 
-//void throttle(request_t *req)
+
 void qos_throttle (const char *path, int req)
 {
 	
-	//get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	int index = get_bucket(path);
+	
+	if (index < 0) return;
 	
 	while(!qos_can_send(&rb)) {
-		struct timespec ts, ts2;
-		ts.tv_nsec = 1000;
 		
 		sleep(1);
 		
-		inc_queue(req);
-		
-		if( nanosleep(&ts,&ts2) < 0 ) {
-			printf("sleep failed\n");
-		} // Some sleep function. Linux has lots to choose from.
-		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
-		//	return;
-		//}
+		inc_queue(index, req);
 	}
 	return;
 }
 
-void inc_queue(int req)
+void inc_queue(int index, int req)
 {
+	#if UNSAFE
+	com_lock_stat();
+	#endif
 	
 	switch(req)
 	{
 		// Read operations
 		case QOS_READ_OPS:
 			monitor.reads_queued++;
-			
+			com_stat_list->stats[index].reads_queued++;
 			break;
 		// Write operations
 		case QOS_WRITE_OPS:
 			monitor.writes_queued++;
-			
+			com_stat_list->stats[index].writes_queued++;
 			break;
 	}
 	
 	monitor.suspensions++;
+	com_stat_list->stats[index].iops_suspended++;
 	
+	#if UNSAFE
+	com_unlock_stat();
+	#endif
+}
+
+/**
+*
+* Get token bucket for specific mountpoint
+*
+* @return void
+*
+*/
+
+int get_bucket(const char *path)
+{
+	int pos = 0;
+	#if UNSAFE
+	com_lock_sla();
+	#endif
+	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
+    pos++;
+
+	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
+	
+	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
+	
+	rb = rb_mounts[pos];
+	
+	strcpy(rb.rb_path, path);
+	rb.rb_rate = com_sla_list->slas[pos].iops_max;
+	rb.rb_token_cap = rb.rb_rate / 10;
+	
+
+	#if UNSAFE
+	com_unlock_sla();
+	#endif
+	return pos;
+}
+
+/**
+*
+* Add token bucket for specific mountpoint
+*
+* @return void
+*
+*/
+
+void add_bucket(const char *path, unsigned int index, unsigned int rate)
+{
+	int pos = 0;
+	
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
+    pos++;
+	
+	strcpy(rb_mounts[pos].rb_path, path);
+	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
+	rb_mounts[pos].rb_token_cap = rate / 10;
+	rb_mounts[pos].rb_tokens = rate / 10;
 }
 
 /**
@@ -156,23 +211,30 @@ unsigned long qos_get_uptime(void)
 *
 * Main function
 *
-* 
+* @return 1 when finished
 *
 */
 
-int qos_init() 
+int qos_init(const char *path) 
 {
-	init_mem();
+	com_init_mem();
 	
-	rb.rb_rate = 2000; // replace with value passed through control
+	get_bucket(path);
 	
-    rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
-	
-    rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
-	
-    rb.rb_ts = qos_get_uptime();
-	
-	close_mem();
+	return 1;
+}
+
+/**
+*
+* Release function - release shared memory, called when qqfs unmounts
+*
+* @return 1 when finished
+*
+*/
+
+int qos_release(void)
+{
+	com_close_mem();
 	
 	return 1;
 }
