@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "../qqfs/src/qos_throttle.h"
+#include "qos_throttle.h"
 
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
