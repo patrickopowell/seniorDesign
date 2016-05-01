@@ -40,7 +40,6 @@ typedef struct {
 typedef struct {
 	int s_dev;
 	int i_ino;
-	char path[ 80 ];
 	int iops_sec;
 	int reads_queued;
 	int writes_queued;
@@ -50,6 +49,7 @@ typedef struct {
 
 typedef struct {
 	stat_info stats[MAX_NUM_SERVERS];
+	char path[ 5 ][ 80 + 1 ];
 	int count;
 } stat_info_memory;
 
