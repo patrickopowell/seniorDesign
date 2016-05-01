@@ -33,7 +33,7 @@ unsigned int tokens;
 		// time_diff is in usecs. Rate is in ops per second.
 		tokens = (time_diff * rb_ptr->rb_rate)/1000000;
 	}
-
+	
 	if (tokens > 0) {
 		rb_ptr->rb_tokens += tokens;
 		// Check credit, do not allow it to exceed cap. 
@@ -46,6 +46,10 @@ unsigned int tokens;
 			rb_ptr->rb_ts += (tokens * 1000000)/rb_ptr->rb_rate;
 		}
 	}
+	
+	if (rb_ptr->rb_tokens > rb_ptr->rb_token_cap) {
+		rb_ptr->rb_tokens = rb_ptr->rb_token_cap;
+	}	
 }
 
 /**
@@ -127,7 +131,7 @@ void inc_queue(int index, int req)
 		// Write operations
 		case QOS_WRITE_OPS:
 			monitor.writes_queued++;
-			com_stat_list->stats[index].reads_queued++;
+			com_stat_list->stats[index].writes_queued++;
 			break;
 	}
 	
