@@ -1,8 +1,8 @@
-cp ../qqfs/src/qos_throttle.c .
+cp ../../qqfs/src/qos_throttle.c .
 
-cp ../qqfs/src/qos_throttle.h .
+cp ../../qqfs/src/qos_throttle.h .
 
-cp ../qqfs/src/shared_common.h .
+cp ../../qqfs/src/shared_common.h .
 
 gcc -Wall -c qos_throttle.c -O0 -fprofile-arcs -ftest-coverage -g
 
