@@ -57,6 +57,8 @@ void test_throttle(void)
 	CU_ASSERT(uptime > 900000 && uptime < 1100000);
 	
     rb.rb_tokens = 0;
+	
+	rb.rb_ts = qos_get_uptime();
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
 
@@ -92,6 +94,7 @@ void test_update_tokens(void)
 	update_tokens(&rb);	
 	
 	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
+	printf("%5stest_update_tokens() - token_cap = %u\n", spacer, rb.rb_token_cap);
 
 	CU_ASSERT(rb.rb_tokens <= 20000);
 	
@@ -99,11 +102,16 @@ void test_update_tokens(void)
 
 void test_init(void)
 {
-	CU_ASSERT(qos_init() == 1);
+	CU_ASSERT(qos_init("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/") == 1);
 }
 
 int main(void)
 {
+	shr_init_mem();
+	
+	strcpy(shr_stat_list->stats[0].rb_path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
+	shr_stat_list->stats[0].iops_sec = 20000;
+	
 	CU_pSuite pSuite = NULL;
 	
 	if (CUE_SUCCESS != CU_initialize_registry())
@@ -128,6 +136,8 @@ int main(void)
 	printf("\n\n");
 	
 	CU_cleanup_registry();
+	
+	shr_close_mem();
 	
 	return CU_get_error();
 
