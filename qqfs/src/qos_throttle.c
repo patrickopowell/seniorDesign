@@ -183,7 +183,7 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 	rb_mounts[pos].rb_rate = shr_stat_list->stats[pos].iops_sec;
 	rb_mounts[pos].rb_token_cap = rate / 10;
 	rb_mounts[pos].rb_tokens = rate / 10;
-	rb_mounts[pos].rb_ts = qos_get_uptime();
+	//rb_mounts[pos].rb_ts = qos_get_uptime();
 	
 
 	#if UNSAFE
