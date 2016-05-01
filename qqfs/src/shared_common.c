@@ -116,11 +116,11 @@ void shr_unlock_sla()
 void shr_close_stat()
 {
         sem_close(stat_lock);
-        shmdt(stat_mem_info);
+        shmdt(shr_stat_list);
 }
 
 void shr_close_sla()
 {
         sem_close(sla_lock);
-        shmdt(sla_mem_info);
+        shmdt(shr_sla_list);
 }
