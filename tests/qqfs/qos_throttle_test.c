@@ -45,8 +45,18 @@ void test_throttle(void)
     rb.rb_ts = qos_get_uptime();
 	
 	printf("\n%5stest_throttle() - rb_ts = %lu\n", spacer, rb.rb_ts);
+	
+	sleep(2);
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
+
+	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
+	
+	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
+
+	CU_ASSERT(uptime > 900000 && uptime < 1100000);
+
+	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
 	
@@ -72,6 +82,17 @@ void test_update_tokens(void)
 	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
 
 	CU_ASSERT(rb.rb_tokens > 0);
+	
+    rb.rb_ts = qos_get_uptime();
+	
+	rb.rb_tokens = 25000;
+
+	update_tokens(&rb);	
+	
+	printf("%5stest_update_tokens() - tokens = %u\n", spacer, rb.rb_tokens);
+
+	CU_ASSERT(rb.rb_tokens <= 20000);
+	
 }
 
 int main(void)
