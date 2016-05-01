@@ -177,7 +177,7 @@ unsigned long qos_get_uptime(void)
 
 int qos_init() 
 {
-	init_mem();
+	shr_init_mem();
 	
 	rb.rb_rate = 2000; // replace with value passed through control
 	
@@ -187,7 +187,7 @@ int qos_init()
 	
     rb.rb_ts = qos_get_uptime();
 	
-	close_mem();
+	shr_close_mem();
 	
 	return 1;
 }
