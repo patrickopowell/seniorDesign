@@ -69,10 +69,6 @@ int qos_can_send (struct ratebucket *rb_ptr)
 	}
 	// Out of tokens. Update ratebucket and try again
 	update_tokens(rb_ptr);
-	/*if (rb_ptr->rb_tokens > 0) {
-		rb_ptr->rb_tokens--;
-		return 1;
-	}*/
 
 	return 0;
 }
@@ -87,28 +83,19 @@ int qos_can_send (struct ratebucket *rb_ptr)
 *
 */
 
-//void throttle(request_t *req)
+
 void qos_throttle (const char *path, int req)
 {
 	
-	int index = get_bucket(path);//rb.rb_id = mountID; iterate through buckets to verify the right rate limit
+	int index = get_bucket(path);
 	
 	if (index < 0) return;
 	
 	while(!qos_can_send(&rb)) {
-		//struct timespec ts, ts2;
-		//ts.tv_nsec = 1000;
 		
 		sleep(1);
 		
 		inc_queue(index, req);
-		
-		/*if( nanosleep(&ts,&ts2) < 0 ) {
-			printf("sleep failed\n");
-		}*/ // Some sleep function. Linux has lots to choose from.
-		//if (interrupted()) { // In case user got impatient. Some Linux function that checks process state.
-		//	return;
-		//}
 	}
 	return;
 }
@@ -118,8 +105,6 @@ void inc_queue(int index, int req)
 	#if UNSAFE
 	com_lock_stat();
 	#endif
-	
-	com_stat_list->stats[index].iops_suspended++;
 	
 	switch(req)
 	{
@@ -136,6 +121,7 @@ void inc_queue(int index, int req)
 	}
 	
 	monitor.suspensions++;
+	com_stat_list->stats[index].iops_suspended++;
 	
 	#if UNSAFE
 	com_unlock_stat();
@@ -187,9 +173,7 @@ int get_bucket(const char *path)
 void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
-	/*#if UNSAFE
-	com_lock_sla();
-	#endif*/
+	
 	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
 	
@@ -197,12 +181,6 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
 	rb_mounts[pos].rb_token_cap = rate / 10;
 	rb_mounts[pos].rb_tokens = rate / 10;
-	//rb_mounts[pos].rb_ts = qos_get_uptime();
-	
-
-	/*#if UNSAFE
-	com_unlock_sla();
-	#endif*/
 }
 
 /**
@@ -233,7 +211,7 @@ unsigned long qos_get_uptime(void)
 *
 * Main function
 *
-* 
+* @return 1 when finished
 *
 */
 
@@ -241,16 +219,21 @@ int qos_init(const char *path)
 {
 	com_init_mem();
 	
-	//rb.rb_rate = 2000; // replace with value passed through control
-	
-    //rb.rb_tokens = 200; // 10 percent of rate. ~100ms of iops at rate/second
-	
-    //rb.rb_token_cap = 200; // 10 percent of rate. Controls size of bursts
-	
-    //rb.rb_ts = qos_get_uptime();
-	
 	get_bucket(path);
 	
+	return 1;
+}
+
+/**
+*
+* Release function - release shared memory, called when qqfs unmounts
+*
+* @return 1 when finished
+*
+*/
+
+int qos_release(void)
+{
 	com_close_mem();
 	
 	return 1;

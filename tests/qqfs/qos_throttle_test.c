@@ -103,6 +103,7 @@ void test_update_tokens(void)
 void test_init(void)
 {
 	CU_ASSERT(qos_init("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/") == 1);
+	CU_ASSERT(qos_release() == 1);
 }
 
 int main(void)

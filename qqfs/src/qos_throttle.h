@@ -54,8 +54,7 @@ void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 unsigned long qos_get_uptime(void);
 int qos_init(const char *path);
-//void init_mem(void);
-//void close_mem(void);
+int qos_release(void);
 
 qos_monitor monitor;
 

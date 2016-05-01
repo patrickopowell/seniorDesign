@@ -939,5 +939,7 @@ int main(int argc, char *argv[])
     fuse_stat = fuse_main(argc, argv, &bb_oper, bb_data);
     fprintf(stderr, "fuse_main returned %d\n", fuse_stat);
     
+	qos_release();
+	
     return fuse_stat;
 }
