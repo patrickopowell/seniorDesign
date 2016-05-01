@@ -2,11 +2,11 @@ cp ../qqfs/src/qos_throttle.c ./qqfs
 
 cp ../qqfs/src/qos_throttle.h ./qqfs
 
-cd ./qqfs
-
 cp ../client/src/main/shared_common.h .
 
 cp ../client/src/main/shared_common.c .
+
+cd ./qqfs
 
 gcc -Wall -c qos_throttle.c shared_common.c -O0 -fprofile-arcs -ftest-coverage -g
 
