@@ -97,6 +97,11 @@ void test_update_tokens(void)
 	
 }
 
+void test_init(void)
+{
+	CU_ASSERT(qos_init() == 1);
+}
+
 int main(void)
 {
 	CU_pSuite pSuite = NULL;
