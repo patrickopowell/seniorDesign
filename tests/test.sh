@@ -6,6 +6,10 @@ cp ../client/src/main/shared_common.h ./qqfs
 
 cp ../client/src/main/shared_common.c ./qqfs
 
+cp ../client/src/lib/logging/logging.h ./
+
+cp ../client/src/lib/logging/logging.c ./
+
 cd ./qqfs
 
 gcc -Wall -c qos_throttle.c shared_common.c -O0 -fprofile-arcs -ftest-coverage -g
