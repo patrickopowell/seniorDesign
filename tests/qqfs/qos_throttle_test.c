@@ -113,7 +113,8 @@ int main(void)
 	
 	if ( (NULL == CU_add_test(pSuite, "test_token_bucket", test_token_bucket)) ||
 		(NULL == CU_add_test(pSuite, "test_update_tokens", test_update_tokens)) ||
-		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle))
+		(NULL == CU_add_test(pSuite, "test_throttle", test_throttle)) ||
+		(NULL == CU_add_test(pSuite, "test_init", test_init))
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();		
