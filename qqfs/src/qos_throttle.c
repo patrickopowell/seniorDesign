@@ -142,18 +142,18 @@ int get_bucket(const char *path)
 	#if UNSAFE
 	shr_lock_sla();
 	#endif
-	while (pos<5 && strcmp( shr_stat_list->stats[pos]->path, path ) != 0 )
+	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 )
     pos++;
 
-	if(pos == 4 && strcmp( shr_stat_list->stats[pos]->path, path ) != 0) return 0;
+	if(pos == 4 && strcmp( shr_stat_list->stats[pos].path, path ) != 0) return 0;
 	
-	if (strcmp( rb_mounts[pos]->, "" ) != 0) add_bucket(path, pos, shr_stat_list->stats[pos]->iops_sec);
+	if (strcmp( rb_mounts[pos]->rb_path, "" ) != 0) add_bucket(path, pos, shr_stat_list->stats[pos].iops_sec);
 	
 	rb = rb_mounts[pos];
 	
-	rb.rb_path = path[pos];
-	rb.rb_rate = shr_stat_list->stats[pos]->iops_sec;
-	rb.rb_token_cap = rb_rate / 10;
+	rb.rb_path = path;
+	rb.rb_rate = shr_stat_list->stats[pos].iops_sec;
+	rb.rb_token_cap = rb.rb_rate / 10;
 	
 
 	#if UNSAFE
@@ -176,7 +176,7 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 	#if UNSAFE
 	shr_lock_sla();
 	#endif
-	while (pos<5 && strcmp( shr_stat_list->stats[pos]->path, path ) != 0 || strcmp( shr_stat_list->stats[pos]->path, "" ) != 0 )
+	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 || strcmp( shr_stat_list->stats[pos].path, "" ) != 0 )
     pos++;
 	
 	rb_mounts[pos].rb_path = path[pos];

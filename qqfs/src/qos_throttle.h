@@ -49,7 +49,7 @@ typedef struct
 void qos_throttle (const char *path, int req);
 void inc_queue(int req);
 int get_bucket(const char *path);
-void add_bucket(const char *path);
+void add_bucket(const char *path, unsigned int index, unsigned int rate);
 void update_token (struct ratebucket *rb_ptr);
 int qos_can_send (struct ratebucket *rb_ptr);
 unsigned long qos_get_uptime(void);
