@@ -104,8 +104,8 @@ static void init_mem()
 static void close_mem()
 {
         sem_close( stat_lock );
-        shmdt( stat_mem_info );
+        //shmdt( stat_mem_info );
 
         sem_close( sla_lock );
-        shmdt( sla_mem_info );
+        //shmdt( sla_mem_info );
 }
