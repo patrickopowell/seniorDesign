@@ -1,10 +1,8 @@
-mkdir src
+cp ../qqfs/src/qos_throttle.c ./qqfs
 
-cp ../qqfs/src/qos_throttle.c ./src
+cp ../qqfs/src/qos_throttle.h ./qqfs
 
-cp ../qqfs/src/qos_throttle.h ./src
-
-cd ./src
+cd ./qqfs
 
 #cp ../client/src/main/shared_common.h .
 
