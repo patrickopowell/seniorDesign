@@ -145,7 +145,6 @@ int get_bucket(const char *path)
 	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 )
     pos++;
 
-	printf("test\n");
 	if(pos == 4 && strcmp( shr_stat_list->stats[pos].path, path ) != 0) return 0;
 	
 	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, shr_stat_list->stats[pos].iops_sec);

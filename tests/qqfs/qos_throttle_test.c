@@ -57,6 +57,8 @@ void test_throttle(void)
 	CU_ASSERT(uptime > 900000 && uptime < 1100000);
 	
     rb.rb_tokens = 0;
+	
+	rb.rb_ts = qos_get_uptime();
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
 
