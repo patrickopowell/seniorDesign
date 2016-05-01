@@ -1,10 +1,14 @@
-cp ../qqfs/src/qos_throttle.c .
+mkdir src
 
-cp ../qqfs/src/qos_throttle.h .
+cp ../qqfs/src/qos_throttle.c ./src
 
-cp ../client/src/main/shared_common.h .
+cp ../qqfs/src/qos_throttle.h ./src
 
-cp ../client/src/main/shared_common.c .
+cd ./src
+
+#cp ../client/src/main/shared_common.h .
+
+#cp ../client/src/main/shared_common.c .
 
 gcc -Wall -c qos_throttle.c -O0 -fprofile-arcs -ftest-coverage -g
 

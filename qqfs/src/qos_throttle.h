@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-#include "shared_common.h"
+#include "../../client/src/main/shared_common.h"
 
 
 #define SEC_PER_YEAR 31557600
