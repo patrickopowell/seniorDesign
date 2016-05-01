@@ -140,24 +140,24 @@ int get_bucket(const char *path)
 {
 	int pos = 0;
 	#if UNSAFE
-	shr_lock_sla();
+	com_lock_sla();
 	#endif
-	while (pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0 )
+	while (pos<5 && strcmp( com_stat_list->stats[pos].path, path ) != 0 )
     pos++;
 
-	if(pos == 4 && strcmp( shr_stat_list->stats[pos].path, path ) != 0) return 0;
+	if(pos == 4 && strcmp( com_stat_list->stats[pos].path, path ) != 0) return 0;
 	
-	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, shr_stat_list->stats[pos].iops_sec);
+	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_stat_list->stats[pos].iops_sec);
 	
 	rb = rb_mounts[pos];
 	
 	strcpy(rb.rb_path, path);
-	rb.rb_rate = shr_stat_list->stats[pos].iops_sec;
+	rb.rb_rate = com_stat_list->stats[pos].iops_sec;
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 
 	#if UNSAFE
-	shr_unlock_sla();
+	com_unlock_sla();
 	#endif
 	return 1;
 }
@@ -174,20 +174,20 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
 	#if UNSAFE
-	shr_lock_sla();
+	com_lock_sla();
 	#endif
-	while ((pos<5 && strcmp( shr_stat_list->stats[pos].path, path ) != 0) || strcmp( shr_stat_list->stats[pos].path, "" ) != 0 )
+	while ((pos<5 && strcmp( com_stat_list->stats[pos].path, path ) != 0) || strcmp( com_stat_list->stats[pos].path, "" ) != 0 )
     pos++;
 	
 	strcpy(rb_mounts[pos].rb_path, path);
-	rb_mounts[pos].rb_rate = shr_stat_list->stats[pos].iops_sec;
+	rb_mounts[pos].rb_rate = com_stat_list->stats[pos].iops_sec;
 	rb_mounts[pos].rb_token_cap = rate / 10;
 	rb_mounts[pos].rb_tokens = rate / 10;
 	//rb_mounts[pos].rb_ts = qos_get_uptime();
 	
 
 	#if UNSAFE
-	shr_unlock_sla();
+	com_unlock_sla();
 	#endif
 }
 
@@ -225,7 +225,7 @@ unsigned long qos_get_uptime(void)
 
 int qos_init(const char *path) 
 {
-	shr_init_mem();
+	com_init_mem();
 	
 	//rb.rb_rate = 2000; // replace with value passed through control
 	
@@ -237,7 +237,7 @@ int qos_init(const char *path)
 	
 	get_bucket(path);
 	
-	shr_close_mem();
+	com_close_mem();
 	
 	return 1;
 }

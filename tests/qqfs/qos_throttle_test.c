@@ -107,10 +107,10 @@ void test_init(void)
 
 int main(void)
 {
-	shr_init_mem();
+	com_init_mem();
 	
-	strcpy(shr_stat_list->stats[0].rb_path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	shr_stat_list->stats[0].iops_sec = 20000;
+	strcpy(com_stat_list->stats[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
+	com_stat_list->stats[0].iops_sec = 20000;
 	
 	CU_pSuite pSuite = NULL;
 	
@@ -137,7 +137,7 @@ int main(void)
 	
 	CU_cleanup_registry();
 	
-	shr_close_mem();
+	com_close_mem();
 	
 	return CU_get_error();
 
