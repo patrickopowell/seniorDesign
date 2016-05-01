@@ -157,12 +157,12 @@ int get_bucket(const char *path)
 
 	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
 	
-	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_sec);
+	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
 	rb = rb_mounts[pos];
 	
 	strcpy(rb.rb_path, path);
-	rb.rb_rate = com_sla_list->slas[pos].iops_sec;
+	rb.rb_rate = com_sla_list->slas[pos].iops_max;
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 
@@ -190,7 +190,7 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
     pos++;
 	
 	strcpy(rb_mounts[pos].rb_path, path);
-	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_sec;
+	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
 	rb_mounts[pos].rb_token_cap = rate / 10;
 	rb_mounts[pos].rb_tokens = rate / 10;
 	//rb_mounts[pos].rb_ts = qos_get_uptime();
