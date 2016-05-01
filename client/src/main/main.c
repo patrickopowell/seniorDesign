@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
-	int lockid = setup_instance();
+	int lockid = qos_setup_instance();
 	qos_setup_logging("qqclient");
 	pthread_t threads[RESPONSIBILITIES];
 	if (pthread_create(&threads[0], NULL, &qos_receiver_start, NULL))
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 		pthread_join(threads[i], NULL);
 	qos_log_info("Exiting qqclient.");
 	qos_halt_logging();
-	destroy_instance(lockid);
+	qos_destroy_instance(lockid);
 	return 0;
 }
 
@@ -44,8 +44,9 @@ void setup_clean_kill()
 	sigaction(SIGINT, &act, 0);
 }
 
-void setup_instance()
+void qos_setup_instance()
 {
+	shr_init_mem();
 	int lockid = open(QQCLIENT_LOCK, O_WRONLY | O_CREAT, 0600);
 	int rc = flock(lockfile, LOCK_EX | LOCK_NB);
 	if (rc == -1) {
@@ -53,14 +54,15 @@ void setup_instance()
 		// add server
 		exit(1);
 	} else {
-		init_mem();
+		
 	}
 	running = 1;
 	return lockid;
 }
 
-void destroy_instance(int lockid)
+void qos_destroy_instance(int lockid)
 {
+	shr_close_mem();
 	flock(lockid, LOCK_UN);
 }
 
