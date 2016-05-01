@@ -58,7 +58,7 @@ void test_throttle(void)
 
 	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
 
-	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
+	uptime = qos_get_uptime() - rb.rb_ts;
 	
 	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
 
