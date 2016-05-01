@@ -109,6 +109,9 @@ int main(void)
 {
 	shr_init_mem();
 	
+	strcpy(shr_stat_list->stats[0].rb_path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
+	shr_stat_list->stats[0].iops_sec = 20000;
+	
 	CU_pSuite pSuite = NULL;
 	
 	if (CUE_SUCCESS != CU_initialize_registry())
