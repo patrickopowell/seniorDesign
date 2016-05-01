@@ -920,7 +920,7 @@ int main(int argc, char *argv[])
 	abort();
     }
 
-	qos_init();
+	qos_init(realpath(argv[argc-1], NULL));
 
     // Pull the rootdir out of the argument list and save it in my
     // internal data
