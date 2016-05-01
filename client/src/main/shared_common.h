@@ -61,7 +61,7 @@ struct sla_info_memory *shr_sla_list;
 
 int shr_init_mem();
 void shr_close_mem();
-int shr_init_stae_mem();
+int shr_init_stat_mem();
 int shr_init_stat_sem();
 void shr_lock_stat();
 void shr_unlock_stat();
