@@ -1,6 +1,7 @@
 #ifndef COMMON_INCLUDE
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/file.h>
 #include <signal.h>
 #include <pthread.h>
 #include <sys/time.h>
@@ -9,10 +10,9 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
-#include "../lib/logging/logging.h"
 #include "shared_common.h"
 
-typedef storage_server storage_server;
+typedef struct storage_server storage_server;
 
 struct storage_server {
 	int s_dev;
@@ -27,6 +27,5 @@ storage_server *server_list;
 int running;
 
 int check_running();
-void failure(int is_thread);
 #define COMMON_INCLUDE
 #endif

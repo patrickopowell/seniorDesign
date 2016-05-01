@@ -8,16 +8,21 @@
 #include <sys/shm.h>
 #include <fcntl.h>
 #include <semaphore.h>
+#include "../lib/logging/logging.h"
 
+#define SHR_SLA_MEM "/qualiqueue/sla"
+#define SHR_STAT_MEM "/qualiqueue/stats"
+#define SHR_STAT_LOCK "/qualiqueue-stat-lock"
+#define SHR_SLA_LOCK "/qualiqueue-sla-lock"
 
-#define MEMORY_ID_SLA "/qualiqueue/sla"
-#define MEMORY_ID_STAT "/qualiqueue/stats"
-#define STAT_LOCK "/qualiqueue-stat-lock"
-#define SLA_LOCK "/qualiqueue-sla-lock"
+#define SHR_STAT_CREATE_FAIL -1
+#define SHR_STAT_MAP_FAIL -2
+#define SHR_STAT_SEM_FAIL -3
+#define SHR_SLA_CREATE_FAIL -4
+#define SHR_SLA_MAP_FAIL -5
+#define SHR_SLA_SEM_FAIL -6
 
-#define MAX_NUM_SERVERS 5
-
-//typedef sla_info sla_info;
+#define SHR_MAX_SERVERS 5
 
 struct sla_info {
 	int sla_id;
@@ -31,11 +36,9 @@ struct sla_info {
 };
 
 struct sla_info_memory {
-	struct sla_info slas[MAX_NUM_SERVERS];
+	struct sla_info slas[SHR_MAX_SERVERS];
 	int count;
 };
-
-//typedef stat_info stat_info;
 
 struct stat_info {
 	int s_dev;
@@ -49,63 +52,22 @@ struct stat_info {
 };
 
 struct stat_info_memory {
-	struct stat_info stats[MAX_NUM_SERVERS];
+	struct stat_info stats[SHR_MAX_SERVERS];
 	int count;
 };
 
-static sem_t *stat_lock;
-static sem_t *sla_lock;
+struct stat_info_memory *shr_stat_list;
+struct sla_info_memory *shr_sla_list;
 
-struct stat_info_memory *stat_mem_info;
-struct sla_info_memory *sla_mem_info;
-
-// Print out an error message and exit.
-static void fail( char const *message ) {
-  fprintf( stderr, "%s\n", message );
-  exit( 1 );
-}
-
-static void init_mem()
-{
-        // initialize stat memory
-
-        key_t stat_key = ftok( MEMORY_ID_STAT, 1 );
-
-        int shmid_stat = shmget( stat_key, sizeof( struct stat_info_memory ), 0600 | IPC_CREAT );
-        if ( shmid_stat == -1 )
-                fail( "Can't create stat shared memory" );
-
-        stat_mem_info = (struct stat_info_memory *)shmat( shmid_stat, 0, 0 );
-        if ( stat_mem_info == (void *)-1 )
-                fail( "Can't map stat shared memory segment into address space" );
-
-        stat_lock = sem_open( STAT_LOCK, O_CREAT, 0600, 1 );
-        if ( stat_lock == SEM_FAILED )
-                fail( "Can't make stat semaphore" );
-
-        // initialize sla shared memory
-
-        key_t sla_key = ftok( MEMORY_ID_SLA, 1 );
-
-        int shmid_sla = shmget( sla_key, sizeof( struct sla_info_memory ), 0600 | IPC_CREAT );
-        if ( shmid_sla == -1 )
-                fail( "Can't create sla shared memory" );
-
-        sla_mem_info = (struct sla_info_memory *)shmat( shmid_sla, 0, 0 );
-        if ( sla_mem_info == (void *)-1 )
-                fail( "Can't map sla shared memory segment into address space" );
-
-        sla_lock = sem_open( SLA_LOCK, O_CREAT, 0600, 1 );
-        if ( sla_lock == SEM_FAILED )
-                fail( "Can't make sla semaphore" );
-
-}
-
-static void close_mem()
-{
-        sem_close( stat_lock );
-        shmdt( stat_mem_info );
-
-        sem_close( sla_lock );
-        shmdt( sla_mem_info );
-}
+int shr_init_mem();
+void shr_close_mem();
+int shr_init_stae_mem();
+int shr_init_stat_sem();
+void shr_lock_stat();
+void shr_unlock_stat();
+int shr_init_sla_mem();
+int shr_init_sla_sem();
+void shr_lock_sla();
+void shr_unlock_sla();
+void shr_close_stat();
+void shr_close_sla();

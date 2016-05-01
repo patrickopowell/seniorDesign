@@ -5,7 +5,7 @@
 
 #define RESPONSIBILITIES 2
 #define BUFFERLENGTH 5000
-#define QQCLIENT_LOCK "qqclient.lock"
+#define QQCLIENT_LOCK "/etc/qqclient.lock"
 
 struct arguments {
 	char *args[3];

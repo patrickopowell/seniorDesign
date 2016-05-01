@@ -1,8 +1,8 @@
 #include "logging.h"
 
-void qos_setup_logging()
+void qos_setup_logging(const char *id)
 {
-	openlog("qqclient", LOG_CONS | LOG_PID | LOG_PERROR);
+	openlog(id, LOG_CONS | LOG_PID | LOG_PERROR, LOG_DAEMON);
 	qos_log_info("Starting qqclient logging.");
 }
 

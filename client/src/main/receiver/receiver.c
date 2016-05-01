@@ -39,11 +39,10 @@ void *qos_receiver_start(void *in)
 	while(check_running() != 0) {
 		if (select(receiver_socket+1, &read_fd, NULL, NULL, &stTimeOut) == -1) {
 			qos_log_error("Could not obtain select for socket.");
-			perror("Could not obtain select for socket.\n");
 			continue;
 		}
 		if (!FD_ISSET(receiver_socket, &read_fd)) {
-			perror("No incoming SLAs from server.\n");
+			qos_log_info("No incoming SLAs from server.\n");
 			usleep(1000000);
 			continue;
 		}
@@ -63,27 +62,11 @@ void *qos_receiver_start(void *in)
 			}
 			// pass that ish to the kernel
 			qos_release_sla(sla);*/
+			close(accept_fd);
 		}
-		close(accept_fd);
 	}
 	freeaddrinfo(receiver_info);
 	qos_log_info("Receiver exiting.");
 	return 0;
-}
-
-int generate_mgmt_connection(char *ip)
-{
-	struct addrinfo hints, *receiver_info;
-	memset(&hints, 0, sizeof hints);
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
-	int status = getaddrinfo(NULL, LISTENPORT, &hints, &receiver_info);
-	if (status != 0) {
-		fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
-		exit(1);
-	}
-	int receiver_socket = socket(receiver_info->ai_family, receiver_info->ai_socktype, receiver_info->ai_protocol);
-	return receiver_socket;
 }
 
