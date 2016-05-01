@@ -56,8 +56,8 @@ typedef struct {
 static sem_t *stat_lock;
 static sem_t *sla_lock;
 
-stat_info_memory *stat_mem_info;
-sla_info_memory *sla_mem_info;
+//stat_info_memory *stat_mem_info;
+//sla_info_memory *sla_mem_info;
 
 // Print out an error message and exit.
 static void fail( char const *message ) {
@@ -75,7 +75,7 @@ static void init_mem()
         if ( shmid_stat == -1 )
                 fail( "Can't create stat shared memory" );
 
-        stat_mem_info = (stat_info_memory *)shmat( shmid_stat, 0, 0 );
+        stat_info_memory *stat_mem_info = (stat_info_memory *)shmat( shmid_stat, 0, 0 );
         if ( stat_mem_info == (void *)-1 )
                 fail( "Can't map stat shared memory segment into address space" );
 
@@ -91,7 +91,7 @@ static void init_mem()
         if ( shmid_sla == -1 )
                 fail( "Can't create sla shared memory" );
 
-        sla_mem_info = (sla_info_memory *)shmat( shmid_sla, 0, 0 );
+        sla_info_memory *sla_mem_info = (sla_info_memory *)shmat( shmid_sla, 0, 0 );
         if ( sla_mem_info == (void *)-1 )
                 fail( "Can't map sla shared memory segment into address space" );
 
