@@ -935,9 +935,9 @@ int main(int argc, char *argv[])
     bb_data->logfile = log_open();
     
     // turn over control to fuse
-    fprintf(stderr, "about to call fuse_main\n");
+    //fprintf(stderr, "about to call fuse_main\n");
     fuse_stat = fuse_main(argc, argv, &bb_oper, bb_data);
-    fprintf(stderr, "fuse_main returned %d\n", fuse_stat);
+    //fprintf(stderr, "fuse_main returned %d\n", fuse_stat);
     
 	qos_release();
 	
