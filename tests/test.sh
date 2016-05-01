@@ -14,4 +14,4 @@ cd ./qqfs
 
 gcc -Wall -c qos_throttle.c communication.c ../libcommon/logging/logging.c -O0 -fprofile-arcs -ftest-coverage -g
 
-gcc -Wall -L/usr/local/lib -o qos_throttle_test qos_throttle_test.c qos_throttle.o shared_common.o logging.o -lcunit -pthread -lgcov
+gcc -Wall -L/usr/local/lib -o qos_throttle_test qos_throttle_test.c qos_throttle.o communication.o logging.o -lcunit -pthread -lgcov
