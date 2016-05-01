@@ -6,9 +6,9 @@ cp ../client/src/main/shared_common.h ./qqfs
 
 cp ../client/src/main/shared_common.c ./qqfs
 
-cp ../client/src/lib/logging/logging.h ./
+cp ../client/src/lib/logging/logging.h ./lib/logging
 
-cp ../client/src/lib/logging/logging.c ./
+cp ../client/src/lib/logging/logging.c ./lib/logging
 
 cd ./qqfs
 
