@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
-	int lockid = qos_setup_instance();
 	qos_setup_logging("qqclient");
+	int lockid = qos_setup_instance();
 	pthread_t threads[RESPONSIBILITIES];
 	if (pthread_create(&threads[0], NULL, &qos_receiver_start, NULL))
 		qos_log_critical("Could not create receiver thread.");
@@ -44,17 +44,18 @@ void setup_clean_kill()
 	sigaction(SIGINT, &act, 0);
 }
 
-void qos_setup_instance()
+int qos_setup_instance()
 {
+	qos_log_info("Setting up qqclient instance.");
 	shr_init_mem();
 	int lockid = open(QQCLIENT_LOCK, O_WRONLY | O_CREAT, 0600);
-	int rc = flock(lockfile, LOCK_EX | LOCK_NB);
+	int rc = flock(lockid, LOCK_EX | LOCK_NB);
 	if (rc == -1) {
 		qos_log_info("Existing qqclient instance running, inserting server.");
 		// add server
 		exit(1);
 	} else {
-		
+		qos_log_info("No qqclients detected, starting.");
 	}
 	running = 1;
 	return lockid;

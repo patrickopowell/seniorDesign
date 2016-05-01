@@ -14,7 +14,7 @@ struct arguments {
 
 int main(int argc, char *argv[]);
 void setup_clean_kill();
-void setup_instance();
+int qos_setup_instance();
+void qos_destroy_instance();
 void run_handler(int sig);
-/* check_running() moved to common.h */
 static error_t parse_opt(int key, char *arg, struct argp_state *state);

@@ -84,7 +84,7 @@ int shr_init_sla_mem()
                 qos_log_critical("Can't create sla shared memory!");
                 return SHR_SLA_CREATE_FAIL;
         } else {
-                shr_sla_list = (struct sla_info_memory *)shmat(shmid_stat, 0, 0);
+                shr_sla_list = (struct sla_info_memory *)shmat(shmid_sla, 0, 0);
                 if (shr_sla_list == (void *)-1) {
                         qos_log_critical("Can't map sla shared memory into address space!");
                         return SHR_SLA_MAP_FAIL;
