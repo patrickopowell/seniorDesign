@@ -16,8 +16,7 @@
     	Node next;
     };
 
-	Node *head;
-	head = malloc(sizeof(Node));
+	Node *head = malloc(sizeof(Node));
 
 	/**
 	 *
