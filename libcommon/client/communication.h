@@ -21,6 +21,8 @@
 #define COM_SLA_CREATE_FAIL -4
 #define COM_SLA_MAP_FAIL -5
 #define COM_SLA_SEM_FAIL -6
+#define COM_ELEMENT_NFOUND -7
+#define COM_MEM_OOS -8
 
 #define COM_MAX_SERVERS 5
 
@@ -71,3 +73,7 @@ void com_lock_sla();
 void com_unlock_sla();
 void com_close_stat();
 void com_close_sla();
+int com_get_sla(char *path, struct sla_info *sla_dest);
+int com_set_sla(char *path, struct sla_info *sla_src);
+int com_get_stat(char *path, struct stat_info *stat_dest);
+int com_set_stat(char *path, struct stat_info *stat_src);

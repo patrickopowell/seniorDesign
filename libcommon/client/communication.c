@@ -127,31 +127,37 @@ void com_close_sla()
         shmdt(com_sla_list);
 }
 
-void com_get_sla(char *path, struct sla_info *sla_dest)
+int com_get_sla(char *path, struct sla_info *sla_dest)
 {
+        int return_val = 0;
         com_lock_sla();
+        int found = 0;
         int sla_index = 0;
         int curr_num_slas = com_sla_list->count;
         struct sla_info *curr_sla;
         while (sla_index < curr_num_slas) {
                 curr_sla = com_sla_list->slas[sla_index];
                 if (strcmp(curr_sla->path, path) == 0) {
+                        found = 1;
                         memcpy(&curr_sla, &sla_dest, sizeof curr_sla);
                         break;
                 }
                 sla_index++;
         }
+        if (found == 0)
+                return_val = COM_ELEMENT_NFOUND;
         com_unlock_sla();
+        return return_val;
 }
 
 int com_set_sla(char *path, struct sla_info *sla_src)
 {
-        com_lock_sla();
         int return_val = 0;
+        com_lock_sla();
+        int found = 0;
         int sla_index = 0;
         int curr_num_slas = com_sla_list->count;
         struct sla_info *curr_sla;
-        int found = 0;
         while (sla_index < curr_num_slas) {
                 curr_sla = com_sla_list->slas[sla_index];
                 if (strcmp(curr_sla->path, path) == 0) {
@@ -165,7 +171,7 @@ int com_set_sla(char *path, struct sla_info *sla_src)
                 qos_log_info("SLA for storage not previously specified, adding to list.");
                 if (curr_num_slas == MAX_NUM_SERVERS) {
                         qos_log_critical("No more room for additional storage SLAs!");
-                        return_val = -1;
+                        return_val = COM_MEM_OOS;
                 } else {
                         curr_sla = com_sla_list->slas[curr_num_slas+1];
                         memcpy(&sla_src, &curr_sla, sizeof sla_src);
@@ -178,29 +184,35 @@ int com_set_sla(char *path, struct sla_info *sla_src)
 
 void com_get_stat(char *path, struct stat_info *stat_dest)
 {
+        int return_val = 0;
         com_lock_stat();
+        int found = 0;
         int stat_index = 0;
         int curr_num_stats = com_stat_list->count;
         struct stat_info *curr_stat;
         while (stat_index < curr_num_stats) {
                 curr_stat = com_stat_list->stats[stat_index];
                 if (strcmp(curr_stat->path, path) == 0) {
+                        found = 1;
                         memcpy(&curr_stat, &stat_dest, sizeof curr_stat);
                         break;
                 }
                 stat_index++;
         }
+        if (found == 0)
+                return_val = COM_ELEMENT_NFOUND;
         com_unlock_stat();
+        return return_val;
 }
 
 int com_set_stat(char *path, struct stat_info *stat_src)
 {
-        com_lock_stat();
         int return_val = 0;
+        com_lock_stat();
+        int found = 0;
         int stat_index = 0;
         int curr_num_stats = com_stat_list->count;
         struct stat_info *curr_stat;
-        int found = 0;
         while (stat_index < curr_num_stats) {
                 curr_stat = com_stat_list->stats[stat_index];
                 if (strcmp(curr_stat->path, path) == 0) {
@@ -214,7 +226,7 @@ int com_set_stat(char *path, struct stat_info *stat_src)
                 qos_log_info("Stats for storage not previously specified, adding to list.");
                 if (curr_num_stats == MAX_NUM_SERVERS) {
                         qos_log_critical("No more room for additional storage stats!");
-                        return_val = -1;
+                        return_val = COM_MEM_OOS;
                 } else {
                         curr_stat = com_stat_list->stats[curr_num_stats+1];
                         memcpy(&stat_src, &curr_stat, sizeof stat_src);
