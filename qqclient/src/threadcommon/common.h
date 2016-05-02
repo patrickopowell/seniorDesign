@@ -15,6 +15,7 @@
 #include <sys/shm.h>
 #include <semaphore.h>
 #include <errno.h>
+#include "../../../libcommon/protocol.h"
 #include "../../../libcommon/logging/logging.h"
 #include "../../../libcommon/client/communication.h"
 

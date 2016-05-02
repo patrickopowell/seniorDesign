@@ -12,13 +12,13 @@
 
 // This should be statically set once determined.
 #define SERVERPORT "15555"
-#define DEBUG_SERVER "192.168.1.5"
 
 // Size of network send/receive buffers.
 #define BUFFERLENGTH 5000
  
 void *qq_parser_start(void *in);
 void qq_parse_stat(struct stat_info *stat);
-void qq_init_connection(struct qqfs_instance *instance);
+int qq_init_connection(struct qqfs_instance *instance);
 void qq_send_handshake(struct qqfs_instance *instance);
+void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat);
 void qq_close_connections();

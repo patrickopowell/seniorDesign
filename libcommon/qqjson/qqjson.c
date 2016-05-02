@@ -1,15 +1,10 @@
 #include "qqjson.h"
 
-const protocol_tuple sla_fields[] = {
+const struct protocol_tuple sla_fields[] = {
 	{"version", INTEGER_TYPE},
 	{"sla_version", INTEGER_TYPE},
 	{"client_id", STRING_TYPE},
-	{"storage_id", ARRAY_TYPE,
-		{
-			{"s_dev", INTEGER_TYPE},
-			{"i_ino", INTEGER_TYPE}
-		}
-	},
+	{"storage_id", INTEGER_TYPE},
 	{"storage_type", INTEGER_TYPE},
 	{"iops_max", INTEGER_TYPE},
 	{"iops_min", INTEGER_TYPE},
@@ -18,16 +13,11 @@ const protocol_tuple sla_fields[] = {
 	{"unused_bandwidth", INTEGER_TYPE}
 };
 
-const protocol_tuple feedback_fields[] = {
+const struct protocol_tuple feedback_fields[] = {
 	{"version", INTEGER_TYPE},
 	{"sla_version", INTEGER_TYPE},
 	{"client_id", STRING_TYPE},
-	{"storage_id", ARRAY_TYPE,
-		{
-			{"s_dev", INTEGER_TYPE},
-			{"i_ino", INTEGER_TYPE}
-		}
-	},
+	{"storage_id", INTEGER_TYPE},
 	{"storage_type", INTEGER_TYPE},
 	{"current_throughput", INTEGER_TYPE},
 	{"writes_queued", INTEGER_TYPE},
@@ -55,7 +45,7 @@ int qq_validate_sla(json_t *curr_sla)
 {
 	if (!json_is_object(curr_sla))
 		return 0;
-	int sla_length = sizeof(sla_fields) / sizeof(protocol_tuple);
+	int sla_length = (sizeof sla_fields) / sizeof(struct protocol_tuple);
 	int errors = 0;
 	for (int i = 0; i < sla_length; i++)
 		errors += qq_test_tuple(curr_sla, sla_fields[i]);
@@ -74,7 +64,7 @@ int qq_release_sla(json_t *curr_sla)
  * Construct client feedback JSON object from client_feedback
  * input struct.
  */
-void *qq_construct_client_feedback(client_feedback *cf)
+void *qq_construct_client_feedback(struct client_feedback *cf)
 {
 	json_t *cf_json = json_pack("{sisis[sisi]sisisisisisisi}",
 		"version", cf->version,
@@ -107,7 +97,7 @@ char *qq_obj_to_string(json_t *obj) {
  * Return 0 means SLA information is valid.
  * Return > 0 means at least 1 error is present.
  */
-int qq_test_tuple(json_t *curr_sla, protocol_tuple tuple)
+int qq_test_tuple(json_t *curr_sla, struct protocol_tuple tuple)
 {
 	char *sla_field_name = tuple.name;
 	int sla_field_type = tuple.type;
@@ -121,7 +111,7 @@ int qq_test_tuple(json_t *curr_sla, protocol_tuple tuple)
 		if (!is_array) {
 			errors += 1;
 		} else {
-			protocol_tuple *sub_tuples = tuple.sub_tuples;
+			struct protocol_tuple *sub_tuples = tuple.sub_tuples;
 			errors += qq_test_array_tuples(curr_sla, sla_field_name, sub_tuples);
 		}
 	}
@@ -174,10 +164,10 @@ int qq_test_array(json_t *curr_sla, char *item) {
  * Requires array elements to be in protocol_tuple format.
  * Return number of errors encountered.
  */
-int qq_test_array_tuples(json_t *curr_sla, char *item, protocol_tuple *sub_tuples) {
+int qq_test_array_tuples(json_t *curr_sla, char *item, struct protocol_tuple *sub_tuples) {
 	int errors = 0;
 	if (qq_test_array(curr_sla, item)) {
-		int length = sizeof(sub_tuples) / sizeof(protocol_tuple);
+		int length = (sizeof sub_tuples) / sizeof(struct protocol_tuple);
 		json_t *array = json_object_get(curr_sla, item);
 		for (int i = 0; i < length; i++)
 			errors += qq_test_tuple(array, sub_tuples[i]);
