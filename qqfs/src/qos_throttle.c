@@ -165,10 +165,15 @@ int get_bucket(const char *path)
 
 void add_bucket(const char *path, int index, unsigned int rate)
 {
-	strcpy(rb_mounts[index].rb_path, path);
-	rb_mounts[index].rb_rate = rate;
-	rb_mounts[index].rb_token_cap = rate / 10;
-	rb_mounts[index].rb_tokens = rate / 10;
+	int pos = 0;
+	
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
+    pos++;
+	
+	strcpy(rb_mounts[pos].rb_path, path);
+	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
+	rb_mounts[pos].rb_token_cap = rate / 10;
+	rb_mounts[pos].rb_tokens = rate / 10;
 }
 
 /**
