@@ -102,9 +102,9 @@ void qos_throttle (const char *path, int req)
 
 void inc_queue(int index, int req)
 {
-	#if UNSAFE
+	
 	com_lock_stat();
-	#endif
+	
 	
 	switch(req)
 	{
@@ -123,9 +123,9 @@ void inc_queue(int index, int req)
 	monitor.suspensions++;
 	com_stat_list->stats[index].iops_suspended++;
 	
-	#if UNSAFE
+	
 	com_unlock_stat();
-	#endif
+	
 }
 
 /**
@@ -139,9 +139,9 @@ void inc_queue(int index, int req)
 int get_bucket(const char *path)
 {
 	int pos = 0;
-	#if UNSAFE
+	
 	com_lock_sla();
-	#endif
+	
 	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     pos++;
 
@@ -156,9 +156,9 @@ int get_bucket(const char *path)
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 
-	#if UNSAFE
+	
 	com_unlock_sla();
-	#endif
+	
 	return pos;
 }
 
