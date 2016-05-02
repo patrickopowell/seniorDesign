@@ -48,6 +48,8 @@ void test_throttle(void)
 	
 	printf("\n%5stest_throttle() - rb_ts = %lu\n", spacer, rb.rb_ts);
 	
+	printf("\n%5stest_throttle() - rb_path = %s\n", spacer, rb.rb_path);
+	
 	sleep(2);
 
 	qos_throttle(rb.rb_path,1);
@@ -115,10 +117,10 @@ int main(void)
 	com_init_mem();
 	
 	strcpy(com_stat_list->stats[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	com_stat_list->stats[0].iops_sec = 20000;
+	com_stat_list->stats[0].iops_sec = 200000;
 	
 	strcpy(com_sla_list->slas[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	com_sla_list->slas[0].iops_max = 20000;
+	com_sla_list->slas[0].iops_max = 200000;
 	
 	CU_pSuite pSuite = NULL;
 	

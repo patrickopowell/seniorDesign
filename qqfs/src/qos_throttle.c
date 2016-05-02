@@ -141,8 +141,6 @@ int get_bucket(const char *path)
     pos++;
 
 	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
-
-	printf("\n---pos = %d\n", pos);
 	
 	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
