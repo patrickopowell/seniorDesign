@@ -13,7 +13,7 @@ void *qq_parser_start(void *in)
 		for (int i = 0; i < num_servers; i++) {
 			qq_get_qqfs_instance_by_idx(i, curr_instance);
 			com_get_stat(curr_instance->export_path, curr_stat);
-			qq_parse_stat(&curr_stat);
+			qq_parse_stat(curr_stat);
 		}
 		free(curr_instance);
 		free(curr_stat);

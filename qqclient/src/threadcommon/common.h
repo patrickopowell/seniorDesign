@@ -60,5 +60,7 @@ void qq_lock();
 void qq_unlock();
 int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest);
 int qq_set_qqfs_instance(struct qqfs_instance *instance_src);
+int qq_get_num_qqfs_instances();
+int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest);
 #define COMMON_INCLUDE
 #endif
