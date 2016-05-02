@@ -18,4 +18,4 @@
 #define BUFFERLENGTH 5000
  
 void *qq_parser_start(void *in);
-void *qq_feedback_timer(void *in);
+void qq_parse_stat(struct stat_info *stat);

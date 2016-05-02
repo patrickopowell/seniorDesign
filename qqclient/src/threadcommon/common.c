@@ -124,3 +124,27 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 	qq_unlock();
 	return return_val;
 }
+
+int qq_get_num_qqfs_instances()
+{
+	int num_instances = 0;
+	qq_lock();
+	num_instances = qqfs_instance_list->count;
+	qq_unlock();
+	return num_instances;
+}
+
+int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
+{
+	int return_val = 0;
+	qq_lock();
+	if (index > qqfs_instance_list->count-1)
+		return_val = QQCLIENT_ELEMENT_NFOUND;
+	else {
+		struct qqfs_instance *curr_qqfs;
+		curr_qqfs = &(qqfs_instance_list->instances[index]);
+		memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
+	}
+	qq_unlock();
+	return return_val;
+}
