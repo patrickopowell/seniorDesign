@@ -142,6 +142,8 @@ int get_bucket(const char *path)
 
 	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
 	
+	printf("\n---get_bucket() - path = %s\n", rb_mounts[pos].rb_path);
+	
 	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
 	rb = rb_mounts[pos];
@@ -170,7 +172,7 @@ void add_bucket(const char *path, int index, unsigned int rate)
 	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0))
     pos++;
 
-	printf("\n---index = %d, pos = %d\n", index, pos);
+	printf("\n---index = %d, pos = %d, path = %s\n", index, pos, path);
 	
 	strcpy(rb_mounts[pos].rb_path, path);
 	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
