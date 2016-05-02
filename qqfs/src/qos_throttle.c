@@ -150,8 +150,6 @@ int get_bucket(const char *path)
 	rb.rb_rate = com_sla_list->slas[pos].iops_max;
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
-
-	
 	com_unlock_sla();
 	
 	return pos;
@@ -165,14 +163,12 @@ int get_bucket(const char *path)
 *
 */
 
-void add_bucket(const char *path, unsigned int index, unsigned int rate)
+void add_bucket(const char *path, int index, unsigned int rate)
 {
-	int pos = index;
-	
-	strcpy(rb_mounts[pos].rb_path, path);
-	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
-	rb_mounts[pos].rb_token_cap = rate / 10;
-	rb_mounts[pos].rb_tokens = rate / 10;
+	strcpy(rb_mounts[index].rb_path, path);
+	rb_mounts[index].rb_rate = rate;
+	rb_mounts[index].rb_token_cap = rate / 10;
+	rb_mounts[index].rb_tokens = rate / 10;
 }
 
 /**

@@ -44,13 +44,17 @@ void test_throttle(void)
 	
     rb.rb_ts = qos_get_uptime();
 	
+	strcpy(rb.rb_path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
+	
 	printf("\n%5stest_throttle() - rb_ts = %lu\n", spacer, rb.rb_ts);
 	
 	sleep(2);
 
-	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
+	qos_throttle(rb.rb_path,1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
+	
+	printf("\n%5stest_throttle() - current_ts = %lu\n", spacer, qos_get_uptime());
 	
 	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
 
@@ -60,7 +64,7 @@ void test_throttle(void)
 	
 	rb.rb_ts = qos_get_uptime();
 
-	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
+	qos_throttle(rb.rb_path,2);
 
 	uptime = qos_get_uptime() - rb.rb_ts;
 	
