@@ -16,7 +16,7 @@ int qq_init_mem()
                 return qq_mem_status;
         }
 
-        int qq_sem_status = qq_init_map_sem();
+        int qq_sem_status = qq_init_qqmap_sem();
         if (qq_sem_status < 0) {
                 qq_log_critical("Could not open qqclient semaphore!");
                 return qq_sem_status;
