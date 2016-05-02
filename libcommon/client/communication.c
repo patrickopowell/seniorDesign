@@ -22,13 +22,13 @@ int com_init_mem()
 
         int sla_mem_status = com_init_sla_mem();
         if (sla_mem_status < 0) {
-                qq_log_critical("Could not create sla shared memory!");
+                qq_log_critical("Could not create SLA shared memory!");
                 return sla_mem_status;
         }
 
         int sla_sem_status = com_init_sla_sem();
         if (sla_sem_status < 0) {
-                qq_log_critical("Could not open sla semaphore!");
+                qq_log_critical("Could not open SLA semaphore!");
                 return sla_sem_status;
         }
 }
@@ -45,11 +45,13 @@ int com_init_stat_mem()
         int shmid_stat = shmget(stat_key, sizeof(struct stat_info_memory), 0600 | IPC_CREAT);
         if (shmid_stat == -1) {
                 qq_log_critical("Can't create stat shared memory!");
+                qq_log_debug(strerror(errno));
                 return COM_STAT_CREATE_FAIL;
         } else {
                 com_stat_list = (struct stat_info_memory *)shmat(shmid_stat, 0, 0);
                 if (com_stat_list == (void *)-1) {
                         qq_log_critical("Can't map stat shared memory into address space!");
+                        qq_log_debug(strerror(errno));
                         return COM_STAT_MAP_FAIL;
                 }
                 com_stat_list->count = 0;
@@ -62,6 +64,7 @@ int com_init_stat_sem()
         stat_lock = sem_open(COM_STAT_LOCK, O_CREAT, 0600, 1);
         if (stat_lock == SEM_FAILED) {
                 qq_log_critical("Stat semaphore creation failed!");
+                qq_log_debug(strerror(errno));
                 return COM_STAT_SEM_FAIL;
         }
         return 0;
@@ -83,11 +86,13 @@ int com_init_sla_mem()
         int shmid_sla = shmget(sla_key, sizeof(struct sla_info_memory), 0600 | IPC_CREAT);
         if (shmid_sla == -1) {
                 qq_log_critical("Can't create SLA shared memory!");
+                qq_log_debug(strerror(errno));
                 return COM_SLA_CREATE_FAIL;
         } else {
                 com_sla_list = (struct sla_info_memory *)shmat(shmid_sla, 0, 0);
                 if (com_sla_list == (void *)-1) {
                         qq_log_critical("Can't map SLA shared memory into address space!");
+                        qq_log_debug(strerror(errno));
                         return COM_SLA_MAP_FAIL;
                 }
                 com_sla_list->count = 0;
@@ -100,6 +105,7 @@ int com_init_sla_sem()
         sla_lock = sem_open(COM_SLA_LOCK, O_CREAT, 0600, 1);
         if (sla_lock == SEM_FAILED) {
                 qq_log_critical("SLA semaphore creation failed!");
+                qq_log_debug(strerror(errno));
                 return COM_SLA_SEM_FAIL;
         }
         return 0;

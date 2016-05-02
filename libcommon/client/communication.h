@@ -8,12 +8,13 @@
 #include <sys/shm.h>
 #include <fcntl.h>
 #include <semaphore.h>
+#include <errno.h>
 #include "../logging/logging.h"
 
-#define COM_SLA_MEM "/qualiqueue/sla"
-#define COM_STAT_MEM "/qualiqueue/stats"
-#define COM_STAT_LOCK "/qualiqueue-stat-lock"
-#define COM_SLA_LOCK "/qualiqueue-sla-lock"
+#define COM_SLA_MEM "qq-slas"
+#define COM_STAT_MEM "qq-stats"
+#define COM_STAT_LOCK "qq-stat-lock"
+#define COM_SLA_LOCK "qq-sla-lock"
 
 #define COM_STAT_CREATE_FAIL -1
 #define COM_STAT_MAP_FAIL -2

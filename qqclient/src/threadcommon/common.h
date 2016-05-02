@@ -8,13 +8,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <netdb.h>
 #include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <semaphore.h>
+#include <errno.h>
 #include "../../../libcommon/logging/logging.h"
 #include "../../../libcommon/client/communication.h"
 
-#define QQCLIENT_MEM "/qualiqueue/client/mem"
-#define QQCLIENT_SEM "/qualiqueue/client/lock"
+#define QQCLIENT_MEM "qq-client-mem"
+#define QQCLIENT_SEM "qq-client-lock"
 
 #define QQCLIENT_MEM_CREATE_FAIL -1
 #define QQCLIENT_MEM_MAP_FAIL -2
@@ -32,8 +37,8 @@ struct storage_identifier {
 
 struct qqfs_instance {
 	char qqserver_ip[15];
-	char base_path[80];
-	char export_path[80];
+	char base_path[15];
+	char export_path[15];
 	struct storage_identifier sid;
 };
 

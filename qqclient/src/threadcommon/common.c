@@ -29,11 +29,13 @@ int qq_init_qqmap_mem()
         int shmid_mem = shmget(mem_key, sizeof(struct qqfs_instances), 0600 | IPC_CREAT);
         if (shmid_mem == -1) {
                 qq_log_critical("Can't create qqclient shared memory!");
+                qq_log_debug(strerror(errno));
                 return QQCLIENT_MEM_CREATE_FAIL;
         } else {
                 qqfs_instance_list = (struct qqfs_instances *)shmat(shmid_mem, 0, 0);
                 if (qqfs_instance_list == (void *)-1) {
                         qq_log_critical("Can't map qqclient shared memory into address space!");
+                        qq_log_debug(strerror(errno));
                         return QQCLIENT_MEM_MAP_FAIL;
                 }
         }
@@ -45,6 +47,7 @@ int qq_init_qqmap_sem()
         mem_lock = sem_open(QQCLIENT_SEM, O_CREAT, 0600, 1);
         if (mem_lock == SEM_FAILED) {
                 qq_log_critical("qqclient semaphore creation failed!");
+                qq_log_debug(strerror(errno));
                 return QQCLIENT_SEM_FAIL;
         }
         return 0;
@@ -99,7 +102,7 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
         struct qqfs_instance *curr_qqfs;
         while (qqfs_index < curr_num_qqfs) {
                 curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
-                if (strcmp(curr_qqfs->export_path, instance_src->path) == 0) {
+                if (strcmp(curr_qqfs->export_path, instance_src->export_path) == 0) {
                         found = 1;
                         qq_log_critical("Cannot duplicate QQFS mount exports!");
                         return_val = QQCLIENT_DUP_EXPORT;

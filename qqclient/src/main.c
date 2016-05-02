@@ -40,24 +40,32 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 	qq_log_info("Setting up qqclient instance.");
 	int lockid = open(QQCLIENT_LOCK, O_WRONLY | O_CREAT, 0600);
 	int rc = flock(lockid, LOCK_EX | LOCK_NB);
-	qq_init_mem();
+	int mem_status = qq_init_mem();
+	if (mem_status < 0) {
+		qq_log_critical("Could not map qqclient shared memory! Fatal error.");
+		exit(1);
+	}
 	if (rc == -1) {
 		qq_log_info("Existing qqclient instance running, inserting server.");
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
-		memcpy(base_path, new_instance->base_path, sizeof base_path);
-		memcpy(export_path, new_instance->export_path, sizeof export_path);
-		memcpy(qqserver_ip, new_instance->qqserver_ip, sizeof qqserver_ip);
+		memcpy(base_path, new_instance->base_path, strlen(base_path));
+		memcpy(export_path, new_instance->export_path, strlen(export_path));
+		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
 		qq_close_mem();
 		exit(0);
 	} else {
 		qq_log_info("No qqclient instance detected, starting.");
-		com_init_mem();
+		mem_status = com_init_mem();
+		if (mem_status < 0) {
+			qq_log_critical("Could not map qq shared memory! Fatal error.");
+			exit(1);
+		}
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
-		memcpy(base_path, new_instance->base_path, sizeof base_path);
-		memcpy(export_path, new_instance->export_path, sizeof export_path);
-		memcpy(qqserver_ip, new_instance->qqserver_ip, sizeof qqserver_ip);
+		memcpy(base_path, new_instance->base_path, strlen(base_path));
+		memcpy(export_path, new_instance->export_path, strlen(export_path));
+		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
 		int startup = qq_set_qqfs_instance(new_instance);
 		free(new_instance);
 		if (startup < 0)
