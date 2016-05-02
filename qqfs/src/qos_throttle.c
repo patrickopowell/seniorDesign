@@ -62,7 +62,6 @@ unsigned int tokens;
 
 int qos_can_send (struct ratebucket *rb_ptr)
 {
-
 	if (rb_ptr->rb_tokens > 0) {
 		rb_ptr->rb_tokens--;
 		return 1;
@@ -86,7 +85,6 @@ int qos_can_send (struct ratebucket *rb_ptr)
 
 void qos_throttle (const char *path, int req)
 {
-	
 	int index = get_bucket(path);
 	
 	if (index < 0) return;
@@ -102,9 +100,7 @@ void qos_throttle (const char *path, int req)
 
 void inc_queue(int index, int req)
 {
-	
 	com_lock_stat();
-	
 	
 	switch(req)
 	{
@@ -122,7 +118,6 @@ void inc_queue(int index, int req)
 	
 	monitor.suspensions++;
 	com_stat_list->stats[index].iops_suspended++;
-	
 	
 	com_unlock_stat();
 	
@@ -172,10 +167,7 @@ int get_bucket(const char *path)
 
 void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
-	int pos = 0;
-	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
-    pos++;
+	int pos = index;
 	
 	strcpy(rb_mounts[pos].rb_path, path);
 	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
