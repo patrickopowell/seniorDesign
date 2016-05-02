@@ -116,11 +116,15 @@ int main(void)
 {
 	com_init_mem();
 	
+	com_lock_stat();
 	strcpy(com_stat_list->stats[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
 	com_stat_list->stats[0].iops_sec = 200000;
+	com_unlock_stat();
 	
+	com_lock_sla();
 	strcpy(com_sla_list->slas[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
 	com_sla_list->slas[0].iops_max = 200000;
+	com_unlock_sla();
 	
 	CU_pSuite pSuite = NULL;
 	
