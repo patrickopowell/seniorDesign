@@ -10,23 +10,50 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
-#include "../../libcommon/logging/logging.h"
-#include "../../libcommon/client/communication.h"
+#include "../../../libcommon/logging/logging.h"
+#include "../../../libcommon/client/communication.h"
 
-typedef struct storage_server storage_server;
+#define QQCLIENT_MEM "/qualiqueue/client/mem"
+#define QQCLIENT_SEM "/qualiqueue/client/lock"
 
-struct storage_server {
+#define QQCLIENT_MEM_CREATE_FAIL -1
+#define QQCLIENT_MEM_MAP_FAIL -2
+#define QQCLIENT_SEM_FAIL -3
+#define QQCLIENT_ELEMENT_NFOUND -4
+#define QQCLIENT_MEM_OOS -5
+#define QQCLIENT_DUP_EXPORT -6
+
+#define QQCLIENT_MAX_QQFS 5
+
+struct storage_identifier {
 	int s_dev;
 	int i_ino;
-	struct addrinfo hints;
-	struct addrinfo *receiver_info;
-	storage_server *next;
 };
 
-storage_server *server_list;
+struct qqfs_instance {
+	char qqserver_ip[15];
+	char base_path[80];
+	char export_path[80];
+	struct storage_identifier sid;
+};
+
+struct qqfs_instances {
+	struct qqfs_instance instances[QQCLIENT_MAX_QQFS];
+	int count;
+};
+
+struct qqfs_instances *qqfs_instance_list;
 
 int running;
 
 int check_running();
+int qq_init_mem();
+int qq_init_qqmap_mem();
+int qq_init_qqmap_sem();
+void qq_close_mem();
+void qq_lock();
+void qq_unlock();
+int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest);
+int qq_set_qqfs_instance(struct qqfs_instance *instance_src);
 #define COMMON_INCLUDE
 #endif

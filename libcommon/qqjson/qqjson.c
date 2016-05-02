@@ -1,4 +1,4 @@
-#include "qq-json.h"
+#include "qqjson.h"
 
 const protocol_tuple sla_fields[] = {
 	{"version", INTEGER_TYPE},

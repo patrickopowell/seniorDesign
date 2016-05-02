@@ -7,8 +7,8 @@
  * Communicates to the qq server via TCP/IP connection
  */
 
-#include "../common.h"
-#include "../../lib/qq-json/qq-json.h"
+#include "../threadcommon/common.h"
+#include "../../../libcommon/qqjson/qqjson.h"
 
 // This should be statically set once determined.
 #define SERVERPORT "15555"

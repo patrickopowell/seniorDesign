@@ -7,15 +7,18 @@ STD=-std=gnu99
 
 CFLAGS=$(OPT) $(WARN) $(ERR) $(STD)
 COPTS=-ljansson -lpthread
-CLINKS=common.o shared_common.o main.o logging.o qq-json.o receiver.o parser.o
+CLINKS=libcommon_logging.o libcommon_qqjson.o libcommon_client_comm.o threadcommon.o receiver.o parser.o main.o
 
 all: clean main
 
-main: common.o shared_common.o main.o logging.o qq-json.o receiver.o parser.o
+main: $(CLINKS)
 	$(CC) $(CFLAGS) $(CLINKS) -o qqclient $(COPTS)
 
 main.o: main.c
 	$(CC) $(STD) -c main.c
+
+threadcommon.o: threadcommon/common.c
+	$(CC) $(STD) -c threadcommon/common.c -o threadcommon.o
 
 receiver.o: receiver/receiver.c
 	$(CC) $(STD) -c receiver/receiver.c
@@ -23,17 +26,14 @@ receiver.o: receiver/receiver.c
 parser.o: parser/parser.c
 	$(CC) $(STD) -c parser/parser.c
 
-qq-json.o: ../lib/qq-json/qq-json.c
-	$(CC) $(STD) -c ../lib/qq-json/qq-json.c
+libcommon_qqjson.o: ../../libcommon/qqjson/qqjson.c
+	$(CC) $(STD) -c ../../libcommon/qqjson/qqjson.c -o libcommon_qqjson.o
 
-logging.o: ../lib/logging/logging.c
-	$(CC) $(STD) -c ../lib/logging/logging.c
+libcommon_logging.o: ../../libcommon/logging/logging.c
+	$(CC) $(STD) -c ../../libcommon/logging/logging.c -o libcommon_logging.o
 
-common.o: common.c
-	$(CC) $(STD) -c common.c
-
-shared_common.o: shared_common.c
-	$(CC) $(STD) -c shared_common.c
+libcommon_client_comm.o: ../../libcommon/client/communication.c
+	$(CC) $(STD) -c ../../libcommon/client/communication.c -o libcommon_client_comm.o
 
 clean:
-	rm -rf *.o main
+	rm -rf *.o qqclient

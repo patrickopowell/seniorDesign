@@ -16,19 +16,8 @@ int main(int argc, char *argv[])
 	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
-	qq_setup_logging("qqclient");
-	int lockid = qq_setup_instance();
-	int responsibilities = 2;
-	pthread_t threads[responsibilities];
-	if (pthread_create(&threads[0], NULL, &qq_receiver_start, NULL))
-		qq_log_critical("Could not create receiver thread.");
-	if (pthread_create(&threads[1], NULL, &qq_parser_start, NULL))
-		qq_log_critical("Could not create parser thread.");
-	for (int i = 0; i < responsibilities; i++)
-		pthread_join(threads[i], NULL);
-	qq_halt_logging();
+	int lockid = qq_setup_instance(argv[1], argv[2], argv[3]);
 	qq_destroy_instance(lockid);
-	qq_log_info("Exiting qqclient.");
 	return 0;
 }
 
@@ -45,18 +34,42 @@ void setup_clean_kill()
 	sigaction(SIGINT, &act, 0);
 }
 
-int qq_setup_instance()
+int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 {
+	qq_setup_logging("qqclient");
 	qq_log_info("Setting up qqclient instance.");
-	com_init_mem();
 	int lockid = open(QQCLIENT_LOCK, O_WRONLY | O_CREAT, 0600);
 	int rc = flock(lockid, LOCK_EX | LOCK_NB);
+	qq_init_mem();
 	if (rc == -1) {
 		qq_log_info("Existing qqclient instance running, inserting server.");
-		// add server
-		exit(1);
+		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
+		memcpy(base_path, new_instance->base_path, sizeof base_path);
+		memcpy(export_path, new_instance->export_path, sizeof export_path);
+		memcpy(qqserver_ip, new_instance->qqserver_ip, sizeof qqserver_ip);
+		qq_set_qqfs_instance(new_instance);
+		free(new_instance);
+		qq_close_mem();
+		exit(0);
 	} else {
 		qq_log_info("No qqclient instance detected, starting.");
+		com_init_mem();
+		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
+		memcpy(base_path, new_instance->base_path, sizeof base_path);
+		memcpy(export_path, new_instance->export_path, sizeof export_path);
+		memcpy(qqserver_ip, new_instance->qqserver_ip, sizeof qqserver_ip);
+		int startup = qq_set_qqfs_instance(new_instance);
+		free(new_instance);
+		if (startup < 0)
+			exit(1);
+		int responsibilities = 2;
+		pthread_t threads[responsibilities];
+		if (pthread_create(&threads[0], NULL, &qq_receiver_start, NULL))
+			qq_log_critical("Could not create receiver thread.");
+		if (pthread_create(&threads[1], NULL, &qq_parser_start, NULL))
+			qq_log_critical("Could not create parser thread.");
+		for (int i = 0; i < responsibilities; i++)
+			pthread_join(threads[i], NULL);
 	}
 	running = 1;
 	return lockid;
@@ -66,6 +79,8 @@ void qq_destroy_instance(int lockid)
 {
 	qq_log_info("Destroying qqclient instance.");
 	com_close_mem();
+	qq_close_mem();
+	qq_halt_logging();
 	flock(lockid, LOCK_UN);
 }
 
