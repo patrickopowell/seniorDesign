@@ -137,7 +137,7 @@ int get_bucket(const char *path)
 	
 	com_lock_sla();
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0  )
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0))
     pos++;
 
 	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
@@ -167,7 +167,7 @@ void add_bucket(const char *path, int index, unsigned int rate)
 {
 	int pos = 0;
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0))
     pos++;
 
 	printf("\n---index = %d, pos = %d\n", index, pos);
