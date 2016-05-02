@@ -38,13 +38,21 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 {
 	qq_setup_logging("qqclient");
 	qq_log_info("Setting up qqclient instance.");
+	running = 1;
 	int lockid = open(QQCLIENT_LOCK, O_WRONLY | O_CREAT, 0600);
+	if (lockid < 0) {
+		qq_log_critical("Could not open lock file! Fatal error.");
+		qq_log_debug(strerror(errno));
+		exit(1);
+	}
 	int rc = flock(lockid, LOCK_EX | LOCK_NB);
 	int mem_status = qq_init_mem();
 	if (mem_status < 0) {
 		qq_log_critical("Could not map qqclient shared memory! Fatal error.");
 		exit(1);
 	}
+	char qq_command[1024];
+	snprintf(qq_command, sizeof qq_command, "qqfs %s %s", base_path, export_path);
 	if (rc == -1) {
 		qq_log_info("Existing qqclient instance running, inserting server.");
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
@@ -53,33 +61,32 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
+		if (system(qq_command) != 0)
+			qq_log_critical("QQFS was not successfully started!");
 		qq_close_mem();
 		exit(0);
 	} else {
 		qq_log_info("No qqclient instance detected, starting.");
-		mem_status = com_init_mem();
-		if (mem_status < 0) {
-			qq_log_critical("Could not map qq shared memory! Fatal error.");
-			exit(1);
-		}
+		com_init_mem();
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
 		memcpy(base_path, new_instance->base_path, strlen(base_path));
 		memcpy(export_path, new_instance->export_path, strlen(export_path));
 		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
-		int startup = qq_set_qqfs_instance(new_instance);
+		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
-		if (startup < 0)
-			exit(1);
-		int responsibilities = 2;
-		pthread_t threads[responsibilities];
-		if (pthread_create(&threads[0], NULL, &qq_receiver_start, NULL))
-			qq_log_critical("Could not create receiver thread.");
-		if (pthread_create(&threads[1], NULL, &qq_parser_start, NULL))
-			qq_log_critical("Could not create parser thread.");
-		for (int i = 0; i < responsibilities; i++)
-			pthread_join(threads[i], NULL);
+		if (system(qq_command) != 0) {
+			qq_log_critical("QQFS was not successfully started! This is required for instance creation.");
+		} else {
+			int responsibilities = 2;
+			pthread_t threads[responsibilities];
+			if (pthread_create(&threads[0], NULL, &qq_receiver_start, NULL))
+				qq_log_critical("Could not create Receiver.");
+			if (pthread_create(&threads[1], NULL, &qq_parser_start, NULL))
+				qq_log_critical("Could not create Parser.");
+			for (int i = 0; i < responsibilities; i++)
+				pthread_join(threads[i], NULL);
+		}
 	}
-	running = 1;
 	return lockid;
 }
 

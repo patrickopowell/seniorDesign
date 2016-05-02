@@ -37,8 +37,8 @@ struct storage_identifier {
 
 struct qqfs_instance {
 	char qqserver_ip[15];
-	char base_path[15];
-	char export_path[15];
+	char base_path[80];
+	char export_path[80];
 	struct storage_identifier sid;
 };
 
