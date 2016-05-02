@@ -44,19 +44,13 @@ void test_throttle(void)
 	
     rb.rb_ts = qos_get_uptime();
 	
-	strcpy(rb.rb_path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	
 	printf("\n%5stest_throttle() - rb_ts = %lu\n", spacer, rb.rb_ts);
-	
-	printf("\n%5stest_throttle() - rb_path = %s\n", spacer, rb.rb_path);
 	
 	sleep(2);
 
-	qos_throttle(rb.rb_path,1);
+	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",1);
 
 	unsigned int uptime = qos_get_uptime() - rb.rb_ts;
-	
-	printf("\n%5stest_throttle() - current_ts = %lu\n", spacer, qos_get_uptime());
 	
 	printf("%5stest_throttle() - uptime = %u\n", spacer, uptime);
 
@@ -66,7 +60,7 @@ void test_throttle(void)
 	
 	rb.rb_ts = qos_get_uptime();
 
-	qos_throttle(rb.rb_path,2);
+	qos_throttle("/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/",2);
 
 	uptime = qos_get_uptime() - rb.rb_ts;
 	
@@ -116,15 +110,11 @@ int main(void)
 {
 	com_init_mem();
 	
-	com_lock_stat();
 	strcpy(com_stat_list->stats[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	com_stat_list->stats[0].iops_sec = 200000;
-	com_unlock_stat();
+	com_stat_list->stats[0].iops_sec = 20000;
 	
-	com_lock_sla();
 	strcpy(com_sla_list->slas[0].path, "/home/vagrant/QualiQueue/2016springTeam28/qqfs/example/mountdir/");
-	com_sla_list->slas[0].iops_max = 200000;
-	com_unlock_sla();
+	com_sla_list->slas[0].iops_max = 20000;
 	
 	CU_pSuite pSuite = NULL;
 	

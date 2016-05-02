@@ -62,6 +62,7 @@ unsigned int tokens;
 
 int qos_can_send (struct ratebucket *rb_ptr)
 {
+
 	if (rb_ptr->rb_tokens > 0) {
 		rb_ptr->rb_tokens--;
 		return 1;
@@ -85,6 +86,7 @@ int qos_can_send (struct ratebucket *rb_ptr)
 
 void qos_throttle (const char *path, int req)
 {
+	
 	int index = get_bucket(path);
 	
 	if (index < 0) return;
@@ -137,12 +139,13 @@ int get_bucket(const char *path)
 	
 	com_lock_sla();
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0))
-    pos++;
-
+	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
+    {
+		printf("\n---sla[%d] = %s (%d)\n", pos, path, strlen(path));
+		pos++;
+	}
+		
 	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
-	
-	printf("\n---get_bucket() - path = %s\n", rb_mounts[pos].rb_path);
 	
 	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
@@ -165,14 +168,12 @@ int get_bucket(const char *path)
 *
 */
 
-void add_bucket(const char *path, int index, unsigned int rate)
+void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0))
+	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
-
-	printf("\n---index = %d, pos = %d, path = %s\n", index, pos, path);
 	
 	strcpy(rb_mounts[pos].rb_path, path);
 	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
