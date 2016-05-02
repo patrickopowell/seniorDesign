@@ -3,6 +3,10 @@
 
   This program can be distributed under the terms of the GNU GPLv3.
   See the file COPYING.
+  
+  This program has been refactored and re-named as the 
+  QualiQueue File System (QQFS), all variables have been changed from 
+  'bb_' to 'qq_'
 
   There are a couple of symbols that need to be #defined before
   #including all the headers.
@@ -20,13 +24,13 @@
 // setlinebuf() later in consequence.
 #define _XOPEN_SOURCE 500
 
-// maintain bbfs state in here
+// maintain qqfs state in here
 #include <limits.h>
 #include <stdio.h>
-struct bb_state {
+struct qq_state {
     FILE *logfile;
     char *rootdir;
 };
-#define BB_DATA ((struct bb_state *) fuse_get_context()->private_data)
+#define QQ_DATA ((struct qq_state *) fuse_get_context()->private_data)
 
 #endif
