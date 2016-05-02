@@ -28,10 +28,8 @@
 #define COM_MAX_SERVERS 5
 
 struct sla_info {
-	int sla_id;
-	int s_dev;
-	int i_ino;
 	char path[80];
+	int sla_id;
 	int iops_min;
 	int iops_max;
 	int throughput_min;
@@ -44,8 +42,6 @@ struct sla_info_memory {
 };
 
 struct stat_info {
-	int s_dev;
-	int i_ino;
 	char path[80];
 	int iops_sec;
 	int reads_queued;

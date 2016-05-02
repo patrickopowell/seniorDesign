@@ -19,3 +19,6 @@
  
 void *qq_parser_start(void *in);
 void qq_parse_stat(struct stat_info *stat);
+void qq_init_connection(struct qqfs_instance *instance);
+void qq_send_handshake(struct qqfs_instance *instance);
+void qq_close_connections();
