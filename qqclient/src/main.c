@@ -103,14 +103,14 @@ void qq_destroy_instance(int lockid)
 
 void qq_unmount_instances()
 {
-	qos_log_info("Detaching QQFS instances from destinations.");
+	qq_log_info("Detaching QQFS instances from destinations.");
 	qq_lock();
 	for (int i = 0; i < qqfs_instance_list->count; i++) {
 		struct qqfs_instance *curr_inst = &(qqfs_instance_list->instances[i]);
 		char qqfs_ucommand[1024];
-		snprintf(qqfs_ucommand, sizeof qqfs_ucommand, "fusermount -u %s", qqfs_instance->export_path);
+		snprintf(qqfs_ucommand, sizeof qqfs_ucommand, "fusermount -u %s", curr_inst->export_path);
 		if (system(qqfs_ucommand) != 0)
-			qos_log_error("Unable to detatch QQFS from destination!");
+			qq_log_error("Unable to detatch QQFS from destination!");
 	}
 	qq_unlock();
 }

@@ -75,7 +75,7 @@ void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 	cf->suspensions = stat->iops_suspended;
 	cf->sla_check = 0;
 	cf->critical_request = 0;
-	qq_send_cf(cf);
+	qq_send_cf(instance, cf);
 	free(cf);
 }
 

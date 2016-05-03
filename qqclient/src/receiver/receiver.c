@@ -56,11 +56,11 @@ void *qq_receiver_start(void *in)
 			received += nbytes;
 		} while (received < BUFFERLENGTH);
 		close(accept_fd);
-		
+
 		/** Spaghetti monster. **/
 
 		struct sockaddr_in addr;
-		getpeername(accept_fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
+		getpeername(accept_fd, (struct sockaddr *)&addr, (socklen_t *)sizeof(struct sockaddr_in));
 		char *qqserver_ip = inet_ntoa(addr.sin_addr);
 		struct sla *new_sla = calloc(1, sizeof(struct sla));
 
