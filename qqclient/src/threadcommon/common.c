@@ -79,10 +79,10 @@ int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest)
 	int curr_num_qqfs = qqfs_instance_list->count;
 	struct qqfs_instance *curr_qqfs;
 	while (qqfs_index < curr_num_qqfs) {
-		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		curr_qqfs = qqfs_instance_list->instances+qqfs_index;
 		if (strcmp(curr_qqfs->export_path, export_path) == 0) {
 			found = 1;
-			memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
+			*instance_dest = *curr_qqfs;
 			break;
 		}
 		qqfs_index++;
@@ -100,9 +100,8 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 	int found = 0;
 	int qqfs_index = 0;
 	int curr_num_qqfs = qqfs_instance_list->count;
-	struct qqfs_instance *curr_qqfs;
 	while (qqfs_index < curr_num_qqfs) {
-		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		struct qqfs_instance *curr_qqfs = qqfs_instance_list->instances+qqfs_index;
 		if (strcmp(curr_qqfs->export_path, instance_src->export_path) == 0) {
 			found = 1;
 			qq_log_critical("Cannot duplicate QQFS mount exports!");
@@ -116,8 +115,7 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 			qq_log_critical("No more room for additional QQFS instances!");
 			return_val = QQCLIENT_MEM_OOS;
 		} else {
-			curr_qqfs = &(qqfs_instance_list->instances[curr_num_qqfs]);
-			memcpy(&instance_src, &curr_qqfs, sizeof instance_src);
+			qqfs_instance_list->instances[curr_num_qqfs] = *instance_src;
 			qqfs_instance_list->count++;
 		}
 	}
@@ -132,12 +130,11 @@ int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
 	int found = 0;
 	int qqfs_index = 0;
 	int curr_num_qqfs = qqfs_instance_list->count;
-	struct qqfs_instance *curr_qqfs;
 	while (qqfs_index < curr_num_qqfs) {
-		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		struct qqfs_instance *curr_qqfs = qqfs_instance_list->instances+qqfs_index;
 		if (strcmp(curr_qqfs->export_path, instance_src->export_path) == 0) {
+			*curr_qqfs = *instance_src;
 			found = 1;
-			memcpy(&instance_src, &curr_qqfs, sizeof instance_src);
 			break;
 		}
 		qqfs_index++;
@@ -167,9 +164,7 @@ int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
 	if (index > qqfs_instance_list->count-1)
 		return_val = QQCLIENT_ELEMENT_NFOUND;
 	else {
-		struct qqfs_instance *curr_qqfs;
-		curr_qqfs = &(qqfs_instance_list->instances[index]);
-		memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
+		*instance_dest = qqfs_instance_list->instances[index];
 	}
 	qq_unlock();
 	return return_val;
@@ -184,10 +179,10 @@ int qq_get_qqfs_instance_by_pair(char *qqserver_ip, int qqstorage_id, struct qqf
 	int curr_num_qqfs = qqfs_instance_list->count;
 	struct qqfs_instance *curr_qqfs;
 	while (qqfs_index < curr_num_qqfs) {
-		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		curr_qqfs = qqfs_instance_list->instances+qqfs_index;
 		if ((strcmp(curr_qqfs->qqserver_ip, qqserver_ip) == 0) && (curr_qqfs->qqstorage_id == qqstorage_id)) {
 			found = 1;
-			memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
+			*instance_dest = *curr_qqfs;
 			break;
 		}
 		qqfs_index++;

@@ -42,7 +42,6 @@ void *qq_receiver_start(void *in)
 			continue;
 		}
 		if (!FD_ISSET(receiver_socket, &read_fd)) {
-			qq_log_info("No incoming SLAs from server.\n");
 			usleep(1000000);
 			continue;
 		}

@@ -54,9 +54,9 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 	if (rc == -1) {
 		qq_log_info("Existing qqclient instance running, inserting server.");
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
-		memcpy(base_path, new_instance->base_path, strlen(base_path));
-		memcpy(export_path, new_instance->export_path, strlen(export_path));
-		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
+		memcpy(new_instance->base_path, base_path, strlen(base_path));
+		memcpy(new_instance->export_path, export_path, strlen(export_path));
+		memcpy(new_instance->qqserver_ip, qqserver_ip, strlen(qqserver_ip));
 		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
@@ -68,9 +68,9 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 		qq_log_info("No qqclient instance detected, starting.");
 		com_init_mem();
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
-		memcpy(base_path, new_instance->base_path, strlen(base_path));
-		memcpy(export_path, new_instance->export_path, strlen(export_path));
-		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
+		memcpy(new_instance->base_path, base_path, strlen(base_path));
+		memcpy(new_instance->export_path, export_path, strlen(export_path));
+		memcpy(new_instance->qqserver_ip, qqserver_ip, strlen(qqserver_ip));
 		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
