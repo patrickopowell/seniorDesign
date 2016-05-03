@@ -1,9 +1,15 @@
 #ifndef JANSSON_INCLUDE
 #include <jansson.h>
+#include "../protocol.h"
+#include "../logging/logging.h"
 
 #define STRING_TYPE 0
 #define INTEGER_TYPE 1
 #define ARRAY_TYPE 2
+
+#define QQJSON_VALID 0
+#define QQJSON_NOT_JSON -1
+#define QQJSON_NOT_VALID -2
 
 struct protocol_tuple {
 	char *name;

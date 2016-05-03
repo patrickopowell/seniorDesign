@@ -94,7 +94,6 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 void qq_destroy_instance(int lockid)
 {
 	qq_log_info("Destroying qqclient instance.");
-	// close all qqclient sockets
 	// unmount all qqfs
 	com_close_mem();
 	qq_close_mem();
