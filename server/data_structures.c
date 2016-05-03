@@ -41,11 +41,9 @@ typedef struct LinkedList{
  * Creates a linked list of Clients,
  * with a head node containing Client c.
  *******************************************************/
-//LinkedList *createList(Client *c){
 LinkedList *createList(){
 	LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
 	list->head = malloc(sizeof(Node));
-	//list->head->c = c;
 	list->F11 = push; // push client to front of list
 	list->F12 = delete; // delete client by ID
 	list->F13 = getClientByID; // get client by ID
@@ -59,7 +57,6 @@ LinkedList *createList(){
  */
 void push(Node **head, Client c1){
 	Node *newNode = malloc(sizeof(Node)); // create new Node.
-	//newNode->c = malloc(sizeof(Client));
 	newNode->c = c1; // Set its data.
 	newNode->next = *head; // Make it point to head, so it is now first.
 	*head = newNode; // Make head first again.

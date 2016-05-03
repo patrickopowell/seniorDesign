@@ -3,6 +3,8 @@
  *
  * As of Tuesday May 3, 2016, to compile:
  * 		# gcc -Wall -std=c99 -g interface.c Client.c data_structures.c monitor.c Parser.c -o interface.out
+ * To check for memory leaks:
+ * 		# valgrind --leak-check=full --show-leak-kinds=all ./interface.out
  *
  *****************************************************************/
 
@@ -168,13 +170,12 @@ void pushSLA()
 int main(void)
 {
     setup();
-    //makeSLA(3, 3, "Hello"); // for testing purposes
-    //printf("%s\n", SLA); // Also for the test
     while(1){
 		if(getClient()){
 			pushSLA();
 		}
     }
+
     return 0;
 }
 
