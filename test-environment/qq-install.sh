@@ -28,7 +28,7 @@ sudo cp ../src/qqfs /usr/bin
 
 sudo chmod 777 /usr/bin/qqfs
 
-echo ""
+#echo ""
 echo "---- Mounting QQFS ----"
 echo ""
 
@@ -48,7 +48,7 @@ echo ""
 
 cd ../../tests/
 
-echo ""
+#echo ""
 echo "---- preparing tests ----"
 echo ""
 
@@ -60,10 +60,33 @@ echo ""
 
 cd qqfs
 
-echo ""
+#echo ""
 echo "---- running tests ----"
 echo ""
 
 ./qos_throttle_test
 
 gcov qos_throttle.c ../libcommon/logging/logging.c communication.c -o .
+
+echo ""
+echo "---- tests completed ----"
+echo ""
+
+#echo ""
+echo "---- Installing QQClient ----"
+echo ""
+
+
+# Install QQClient
+cd ../../qqclient/src
+
+make
+
+sudo cp qqclient /usr/bin/
+
+sudo chmod 777 /usr/bin/qqclient
+
+echo ""
+echo "---- QQClient install completed ----"
+echo ""
+
