@@ -4,7 +4,8 @@
 #include "parser/parser.h"
 
 #define BUFFERLENGTH 5000
-#define QQCLIENT_LOCK "/etc/qqclient.lock"
+//#define QQCLIENT_LOCK "/etc/qqclient.lock"
+#define QQCLIENT_LOCK "qqclient.lock"
 
 struct arguments {
 	char *args[3];

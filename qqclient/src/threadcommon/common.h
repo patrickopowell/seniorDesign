@@ -15,6 +15,7 @@
 #include <sys/shm.h>
 #include <semaphore.h>
 #include <errno.h>
+#include "../../../libcommon/protocol.h"
 #include "../../../libcommon/logging/logging.h"
 #include "../../../libcommon/client/communication.h"
 
@@ -30,16 +31,12 @@
 
 #define QQCLIENT_MAX_QQFS 5
 
-struct storage_identifier {
-	int s_dev;
-	int i_ino;
-};
-
 struct qqfs_instance {
 	char qqserver_ip[15];
-	char base_path[80];
-	char export_path[80];
-	struct storage_identifier sid;
+	char base_path[40];
+	char export_path[40];
+	int qqstorage_id;
+	int qqserver_socket;
 };
 
 struct qqfs_instances {

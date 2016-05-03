@@ -3,9 +3,8 @@
 const char *argp_program_version = "qqclient-0.1";
 const char *argp_program_bug_address = "<racampbe@ncsu.edu>";
 static char doc[] = "qqclient -- Instantiate QualiQueue on a location.";
-static char args_doc[] = "BASE_FOLDER EXPORT_FOLDER QQ_SERVER_IP";
+static char args_doc[] = "BASE_FOLDER EXPORT_FOLDER QQSERVER_IP QQSTORAGE_ID";
 static struct argp_option options[] = {
-	{"debug", 'd', 0, 0, "Report debug messages."},
 	{0}
 };
 static struct argp argp = {options, parse_opt, args_doc, doc};
@@ -16,7 +15,7 @@ int main(int argc, char *argv[])
 	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
-	int lockid = qq_setup_instance(argv[1], argv[2], argv[3]);
+	int lockid = qq_setup_instance(argv[1], argv[2], argv[3], argv[4]);
 	qq_destroy_instance(lockid);
 	return 0;
 }
@@ -34,7 +33,7 @@ void setup_clean_kill()
 	sigaction(SIGINT, &act, 0);
 }
 
-int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
+int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, char *qqstorage_id)
 {
 	qq_setup_logging("qqclient");
 	qq_log_info("Setting up qqclient instance.");
@@ -59,6 +58,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 		memcpy(base_path, new_instance->base_path, strlen(base_path));
 		memcpy(export_path, new_instance->export_path, strlen(export_path));
 		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
+		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
 		if (system(qq_command) != 0)
@@ -72,6 +72,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 		memcpy(base_path, new_instance->base_path, strlen(base_path));
 		memcpy(export_path, new_instance->export_path, strlen(export_path));
 		memcpy(qqserver_ip, new_instance->qqserver_ip, strlen(qqserver_ip));
+		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
 		if (system(qq_command) != 0) {
@@ -93,6 +94,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip)
 void qq_destroy_instance(int lockid)
 {
 	qq_log_info("Destroying qqclient instance.");
+	// unmount all qqfs
 	com_close_mem();
 	qq_close_mem();
 	qq_halt_logging();
@@ -112,16 +114,13 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
 	struct arguments *arguments = state->input;
 	switch (key) {
-		case 'd':
-			arguments->debug = 1;
-			break;
 		case ARGP_KEY_ARG:
-			if (state->arg_num >= 3) // Too many args
+			if (state->arg_num >= 4) // Too many args
 				argp_usage(state);
 			arguments->args[state->arg_num] = arg;
 			break;
 		case ARGP_KEY_END:
-			if (state->arg_num < 3) // Too few args
+			if (state->arg_num < 4) // Too few args
 				argp_usage(state);
 			break;
 		default:
