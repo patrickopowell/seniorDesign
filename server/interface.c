@@ -125,7 +125,6 @@ int getClient()
  * The parameters are things that the server either gets from the user or keeps track 
  * of in the main function. Everything else in the SLA is determined by the monitor.
  * @param protocol_version - Determined in main.
- * @param SLA_version      - Determined in monitor.
  * @param client_id        - Received from the client.
  * @param storage_type     - Received from the client.
  ******************************************************************************************************/
@@ -173,7 +172,6 @@ int main(void)
     //printf("%s\n", SLA); // Also for the test
     while(1){
 		if(getClient()){
-			//makeSLA(3, 3, "Hello");
 			pushSLA();
 		}
     }

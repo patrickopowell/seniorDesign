@@ -22,21 +22,21 @@ long getSLA_version();
 /* Return the number of connected clients. */
 int getNumClients(void);
 /* Return the maximum bandwidth capacity. */
-int getBandwidth(void);
+long getBandwidth(void);
 /* Return arbitrary maximum bandwidth of client. */
-int getArbitrary(void);
+long getArbitrary(void);
 /* Return bandwidth being used. */
-int getUsage(void);
+long getUsage(void);
 /* Return SLA min bandwidth guaranteed. */
-int getSLA_min(void);
+long getSLA_min(void);
 /* Return unused bandwidth. */
-int getUnused(void);
+long getUnused(void);
 
 /////////////////// New as of March 15, 2016 /////////////////////
-int getMinThru(void); // min throughput
-int getMaxThru(void); // max throughput
-int getMinIOPS(void); // min IOPS
-int getMaxIOPS(void); // max IOPS
+long getMinThru(void); // min throughput
+long getMaxThru(void); // max throughput
+long getMinIOPS(void); // min IOPS
+long getMaxIOPS(void); // max IOPS
 ////////////////////// End March 15, 2016 ////////////////////////
 
 

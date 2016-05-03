@@ -1,11 +1,11 @@
 #include "monitor.h"
     
-    int numClients = 0;
-    int bandwidth = 0;
-    int arbitrary = 0;
-    int usage = 0;
-    int SLA_min = 0;
-    int unused = 0;
+    int numClients = 1;
+    long bandwidth = 10000;
+    long arbitrary = 0;
+    long usage = 0;
+    long SLA_min = 0;
+    long unused = 0;
     long SLA_version = 0;
     /************************* SETTERS **********************************/
       
@@ -69,46 +69,46 @@
 
     /* Return the number of connected clients. */
     int getNumClients(void){
-        return 0;
+        return numClients;
     }
 
     /* Return the maximum bandwidth capacity. */
-    int getBandwidth(void){
-        return 0;
+    long getBandwidth(void){
+        return bandwidth;
     }
 
     /* Return arbitrary maximum bandwidth of client. */
-    int getArbitrary(void){
+    long getArbitrary(void){
         return 0;
     }
 
     /* Return bandwidth being used. */
-    int getUsage(void){
+    long getUsage(void){
         return 0;
     }
 
     /* Return SLA min bandwidth guaranteed. */
-    int getSLA_min(void){
+    long getSLA_min(void){
         return 2;
     }
 
     /* Return unused bandwidth. */
-    int getUnused(void){
+    long getUnused(void){
         return 5;
     }
     
 /////////////////// New as of March 15, 2016 /////////////////////
-    int getMinThru(void){
-        return 20;
+    long getMinThru(void){
+        return bandwidth / numClients;
     }
-    int getMaxThru(void){
-        return 50;
+    long getMaxThru(void){
+        return bandwidth / numClients;
     }
-    int getMinIOPS(void){
-        return 10;
+    long getMinIOPS(void){
+        return bandwidth / numClients;
     }
-    int getMaxIOPS(void){
-        return 20;
+    long getMaxIOPS(void){
+        return bandwidth / numClients;
     }
 ////////////////////// End March 15, 2016 ////////////////////////
     
