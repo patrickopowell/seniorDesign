@@ -15,6 +15,9 @@ void setSLA_min(int);
 /* Set unused bandwidth. */
 void setUnused(int);
 
+void increment_SLA();
+long getSLA_version();
+
 
 /* Return the number of connected clients. */
 int getNumClients(void);

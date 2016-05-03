@@ -1,0 +1,109 @@
+#### Install CUnit
+
+#cd ../tests/CUnit-2.1-2
+ 
+#sudo ./configure --prefix=/usr
+ 
+#sudo make
+ 
+#sudo make install
+
+#cd ../../qqfs/src
+ 
+#### End CUnit install
+
+#### Install QualiQueue
+
+sudo rm -rf 2016springTeam28/
+
+git clone https://github.ncsu.edu/engr-csc-sdc/2016springTeam28.git
+
+cd 2016springTeam28
+
+git checkout development
+
+chmod -R 777 .
+
+cd qqfs/src
+
+echo ""
+echo "---- Installing QQFS ----"
+echo ""
+
+sh qos_throttle.sh
+
+echo ""
+echo "---- QQFS Installed ----"
+echo ""
+
+cd ../example/
+
+sudo chmod 777 -R .
+
+sudo cp ../src/qqfs /usr/bin
+
+sudo chmod 777 /usr/bin/qqfs
+
+#echo ""
+echo "---- Mounting QQFS ----"
+echo ""
+
+/usr/bin/qqfs rootdir mountdir
+
+ls -lR
+
+fusermount -u mountdir
+
+ls -lR
+
+cd ../../tests
+
+echo ""
+echo "---- Un-Mounted QQFS ----"
+echo ""
+
+cd ../../tests/
+
+#echo ""
+echo "---- preparing tests ----"
+echo ""
+
+sh test.sh
+
+echo ""
+echo "---- tests prepared ----"
+echo ""
+
+cd qqfs
+
+#echo ""
+echo "---- running tests ----"
+echo ""
+
+./qos_throttle_test
+
+gcov qos_throttle.c ../libcommon/logging/logging.c communication.c -o .
+
+echo ""
+echo "---- tests completed ----"
+echo ""
+
+#echo ""
+echo "---- Installing QQClient ----"
+echo ""
+
+
+# Install QQClient
+cd ../../qqclient/src
+
+make
+
+sudo cp qqclient /usr/bin/
+
+sudo chmod 777 /usr/bin/qqclient
+
+echo ""
+echo "---- QQClient install completed ----"
+echo ""
+
+#### End QualiQueue install
