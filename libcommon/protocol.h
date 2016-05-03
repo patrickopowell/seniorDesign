@@ -1,3 +1,4 @@
+#ifndef PROTOCOL
 struct client_feedback {
 	int version;
 	int sla_version;
@@ -23,3 +24,5 @@ struct sla {
 	int throughput_max;
 	int unused_bandwidth;
 };
+#define PROTOCOL
+#endif
