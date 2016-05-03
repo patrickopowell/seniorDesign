@@ -139,6 +139,8 @@ int get_bucket(const char *path)
 	
 	com_lock_sla();
 	
+	if (strcmp(com_sla_list->slas[0].path, "") == 0) return -1;
+	
 	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     {
 		printf("\n---sla[%d] = %s (%d)\n", pos, path, strlen(path));
