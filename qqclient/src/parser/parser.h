@@ -21,4 +21,5 @@ void qq_parse_stat(struct stat_info *stat);
 int qq_init_connection(struct qqfs_instance *instance);
 void qq_send_handshake(struct qqfs_instance *instance);
 void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat);
+void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf);
 void qq_close_connections();

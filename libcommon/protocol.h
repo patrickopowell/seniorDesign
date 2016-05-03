@@ -1,4 +1,5 @@
 #ifndef PROTOCOL
+#define PROTOCOL_VER 1
 struct client_feedback {
 	int version;
 	int sla_version;
