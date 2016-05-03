@@ -35,7 +35,13 @@ int qq_init_connection(struct qqfs_instance *instance)
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	getaddrinfo(instance->qqserver_ip, SERVERPORT, &hints, &res);
+	int status = 0;
+	if ((status = getaddrinfo(instance->qqserver_ip, SERVERPORT, &hints, &res)) != 0) {
+		char msg[100];
+		snprintf(msg, sizeof msg, "Could not getaddrinfo on qqserver_ip: %s", instance->qqserver_ip);
+		qq_log_error(msg);
+		return -1;
+	}
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (connect(sockfd, res->ai_addr, res->ai_addrlen) < 0) {
 		qq_log_error("Could not connect to specified qqserver! Will retry on next pass.");
@@ -98,7 +104,6 @@ void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
 
 void qq_close_connections()
 {
-	qq_lock();
 	int num_servers = qqfs_instance_list->count;
 	struct qqfs_instance *curr_instance = calloc(1, sizeof(struct qqfs_instance));
 	for (int i = 0; i < num_servers; i++) {
@@ -107,5 +112,4 @@ void qq_close_connections()
 			close(curr_instance->qqserver_socket);
 	}
 	free(curr_instance);
-	qq_unlock();
 }
