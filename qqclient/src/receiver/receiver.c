@@ -36,7 +36,7 @@ void *qq_receiver_start(void *in)
 	FD_ZERO(&master);
 	FD_SET(receiver_socket, &master);
 
-	while(check_running() != 0) {
+	while (check_running() != 0) {
 		if (select(receiver_socket+1, &read_fd, NULL, NULL, &stTimeOut) == -1) {
 			qq_log_error("Could not obtain select for socket.");
 			continue;
@@ -48,22 +48,34 @@ void *qq_receiver_start(void *in)
 		}
 		qq_log_info("Receiving SLA.");
 		int accept_fd = accept(receiver_socket, (struct sockaddr *)&server_addr, &addr_size);
-		if (recv(accept_fd, recvbuffer, BUFFERLENGTH, 0) != 0) {
-			fprintf(stdout, "%s\n", recvbuffer);
-			qq_log_info(recvbuffer);
-			/*void *sla = qq_load_sla(recvbuffer);
-			if (sla == NULL) {
-				fprintf(stderr, "Invalid SLA received, failed JSON object construction.");
-				continue;
-			}
-			if (qq_validate_sla(sla) > 0) {
-				fprintf(stderr, "Invalid SLA received, failed validation.");
-				continue;
-			}
-			// pass that ish to the kernel
-			qq_release_sla(sla);*/
-			close(accept_fd);
-		}
+		int received = 0;
+		do {
+			int nbytes = recv(accept_fd, recvbuffer+received, BUFFERLENGTH-received, 0);
+			if (nbytes == 0)
+				break;
+			received += nbytes;
+		} while (received < BUFFERLENGTH);
+		close(accept_fd);
+		/** Spaghetti monster. **/
+		char *qqserver_ip = inet_ntoa(server_addr.sin_addr);
+		struct sla *new_sla = calloc(1, sizeof(struct sla));
+		qq_decode_sla(recvbuffer, new_sla);
+		struct qqfs_instance *curr_instance = calloc(1, sizeof(struct qqfs_instance));
+		qq_get_qqfs_instance_by_pair(qqserver_ip, new_sla->storage_id, curr_instance);
+		struct sla_info *sla_comm = calloc(1, sizeof(struct sla_info));
+		memcpy(curr_instance->export_path, sla_comm->path, sizeof curr_instance->export_path);
+		sla_comm->sla_id = new_sla->sla_version;
+		sla_comm->iops_min = new_sla->iops_min;
+		sla_comm->iops_max = new_sla->iops_max;
+		sla_comm->throughput_min = new_sla->throughput_min;
+		sla_comm->throughput_max = new_sla->throughput_max;
+		com_set_sla(curr_instance->export_path, sla_comm);
+		curr_instance->sla_version = new_sla->sla_version;
+		curr_instance->storage_type = new_sla->storage_type;
+		qq_update_qqfs_instance(curr_instance);
+		free(sla_comm);
+		free(curr_instance);
+		free(new_sla);
 	}
 	freeaddrinfo(receiver_info);
 	qq_log_info("Exiting Receiver.");

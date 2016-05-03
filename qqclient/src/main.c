@@ -50,8 +50,8 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 		qq_log_critical("Could not map qqclient shared memory! Fatal error.");
 		exit(1);
 	}
-	char qq_command[1024];
-	snprintf(qq_command, sizeof qq_command, "qqfs %s %s", base_path, export_path);
+	char qqfs_command[1024];
+	snprintf(qqfs_command, sizeof qqfs_command, "qqfs %s %s", base_path, export_path);
 	if (rc == -1) {
 		qq_log_info("Existing qqclient instance running, inserting server.");
 		struct qqfs_instance *new_instance = calloc(1, sizeof(struct qqfs_instance));
@@ -61,7 +61,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
-		if (system(qq_command) != 0)
+		if (system(qqfs_command) != 0)
 			qq_log_critical("QQFS was not successfully started!");
 		qq_close_mem();
 		exit(0);
@@ -75,7 +75,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 		new_instance->qqstorage_id = strtol(qqstorage_id, NULL, 10);
 		qq_set_qqfs_instance(new_instance);
 		free(new_instance);
-		if (system(qq_command) != 0) {
+		if (system(qqfs_command) != 0) {
 			qq_log_critical("QQFS was not successfully started! This is required for instance creation.");
 		} else {
 			int responsibilities = 2;
@@ -94,11 +94,25 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 void qq_destroy_instance(int lockid)
 {
 	qq_log_info("Destroying qqclient instance.");
-	// unmount all qqfs
+	qq_unmount_instances();
 	com_close_mem();
 	qq_close_mem();
 	qq_halt_logging();
 	flock(lockid, LOCK_UN);
+}
+
+void qq_unmount_instances()
+{
+	qos_log_info("Detaching QQFS instances from destinations.");
+	qq_lock();
+	for (int i = 0; i < qqfs_instance_list->count; i++) {
+		struct qqfs_instance *curr_inst = &(qqfs_instance_list->instances[i]);
+		char qqfs_ucommand[1024];
+		snprintf(qqfs_ucommand, sizeof qqfs_ucommand, "fusermount -u %s", qqfs_instance->export_path);
+		if (system(qqfs_ucommand) != 0)
+			qos_log_error("Unable to detatch QQFS from destination!");
+	}
+	qq_unlock();
 }
 
 /**

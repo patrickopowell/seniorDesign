@@ -125,6 +125,32 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 	return return_val;
 }
 
+int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
+{
+	int return_val = 0;
+	qq_lock();
+	int found = 0;
+	int qqfs_index = 0;
+	int curr_num_qqfs = qqfs_instance_list->count;
+	struct qqfs_instance *curr_qqfs;
+	while (qqfs_index < curr_num_qqfs) {
+		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		if (strcmp(curr_qqfs->export_path, instance_src->export_path) == 0) {
+			found = 1;
+			memcpy(&instance_src, &curr_qqfs, sizeof instance_src);
+			break;
+		}
+		qqfs_index++;
+	}
+	if (found == 0) {
+		qq_log_critical("Could not find QQFS instance to update!");
+		return_val = QQCLIENT_ELEMENT_NFOUND;
+	}
+	qq_unlock();
+	return return_val;
+}
+
+
 int qq_get_num_qqfs_instances()
 {
 	int num_instances = 0;
@@ -145,6 +171,29 @@ int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
 		curr_qqfs = &(qqfs_instance_list->instances[index]);
 		memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
 	}
+	qq_unlock();
+	return return_val;
+}
+
+int qq_get_qqfs_instance_by_pair(char *qqserver_ip, int qqstorage_id, struct qqfs_instance *instance_dest)
+{
+	int return_val = 0;
+	qq_lock();
+	int found = 0;
+	int qqfs_index = 0;
+	int curr_num_qqfs = qqfs_instance_list->count;
+	struct qqfs_instance *curr_qqfs;
+	while (qqfs_index < curr_num_qqfs) {
+		curr_qqfs = &(qqfs_instance_list->instances[qqfs_index]);
+		if ((strcmp(curr_qqfs->qqserver_ip, qqserver_ip) == 0) && (curr_qqfs->qqstorage_id == qqstorage_id)) {
+			found = 1;
+			memcpy(&curr_qqfs, &instance_dest, sizeof curr_qqfs);
+			break;
+		}
+		qqfs_index++;
+	}
+	if (found == 0)
+		return_val = QQCLIENT_ELEMENT_NFOUND;
 	qq_unlock();
 	return return_val;
 }
