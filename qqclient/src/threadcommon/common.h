@@ -37,6 +37,8 @@ struct qqfs_instance {
 	char export_path[40];
 	int qqstorage_id;
 	int qqserver_socket;
+	int sla_version;
+	int storage_type;
 };
 
 struct qqfs_instances {

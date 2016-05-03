@@ -28,11 +28,6 @@ void *qq_parser_start(void *in)
 	return 0;
 }
 
-void qq_parse_stat(struct stat_info *stat)
-{
-	printf("%s\n%d %d %d %d %d\n", stat->path, stat->iops_sec, stat->reads_queued, stat->writes_queued, stat->iops_suspended, stat->throughput);
-}
-
 int qq_init_connection(struct qqfs_instance *instance)
 {
 	struct addrinfo hints, *res;
@@ -52,12 +47,53 @@ int qq_init_connection(struct qqfs_instance *instance)
 
 void qq_send_handshake(struct qqfs_instance *instance)
 {
-
+	struct client_feedback *cf = calloc(1, sizeof(struct client_feedback));
+	cf->version = PROTOCOL_VER;
+	cf->sla_version = 0;
+	cf->storage_id = instance->qqstorage_id;
+	cf->storage_type = 0;
+	cf->current_throughput = 0;
+	cf->writes_queued = 0;
+	cf->reads_queued = 0;
+	cf->suspensions = 0;
+	cf->sla_check = 0;
+	cf->critical_request = 0;
+	qq_send_cf(instance, cf);
+	free(cf);
 }
 
 void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 {
+	struct client_feedback *cf = calloc(1, sizeof(struct client_feedback));
+	cf->version = PROTOCOL_VER;
+	cf->sla_version = instance->sla_version;
+	cf->storage_id = instance->qqstorage_id;
+	cf->storage_type = instance->storage_type;
+	cf->current_throughput = stat->iops_sec;
+	cf->writes_queued = stat->writes_queued;
+	cf->reads_queued = stat->reads_queued;
+	cf->suspensions = stat->iops_suspended;
+	cf->sla_check = 0;
+	cf->critical_request = 0;
+	qq_send_cf(cf);
+	free(cf);
+}
 
+void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
+{
+	char *cf_json = qq_encode_cf(cf);
+	int send_length = strlen(cf_json);
+	int sockfd = instance->qqserver_socket;
+	int sent = 0;
+	do {
+		int nbytes = send(sockfd, cf_json+sent, send_length-sent, 0);
+		if (nbytes < 0) {
+			qq_log_error("Error sending client feedback!");
+			break;
+		}
+		sent += nbytes;
+	} while (sent < send_length);
+	free(cf_json);
 }
 
 void qq_close_connections()
