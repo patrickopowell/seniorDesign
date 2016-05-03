@@ -139,9 +139,6 @@ int get_bucket(const char *path)
 	
 	com_lock_sla();
 	
-	if (strcmp( com_sla_list->slas[3].path, "" ) == 0) printf("\nshared memory empty string is \"\"");
-	else if (strcmp( com_sla_list->slas[3].path, NULL ) == 0) printf("\nshared memory empty string is NULL\n");
-	
 	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     {
 		printf("\n---sla[%d] = %s (%d)\n", pos, path, strlen(path));
@@ -225,10 +222,11 @@ unsigned long qos_get_uptime(void)
 
 int qos_init(const char *path) 
 {
+	printf("\ninit_mem");
 	com_init_mem();
-	
+	printf("\nget_bucket");
 	get_bucket(path);
-	
+	printf("\nreturn\n");
 	return 1;
 }
 
