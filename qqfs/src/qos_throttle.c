@@ -145,14 +145,14 @@ int get_bucket(const char *path)
 		printf("---com_sla_list->slas[%d] = %s (%d)\n", pos, com_sla_list->slas[pos].path, strlen(path));
 		pos++;
 	}
-		
-	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
-	
-	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
 	printf("\n---original_path = %s (%d)\n", pos, path, strlen(path));
 	printf("---rb_mounts[%d].path = %s (%d)\n", pos, rb_mounts[pos].rb_path, strlen(rb_mounts[pos].rb_path));
 	printf("---com_sla_list->slas[%d].path = %s (%d)\n", pos, com_sla_list->slas[pos].path, strlen(com_sla_list->slas[pos].path));
+		
+	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) return -1;
+	
+	if (strcmp( rb_mounts[pos].rb_path, path ) != 0) add_bucket(path, pos, com_sla_list->slas[pos].iops_max);
 	
 	rb = rb_mounts[pos];
 	
