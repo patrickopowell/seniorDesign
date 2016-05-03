@@ -4,6 +4,7 @@
 	typedef enum { false, true } bool;
 
 	typedef struct Client {
+		struct sockaddr_in cli_addr;
 		long id;
 		long current_usage;
 		bool above;
@@ -36,8 +37,8 @@
 	 * and return the number of nodes in the list.
 	 */
 	int length(Node* head) {
-		Node* current = head;
 		int count = 0;
+		Node* current = head;
 		while (current != NULL) {
 			count++;
 			current = current->next;

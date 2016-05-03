@@ -32,6 +32,8 @@ int listening = NULL;
 	
 int SLA_unused = NULL;
 
+Node *head = malloc(sizeof(Node));
+
 
 /**
  * Setup the sockets and stuff.
@@ -83,8 +85,10 @@ int getClient()
     if(new_sock < 0){
         return 0; // failure
     } else{
+    	incrementNumClients();
+    	Client *c1 = malloc(sizeof(Client));
         recv(new_sock, &client_string, 1024, 0);
-        incrementNumClients();
+
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         return 1; // success
     }
@@ -136,6 +140,7 @@ int updateClient(char *str){
 
 int main(void)
 {
+	Node *head = malloc(sizeof(Node));
     setup();
     //makeSLA(3, 3, "Hello", "World!"); // for testing purposes
     //printf("%s\n", SLA); // Also for the test
