@@ -6,6 +6,7 @@
     int usage = 0;
     int SLA_min = 0;
     int unused = 0;
+    long SLA_version = 0;
     /************************* SETTERS **********************************/
       
     /* Set the number of connected clients. */
@@ -51,7 +52,21 @@
         }
     }
     
+    /**
+     * Increments the SLA version.
+     */
+    void increment_SLA(){
+    	SLA_version++;
+    }
+
     /************************* GETTERS **********************************/
+    /**
+     * Returns the current SLA version.
+     */
+    long getSLA_version(){
+    	return SLA_version;
+    }
+
     /* Return the number of connected clients. */
     int getNumClients(void){
         return 0;
