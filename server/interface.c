@@ -1,11 +1,17 @@
 /******************************************************************
  * This is the interface that will communicate with the client.
+ *
+ * As of Tuesday May 3, 2016, to compile:
+ * 		# gcc -Wall -std=c99 -g interface.c Client.c data_structures.c monitor.c Parser.c -o interface.out
+ *
  *****************************************************************/
 
+
+
+#include "data_structures.h"
 #include "monitor.h"
 #include "Client.h"
 #include "Parser.h"
-#include "data_structures.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,10 +41,10 @@ int listening = NULL;
 	
 int SLA_unused = NULL;
 
-LinkedList *list = createList();
-Parser *parser = createParser();
+LinkedList *list; // = createList();
+Parser *parser; // = createParser();
 Client *client;
-Node *head = (Node *)malloc(sizeof(Node));
+Node *head; // = (Node *)malloc(sizeof(Node));
 
 
 /**
@@ -46,6 +52,10 @@ Node *head = (Node *)malloc(sizeof(Node));
  */
 void setup()
 {
+	list = createList();
+	parser = createParser();
+	head = (Node *)malloc(sizeof(Node));
+
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(PORT_ONE);
     local_addr.sin_addr.s_addr = 0;
@@ -97,12 +107,12 @@ int getClient()
         long id = parser->F1(client_string);
         long curr_usage = NULL; // = parser->F10(client_string); //TODO
         long min = parser->F8(client_string);
-        long max = parse->F7(client_string);
+        long max = parser->F7(client_string);
         //// Use the data to create a Client. /////
         client = createClient(id, curr_usage, min, max);
-        list->F1(&head);
-
+        list->F11(&head, *client); // push client into front of list
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+        printf("Pushing new SLA to all clients... \n");
         return 1; // success
     }
 }
@@ -145,7 +155,6 @@ void pushSLA()
 
 int main(void)
 {
-	Node *head = malloc(sizeof(Node));
     setup();
     //makeSLA(3, 3, "Hello", "World!"); // for testing purposes
     //printf("%s\n", SLA); // Also for the test

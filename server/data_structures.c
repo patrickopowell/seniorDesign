@@ -1,33 +1,40 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <stdlib.h>
 #include "Client.h"
 
+typedef struct Node{
+	Client c;
+	struct Node *next;
+} Node;
+
+void push(Node **, Client);
+Node *delete(Node *, long);
+Client *getClientByID(Node *, long);
+int length(Node*);
+void destroyList(Node *);
 
 /* Function typedefs */
-typedef void (*f1)(Node **, Client); // push
-typedef void (*f2)(Node *, long); // delete
-typedef Client (*f3)(Node *, long); // get client by ID
-typedef int (*f4)(Node *); // get length
-typedef void (*f5)(Node *); // free the list
+typedef void (*f11)(Node **, Client); // push
+typedef Node *(*f12)(Node *, long); // delete
+typedef Client *(*f13)(Node *, long); // get client by ID
+typedef int (*f14)(Node *); // get length
+typedef void (*f15)(Node *); // free the list
 
-typedef struct{
-	Client c;
-	Node *next;
-} Node;
 
 /**
  * Creates a linked list of clients.
  * USAGE:
  * 		LinkedList *list = createList(client);
  */
-typedef struct {
+typedef struct LinkedList{
 	Node *head;
-    f1 F1; // push client to front of list
-    f1 F2; // delete client by ID
-    f1 F3; // get client by ID
-    f1 F4; // get length of list
-    f1 F5; // free the List's memory.
+    f11 F11; // push client to front of list
+    f12 F12; // delete client by ID
+    f13 F13; // get client by ID
+    f14 F14; // get length of list
+    f15 F15; // free the List's memory.
 } LinkedList;
 
 /********************************************************
@@ -39,11 +46,12 @@ LinkedList *createList(){
 	LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
 	list->head = malloc(sizeof(Node));
 	//list->head->c = c;
-	list->F1 = push; // push client to front of list
-	list->F2 = delete; // delete client by ID
-	list->F3 = getClientByID; // get client by ID
-	list->F4 = length; // get list length
-	list->F5 = destroyList; // free list memory space
+	list->F11 = push; // push client to front of list
+	list->F12 = delete; // delete client by ID
+	list->F13 = getClientByID; // get client by ID
+	list->F14 = length; // get list length
+	list->F15 = destroyList; // free list memory space
+	return list;
 }
 
 /**
@@ -64,7 +72,7 @@ Node *delete(Node *curr, long id){
 	if(curr == NULL){
 		return NULL;
 	}
-	if(curr->c->id == id){
+	if((curr->c).id == id){
 		Node *temp = curr->next;
 		free(curr);
 		return temp;
@@ -76,12 +84,12 @@ Node *delete(Node *curr, long id){
 /**
  * Return a pointer to the client with "id."
  */
-Client getClientByID(Node *head, long id){
+Client *getClientByID(Node *head, long id){
 	Client *temp;
 	Node *current = head;
 	while (current != NULL) {
-		if(current->c->id == id){
-			temp = current->c;
+		if((current->c).id == id){
+			temp = &(current->c);
 			return temp;
 		}
 		current = current->next;

@@ -36,7 +36,7 @@ typedef struct {
     f1 F9; // get unused bandwidth
 } Parser;
 
-/*************************************************************************************************
+/************************************************************************************************
  * This creates a parser.
  * USAGE: Parser *p = createParser();
  * The returned value must be freed.

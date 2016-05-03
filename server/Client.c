@@ -1,11 +1,11 @@
-
+#include <stdlib.h>
 typedef enum { false, true } bool;
 
 /* Function typedefs for setters */
 typedef void (*f1)(long);
 typedef void (*f2)(bool);
 
-typedef struct {
+typedef struct Client{
 	/*f1 F1; // set id
 	f1 F2; // set current_usage
 	f1 F3; // set min
