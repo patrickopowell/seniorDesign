@@ -38,15 +38,15 @@ int qq_decode_sla(char *sla, struct sla *sla_dest)
 char *qq_encode_sla(struct sla *sla)
 {
 	json_t *sla_json = json_pack(sla_fmt,
-		"version", cf->version,
-		"sla_version", cf->sla_version,
-		"storage_id", cf->storage_id,
-		"storage_type", cf->storage_type,
-		"iops_max", cf->iops_max,
-		"iops_min", cf->iops_min,
-		"throughput_min", cf->throughput_min,
-		"throughput_max", cf->throughput_max,
-		"unused_bandwidth", cf->unused_bandwidth,
+		"version", sla->version,
+		"sla_version", sla->sla_version,
+		"storage_id", sla->storage_id,
+		"storage_type", sla->storage_type,
+		"iops_max", sla->iops_max,
+		"iops_min", sla->iops_min,
+		"throughput_min", sla->throughput_min,
+		"throughput_max", sla->throughput_max,
+		"unused_bandwidth", sla->unused_bandwidth
 	);
 	char *json_str = qq_json_to_string(sla_json);
 	json_decref(sla_json);
@@ -76,9 +76,9 @@ int qq_decode_cf(char *cf, struct client_feedback *cf_dest)
 	return QQJSON_VALID;
 }
 
-int qq_encode_cf(struct client_feedback *cf)
+char *qq_encode_cf(struct client_feedback *cf)
 {
-	json_t *cf_json = json_pack(feedback_fmt,
+	json_t *cf_json = json_pack(cf_fmt,
 		"version", cf->version,
 		"sla_version", cf->sla_version,
 		"storage_id", cf->storage_id,
