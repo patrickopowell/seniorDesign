@@ -56,12 +56,19 @@ void *qq_receiver_start(void *in)
 			received += nbytes;
 		} while (received < BUFFERLENGTH);
 		close(accept_fd);
+		
 		/** Spaghetti monster. **/
-		char *qqserver_ip = inet_ntoa(server_addr.sin_addr);
+
+		struct sockaddr_in addr;
+		getpeername(accept_fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
+		char *qqserver_ip = inet_ntoa(addr.sin_addr);
 		struct sla *new_sla = calloc(1, sizeof(struct sla));
+
 		qq_decode_sla(recvbuffer, new_sla);
+
 		struct qqfs_instance *curr_instance = calloc(1, sizeof(struct qqfs_instance));
 		qq_get_qqfs_instance_by_pair(qqserver_ip, new_sla->storage_id, curr_instance);
+
 		struct sla_info *sla_comm = calloc(1, sizeof(struct sla_info));
 		memcpy(curr_instance->export_path, sla_comm->path, sizeof curr_instance->export_path);
 		sla_comm->sla_id = new_sla->sla_version;
@@ -70,9 +77,11 @@ void *qq_receiver_start(void *in)
 		sla_comm->throughput_min = new_sla->throughput_min;
 		sla_comm->throughput_max = new_sla->throughput_max;
 		com_set_sla(curr_instance->export_path, sla_comm);
+
 		curr_instance->sla_version = new_sla->sla_version;
 		curr_instance->storage_type = new_sla->storage_type;
 		qq_update_qqfs_instance(curr_instance);
+
 		free(sla_comm);
 		free(curr_instance);
 		free(new_sla);
