@@ -12,7 +12,6 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
-	arguments.debug = 0;
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 	setup_clean_kill();
 	int lockid = qq_setup_instance(argv[1], argv[2], argv[3], argv[4]);
