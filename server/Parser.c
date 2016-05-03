@@ -39,6 +39,7 @@ typedef struct {
 /*************************************************************************************************
  * This creates a parser.
  * USAGE: Parser *p = createParser();
+ * The returned value must be freed.
  ************************************************************************************************/
 Parser *createParser(){
     Parser *temp = (Parser *)malloc(sizeof(Parser));

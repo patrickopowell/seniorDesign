@@ -1,87 +1,133 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include "Client.h"
 
-	long list_size;
 
-	typedef enum { false, true } bool;
+/* Function typedefs */
+typedef void (*f1)(Node **, Client); // push
+typedef void (*f2)(Node *, long); // delete
+typedef Client (*f3)(Node *, long); // get client by ID
+typedef int (*f4)(Node *); // get length
+typedef void (*f5)(Node *); // free the list
 
-	typedef struct Client {
-		struct sockaddr_in cli_addr;
-		long id;
-		long current_usage;
-		bool above;
-		int min;
-		int max;
-	};
+typedef struct{
+	Client c;
+	Node *next;
+} Node;
 
-	typedef struct Node{
-    	Client c;
-    	Node next;
-    };
+/**
+ * Creates a linked list of clients.
+ * USAGE:
+ * 		LinkedList *list = createList(client);
+ */
+typedef struct {
+	Node *head;
+    f1 F1; // push client to front of list
+    f1 F2; // delete client by ID
+    f1 F3; // get client by ID
+    f1 F4; // get length of list
+    f1 F5; // free the List's memory.
+} LinkedList;
 
-	Node *head = malloc(sizeof(Node));
+/********************************************************
+ * Creates a linked list of Clients,
+ * with a head node containing Client c.
+ *******************************************************/
+//LinkedList *createList(Client *c){
+LinkedList *createList(){
+	LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
+	list->head = malloc(sizeof(Node));
+	//list->head->c = c;
+	list->F1 = push; // push client to front of list
+	list->F2 = delete; // delete client by ID
+	list->F3 = getClientByID; // get client by ID
+	list->F4 = length; // get list length
+	list->F5 = destroyList; // free list memory space
+}
 
-	/**
-	 *
-	 */
-	Client createClient(long ID, long curr, int MIN, int MAX){
-		Client *c1 = malloc(sizeof(Client));
-		c1->id = ID;
-		c1->current_usage = curr;
-		c1->min = MIN;
-		c1->max = MAX;
-		c1->above = false;
-		return c1;
+/**
+ * Adds a Client to the front of the list.
+ */
+void push(Node **head, Client c1){
+	Node *newNode = malloc(sizeof(Node)); // create new Node.
+	//newNode->c = malloc(sizeof(Client));
+	newNode->c = c1; // Set its data.
+	newNode->next = *head; // Make it point to head, so it is now first.
+	*head = newNode; // Make head first again.
+}
+
+/**
+ * Removes a client with ID "id" from the list.
+ */
+Node *delete(Node *curr, long id){
+	if(curr == NULL){
+		return NULL;
 	}
+	if(curr->c->id == id){
+		Node *temp = curr->next;
+		free(curr);
+		return temp;
+	}
+	curr->next = delete(curr->next, id);
+	return curr;
+}
 
-	/**
-	 * Given a linked list head pointer, compute
-	 * and return the number of nodes in the list.
-	 */
-	int length(Node* head) {
-		int count = 0;
-		Node* current = head;
-		while (current != NULL) {
-			count++;
-			current = current->next;
+/**
+ * Return a pointer to the client with "id."
+ */
+Client getClientByID(Node *head, long id){
+	Client *temp;
+	Node *current = head;
+	while (current != NULL) {
+		if(current->c->id == id){
+			temp = current->c;
+			return temp;
 		}
-		return count;
+		current = current->next;
 	}
+	return NULL;
+}
 
-
-	/**
-	 * Adds a Client to the front of the list.
-	 */
-	void push(Node **head, Client c1){
-		Node *newNode = malloc(sizeof(Node)); // create new Node.
-		newNode->c = c1; // Set its data.
-		newNode->next = *head; // Make it point to head, so it is now first.
-		*head = newNode; // Make head first again.
+/**
+ * Given a linked list head pointer, compute
+ * and return the number of nodes in the list.
+ */
+int length(Node* head) {
+	int count = 0;
+	Node* current = head;
+	while (current != NULL) {
+		count++;
+		current = current->next;
 	}
+	return count;
+}
 
-
-	/**
-	 * Adds a Client to the end of a list.
-	 */
-	bool add(Client c){
-
+/**
+ * Goes through the list and frees the memory.
+ */
+void destroyList(Node * head){
+	Node* temp1 = head;
+	while (temp1 != NULL) {
+		Node* temp2 = temp1;
+		temp1 = temp1->next;
+		free(temp2);
 	}
+	free(temp1);
+}
 
-	/**
-	 * Removes a client from the list at index i.
-	 */
-	bool remove(int i){
 
-	}
 
-	/**
-	 * Inserts a Client into a list at index i.
-	 */
-	bool insert(Client c, int i){
 
-	}
 
-	/**
-	 * Return a pointer to the client with "id."
-	 */
-	Client getClient(char id){
 
-	}
+
+
+
+
+
+
+
+
+
+

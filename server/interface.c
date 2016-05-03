@@ -3,6 +3,9 @@
  *****************************************************************/
 
 #include "monitor.h"
+#include "Client.h"
+#include "Parser.h"
+#include "data_structures.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +35,10 @@ int listening = NULL;
 	
 int SLA_unused = NULL;
 
-Node *head = malloc(sizeof(Node));
+LinkedList *list = createList();
+Parser *parser = createParser();
+Client *client;
+Node *head = (Node *)malloc(sizeof(Node));
 
 
 /**
@@ -86,8 +92,15 @@ int getClient()
         return 0; // failure
     } else{
     	incrementNumClients();
-    	Client *c1 = malloc(sizeof(Client));
         recv(new_sock, &client_string, 1024, 0);
+        ///// Parse the received string. ///////////
+        long id = parser->F1(client_string);
+        long curr_usage = NULL; // = parser->F10(client_string); //TODO
+        long min = parser->F8(client_string);
+        long max = parse->F7(client_string);
+        //// Use the data to create a Client. /////
+        client = createClient(id, curr_usage, min, max);
+        list->F1(&head);
 
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         return 1; // success
@@ -125,17 +138,9 @@ void makeSLA( int protocol_version, int SLA_version, char *client_id, char *stor
     //return SLA;
 }
 
-void sendSLA()
+void pushSLA()
 {
     send(new_sock, SLA, sizeof(SLA), 0); // just a random string for testing.
-}
-
-/**
- * Takes the string received from client, and parses it
- * into useful information for updating the client info.
- */
-int updateClient(char *str){
-
 }
 
 int main(void)
@@ -146,7 +151,7 @@ int main(void)
     //printf("%s\n", SLA); // Also for the test
 	if(getClient()){
 	    makeSLA(3, 3, "Hello", "World!");
-	    sendSLA();
+	    pushSLA();
 	}
     return 0;
 }
