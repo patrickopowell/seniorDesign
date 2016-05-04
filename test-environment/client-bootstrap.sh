@@ -1,5 +1,4 @@
 #!/bin/bash
-
 printf "Downloading ranked mirrors...\n"
 if [ -f /etc/pacman.d/mirrorlist ]; then
   cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist_$(date +%Y%m%d%H%M)
