@@ -1,7 +1,7 @@
 #include "qqjson.h"
 
 const char *sla_fmt = "{s:i, s:i, s:s, s:i, s:i, s:i, s:i, s:i, s:i, s:i}";
-const char *cf_fmt = "{s:i, s:i, s:s, s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i}";
+const char *cf_fmt = "{s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i}";
 
 /**
  * Converts JSON object to string for communication.
@@ -21,16 +21,16 @@ int qq_decode_sla(char *sla, struct sla *sla_dest)
 		return QQJSON_NOT_JSON;
 	}
 	json_unpack(curr_sla, sla_fmt, 
-		"version", &(sla_dest->version),
-		"sla_version", &(sla_dest->sla_version),
-		"client_id", &(sla_dest->client_id),
-		"storage_id", &(sla_dest->storage_id),
-		"storage_type", &(sla_dest->storage_type),
-		"iops_max", &(sla_dest->iops_max),
-		"iops_min", &(sla_dest->iops_min),
-		"throughput_min", &(sla_dest->throughput_min),
-		"throughput_max", &(sla_dest->throughput_max),
-		"unused_bandwidth", &(sla_dest->unused_bandwidth)
+		"version", sla_dest->version,
+		"sla_version", sla_dest->sla_version,
+		"client_id", sla_dest->client_id,
+		"storage_id", sla_dest->storage_id,
+		"storage_type", sla_dest->storage_type,
+		"iops_max", sla_dest->iops_max,
+		"iops_min", sla_dest->iops_min,
+		"throughput_min", sla_dest->throughput_min,
+		"throughput_max", sla_dest->throughput_max,
+		"unused_bandwidth", sla_dest->unused_bandwidth
 	);
 	return QQJSON_VALID;
 }
@@ -62,16 +62,16 @@ int qq_decode_cf(char *cf, struct client_feedback *cf_dest)
 		return QQJSON_NOT_JSON;
 	}
 	json_unpack(curr_cf, cf_fmt, 
-		"version", &(cf_dest->version),
-		"sla_version", &(cf_dest->sla_version),
-		"storage_id", &(cf_dest->storage_id),
-		"storage_type", &(cf_dest->storage_type),
-		"current_throughput", &(cf_dest->current_throughput),
-		"writes_queued", &(cf_dest->writes_queued),
-		"reads_queued", &(cf_dest->reads_queued),
-		"suspensions", &(cf_dest->suspensions),
-		"sla_check", &(cf_dest->sla_check),
-		"critical_request", &(cf_dest->critical_request)
+		"version", cf_dest->version,
+		"sla_version", cf_dest->sla_version,
+		"storage_id", cf_dest->storage_id,
+		"storage_type", cf_dest->storage_type,
+		"current_throughput", cf_dest->current_throughput,
+		"writes_queued", cf_dest->writes_queued,
+		"reads_queued", cf_dest->reads_queued,
+		"suspensions", cf_dest->suspensions,
+		"sla_check", cf_dest->sla_check,
+		"critical_request", cf_dest->critical_request
 	);
 	return QQJSON_VALID;
 }
@@ -91,6 +91,8 @@ char *qq_encode_cf(struct client_feedback *cf)
 		"critical_request", cf->critical_request
 	);
 	char *json_str = qq_json_to_string(cf_json);
+	if (json_str == NULL)
+		qq_log_error("Could not encode client feedback!");
 	json_decref(cf_json);
 	return json_str;
 }
