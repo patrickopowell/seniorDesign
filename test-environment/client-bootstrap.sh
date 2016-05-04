@@ -1,4 +1,5 @@
 #!/bin/bash
+# @author Remington Campbell <rem.campbell@gmail.com>
 # Assumes Arch Linux
 printf "Downloading ranked mirrors...\n"
 if [ -f /etc/pacman.d/mirrorlist ]; then
@@ -30,7 +31,8 @@ fi
 cd autobuild
 printf "Installing Jansson...\n"
 mkdir jansson-2.7
-if [ $? -gt 0 ]; then
+if [ $? -eq 0 ]; then
+	rmdir jansson-2.7
 	printf "Unpacking Jansson for the first time...\n"
 	tar -xvf jansson-2.7.tar.gz
 fi
