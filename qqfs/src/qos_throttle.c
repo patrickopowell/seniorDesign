@@ -145,7 +145,7 @@ int get_bucket(const char *path)
 		return -1;
 	}
 	
-	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
+	while (pos<COM_MAX_SERVERS && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     {
 		pos++;
 	}
@@ -155,7 +155,7 @@ int get_bucket(const char *path)
 	printf("---com_sla_list->slas[%d].path = %s (%d)\n", pos, com_sla_list->slas[pos].path, strlen(com_sla_list->slas[pos].path));
 	*/
 		
-	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) {
+	if(pos == COM_MAX_SERVERS-1 && strcmp( com_sla_list->slas[pos].path, path ) != 0) {
 		com_unlock_sla();
 		
 		return -1;
@@ -167,6 +167,7 @@ int get_bucket(const char *path)
 	
 	strcpy(rb.rb_path, path);
 	rb.rb_rate = com_sla_list->slas[pos].iops_max;
+	// cap tokens at 10% of rate
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 	com_unlock_sla();
@@ -186,7 +187,7 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
+	while ((pos<COM_MAX_SERVERS && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
 	
 	strcpy(rb_mounts[pos].rb_path, path);
