@@ -15,7 +15,7 @@ class Generator:
             node.vm.box = "{}"
             node.vm.usable_port_range = (2200..2250)
             node.vm.hostname = machine[:hostname]
-            node.vm.network "public_network", bridge: "br0"
+            node.vm.network "public_network", bridge: "br0", ip: machine[:ip]
             node.ssh.password = "vagrant"
             node.vm.provider "virtualbox" do |vb|
                 vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
