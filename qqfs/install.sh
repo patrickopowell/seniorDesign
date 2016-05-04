@@ -1,3 +1,9 @@
+# QualiQueue File System (QQFS) Installer
+
+echo ""
+echo "---- Installing QQFS ----"
+echo ""
+
 #### FUSE - update & install
 
 #sudo pacman -S build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
@@ -19,9 +25,6 @@
 #cd ../
 
 #### End FUSE install
-
-
-cd ../
 #### Install QQFS
 
 sudo sh autogen.sh
@@ -29,4 +32,12 @@ sudo sh autogen.sh
 sudo ./configure
 
 sudo make
+
+sudo cp src/qqfs /usr/bin
+
+sudo chmod 777 /usr/bin/qqfs
+
+echo ""
+echo "---- QQFS Installed ----"
+echo ""
 
