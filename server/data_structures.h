@@ -33,7 +33,7 @@ typedef struct {
     f12 F12; // delete client by ID
     f13 F13; // get client by ID
     f14 F14; // get length of list
-    f15 F15; // free the List's memory.
+    f15 ds_freeList; // free the List's memory.
 } LinkedList;
 
 //LinkedList *createList(Client *);

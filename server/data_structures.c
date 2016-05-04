@@ -34,7 +34,7 @@ typedef struct LinkedList{
     f12 F12; // delete client by ID
     f13 F13; // get client by ID
     f14 F14; // get length of list
-    f15 F15; // free the List's memory.
+    f15 ds_freeList; // free the List's memory.
 } LinkedList;
 
 /********************************************************
@@ -48,7 +48,7 @@ LinkedList *createList(){
 	list->F12 = delete; // delete client by ID
 	list->F13 = getClientByID; // get client by ID
 	list->F14 = length; // get list length
-	list->F15 = destroyList; // free list memory space
+	list->ds_freeList = destroyList; // free list memory space
 	return list;
 }
 
@@ -116,6 +116,7 @@ void destroyList(Node * head){
 	while (temp1 != NULL) {
 		Node* temp2 = temp1;
 		temp1 = temp1->next;
+		//free(temp2->c);
 		free(temp2);
 	}
 	free(temp1);

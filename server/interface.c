@@ -167,15 +167,23 @@ void pushSLA()
 	}
 }
 
+void closeProgram(){
+	list->ds_freeList(head);
+	free(list->head);
+	free(list);
+	free(parser);
+}
+
+
 int main(void)
 {
     setup();
-    while(1){
+    /*while(1){
 		if(getClient()){
 			pushSLA();
 		}
-    }
-
+    }*/
+    closeProgram();
     return 0;
 }
 
