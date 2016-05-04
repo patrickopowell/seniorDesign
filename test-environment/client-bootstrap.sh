@@ -21,21 +21,21 @@ printf "Installing development packages...\n"
 pacman -S --noconfirm --needed base-devel linux-headers kmod git fuse
 printf "Manual package installation...\n"
 cd /vagrant/
-buildexist=$(mkdir autobuild)
-if [ -z "$buildexist" ]; then
+mkdir autobuild
+if [ $? -eq 0 ]; then
 	printf "Sources for installation not present!\n"
 	printf "QualiQueue and Jansson sources are required to be present in autobuild in shared folder.\n"
 	exit 1
 fi
 cd autobuild
 printf "Installing Jansson...\n"
-janssonexist=$(mkdir jansson-2.7)
-if [ -z "$janssonexist" ]; then
+mkdir jansson-2.7
+if [ $? -gt 0 ]; then
 	printf "Unpacking Jansson for the first time...\n"
 	tar -xvf jansson-2.7.tar.gz
 fi
-janssonfexist=$(cd jansson-2.7)
-if [ -z "$janssonfexist" ]; then
+cd jansson-2.7
+if [ $? -eq 0 ]; then
 	./configure
 	make
 	make check
@@ -52,8 +52,8 @@ else
 	printf "Jansson folder not present!\n"
 fi
 printf "Installing QualiQueue client components...\n"
-qqexist=$(cd 2016springTeam28)
-if [ -z "$qqexist" ]; then
+cd 2016springTeam28
+if [ $? -eq 0 ]; then
 	git checkout development
 	bash install-client.sh
 	cd ..
