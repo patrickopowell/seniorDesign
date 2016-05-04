@@ -1,4 +1,5 @@
 #!/bin/bash
+# Assumes Arch Linux
 printf "Downloading ranked mirrors...\n"
 if [ -f /etc/pacman.d/mirrorlist ]; then
   cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist_$(date +%Y%m%d%H%M)
@@ -8,6 +9,7 @@ fi
 curl -s "https://www.archlinux.org/mirrorlist/?country=US&protocol=http&ip_version=4&use_mirror_status=on" -o mirrorlist
 if [ $? -gt 0 ]; then
 	printf "Mirrorlist download failed, not replacing!\n"
+	printf "This is going to be slow.\n"
 else
 	printf "Mirrorlist download successful!\n"
 	sed -i 's/^#Server/Server/g' mirrorlist
@@ -15,42 +17,46 @@ else
 fi
 printf "Force updating system...\n"
 pacman -Syyu --noconfirm
-printf "Installing packages...\n"
+printf "Installing development packages...\n"
 pacman -S --noconfirm --needed base-devel linux-headers kmod git fuse
 printf "Manual package installation...\n"
 cd /vagrant/
-printf "Adding QualiQueue SSH key...\n"
-cp qq.key /home/vagrant/.ssh/qq.key
-cp ssh.config /home/vagrant/.ssh/config
-chown vagrant:vagrant /home/vagrant/.ssh/qq.key
-chown vagrant:vagrant /home/vagrant/.ssh/config
-chmod 600 /home/vagrant/.ssh/qq.key
-chmod 700 /home/vagrant/.ssh/config
-buildexist=$(mkdir builds)
-cd builds
+buildexist=$(mkdir autobuild)
 if [ -z "$buildexist" ]; then
-	printf "Downloading Jansson...\n"
-	curl -L -O http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
-	tar -xvf jansson-2.7.tar.gz
-	printf "Downloading QualiQueue...\n"
-	runuser -l vagrant -c 'cd /vagrant/builds && git clone git@github.ncsu.edu:engr-csc-sdc/2016springTeam28.git'
-	cd 2016springTeam28
-	git checkout development
+	printf "Sources for installation not present!\n"
+	printf "QualiQueue and Jansson sources are required to be present in autobuild in shared folder.\n"
+	exit 1
 fi
-cd jansson-2.7
+cd autobuild
 printf "Installing Jansson...\n"
-./configure
-make
-make check
-make install
-# if Arch
-currpath=$(pwd)
-cd /usr/local/lib
-ln -s /usr/local/lib/libjansson.so.4 /usr/lib/libjansson.so.4
-ldconfig
-cd $currpath
-# endif
-cd ..
-cd 2016springTeam28
-bash installall.sh
-cd ..
+janssonexist=$(mkdir jansson-2.7)
+if [ -z "$janssonexist" ]; then
+	printf "Unpacking Jansson for the first time...\n"
+	tar -xvf jansson-2.7.tar.gz
+fi
+janssonfexist=$(cd jansson-2.7)
+if [ -z "$janssonfexist" ]; then
+	./configure
+	make
+	make check
+	make install
+	# if Arch
+	currpath=$(pwd)
+	cd /usr/local/lib
+	ln -s /usr/local/lib/libjansson.so.4 /usr/lib/libjansson.so.4
+	ldconfig
+	cd $currpath
+	# endif
+	cd ..
+else
+	printf "Jansson folder not present!\n"
+fi
+printf "Installing QualiQueue client components...\n"
+qqexist=$(cd 2016springTeam28)
+if [ -z "$qqexist" ]; then
+	git checkout development
+	bash install-client.sh
+	cd ..
+else
+	printf "QualiQueue folder not present!\n"
+fi
