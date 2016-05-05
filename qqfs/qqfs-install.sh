@@ -33,7 +33,7 @@ sudo ./configure
 
 sudo make
 
-sudo cp src/qqfs /usr/bin
+sudo cp -f src/qqfs /usr/bin
 
 sudo chmod 777 /usr/bin/qqfs
 
