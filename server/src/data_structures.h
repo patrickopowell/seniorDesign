@@ -29,10 +29,10 @@ typedef void (*f15)(Node *); // free the list
 
 typedef struct {
 	Node *head;
-    f11 F11; // push client to front of list
+    f11 ds_push; // push client to front of list
     f12 F12; // delete client by ID
     f13 F13; // get client by ID
-    f14 F14; // get length of list
+    f14 ds_getLength; // get length of list
     f15 ds_freeList; // free the List's memory.
 } LinkedList;
 

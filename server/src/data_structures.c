@@ -30,10 +30,10 @@ typedef void (*f15)(Node *); // free the list
  */
 typedef struct LinkedList{
 	Node *head;
-    f11 F11; // push client to front of list
+    f11 ds_push; // push client to front of list
     f12 F12; // delete client by ID
     f13 F13; // get client by ID
-    f14 F14; // get length of list
+    f14 ds_getLength; // get length of list
     f15 ds_freeList; // free the List's memory.
 } LinkedList;
 
@@ -44,10 +44,10 @@ typedef struct LinkedList{
 LinkedList *createList(){
 	LinkedList *list = (LinkedList *)malloc(sizeof(LinkedList));
 	list->head = malloc(sizeof(Node));
-	list->F11 = push; // push client to front of list
+	list->ds_push = push; // push client to front of list
 	list->F12 = delete; // delete client by ID
 	list->F13 = getClientByID; // get client by ID
-	list->F14 = length; // get list length
+	list->ds_getLength = length; // get list length
 	list->ds_freeList = destroyList; // free list memory space
 	return list;
 }
