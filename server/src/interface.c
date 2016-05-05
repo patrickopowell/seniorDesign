@@ -119,7 +119,7 @@ int getClient()
         long storage_type = parser->F4(client_string);
         //// Use the data to create a Client. /////
         client = createClient(new_sock, sin_size, client_addr, id, curr_usage, min, max, storage_type);
-        list->F11(&head, *client); // push client into front of list
+        list->ds_push(&head, *client); // push client into front of list
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("Pushing new SLA to all clients... \n");
         //close(new_sock);
