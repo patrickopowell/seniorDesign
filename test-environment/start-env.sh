@@ -1,7 +1,7 @@
 #!/bin/bash
-vagrant_dir='/qos/vagrant_env/';
-vagrant_image_dir='/qos/vagrant_images/';
-vm_dir='/qos/vm_images';
+vagrant_dir='/qq/vagrant_env/';
+vagrant_image_dir='/qq/vagrant_images/';
+vm_dir='/qq/vm_images';
 VAGRANT_HOME=$vagrant_image_dir;
 export VAGRANT_HOME;
 VAGRANT_CWD=$vagrant_dir;
