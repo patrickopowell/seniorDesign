@@ -8,10 +8,12 @@ CFLAGS=$(OPT) $(WARN) $(ERR) $(STD) $(DBG)
 COPTS=-ljansson -lpthread
 CLINKS=libcommon_logging.o libcommon_qqjson.o libcommon_client_comm.o threadcommon.o receiver.o parser.o main.o
 
+OFILE=../bin/qqclient
+
 all: clean main
 
 main: $(CLINKS)
-	$(CC) $(CFLAGS) $(CLINKS) -o qqclient $(COPTS)
+	$(CC) $(CFLAGS) $(CLINKS) -o $(OFILE) $(COPTS)
 
 main.o: main.c
 	$(CC) $(STD) $(DBG) -c main.c
@@ -35,4 +37,4 @@ libcommon_client_comm.o: ../../libcommon/client/communication.c
 	$(CC) $(STD) $(DBG) -c ../../libcommon/client/communication.c -o libcommon_client_comm.o
 
 clean:
-	rm -rf *.o qqclient
+	rm -rf *.o $(OFILE)

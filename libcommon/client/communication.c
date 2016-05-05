@@ -142,10 +142,10 @@ int com_get_sla(char *path, struct sla_info *sla_dest)
         int curr_num_slas = com_sla_list->count;
         struct sla_info *curr_sla;
         while (sla_index < curr_num_slas) {
-                curr_sla = &(com_sla_list->slas[sla_index]);
+                curr_sla = com_sla_list->slas+sla_index;
                 if (strcmp(curr_sla->path, path) == 0) {
                         found = 1;
-                        memcpy(&curr_sla, &sla_dest, sizeof curr_sla);
+                        *sla_dest = *curr_sla;
                         break;
                 }
                 sla_index++;
@@ -165,10 +165,10 @@ int com_set_sla(char *path, struct sla_info *sla_src)
         int curr_num_slas = com_sla_list->count;
         struct sla_info *curr_sla;
         while (sla_index < curr_num_slas) {
-                curr_sla = &(com_sla_list->slas[sla_index]);
+                curr_sla = com_sla_list->slas+sla_index;
                 if (strcmp(curr_sla->path, path) == 0) {
                         found = 1;
-                        memcpy(&sla_src, &curr_sla, sizeof sla_src);
+                        *curr_sla = *sla_src;
                         break;
                 }
                 sla_index++;
@@ -179,8 +179,7 @@ int com_set_sla(char *path, struct sla_info *sla_src)
                         qq_log_critical("No more room for additional storage SLAs!");
                         return_val = COM_MEM_OOS;
                 } else {
-                        curr_sla = &(com_sla_list->slas[curr_num_slas+1]);
-                        memcpy(&sla_src, &curr_sla, sizeof sla_src);
+                        com_sla_list->slas[curr_num_slas+1] = *sla_src;
                         com_sla_list->count++;
                 }
         }
@@ -197,10 +196,10 @@ int com_get_stat(char *path, struct stat_info *stat_dest)
         int curr_num_stats = com_stat_list->count;
         struct stat_info *curr_stat;
         while (stat_index < curr_num_stats) {
-                curr_stat = &(com_stat_list->stats[stat_index]);
+                curr_stat = com_stat_list->stats+stat_index;
                 if (strcmp(curr_stat->path, path) == 0) {
                         found = 1;
-                        memcpy(&curr_stat, &stat_dest, sizeof curr_stat);
+                        *stat_dest = *curr_stat;
                         break;
                 }
                 stat_index++;
@@ -220,10 +219,10 @@ int com_set_stat(char *path, struct stat_info *stat_src)
         int curr_num_stats = com_stat_list->count;
         struct stat_info *curr_stat;
         while (stat_index < curr_num_stats) {
-                curr_stat = &(com_stat_list->stats[stat_index]);
+                curr_stat = com_stat_list->stats+stat_index;
                 if (strcmp(curr_stat->path, path) == 0) {
                         found = 1;
-                        memcpy(&stat_src, &curr_stat, sizeof stat_src);
+                        *curr_stat = *stat_src;
                         break;
                 }
                 stat_index++;
@@ -234,8 +233,7 @@ int com_set_stat(char *path, struct stat_info *stat_src)
                         qq_log_critical("No more room for additional storage stats!");
                         return_val = COM_MEM_OOS;
                 } else {
-                        curr_stat = &(com_stat_list->stats[curr_num_stats+1]);
-                        memcpy(&stat_src, &curr_stat, sizeof stat_src);
+                        com_stat_list->stats[curr_num_stats+1] = *stat_src;
                         com_stat_list->count++;
                 }
         }

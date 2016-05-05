@@ -14,6 +14,8 @@
 *
 * Storage QoS update tokens function - called from kernel space when out of tokens
 *
+* @author Patrick Powell
+* 
 * @return void
 *
 */
@@ -25,6 +27,8 @@ unsigned int time_diff;
 unsigned int tokens;
 
 	time_diff = current_ts - rb_ptr->rb_ts;
+	
+	printf("\nrb_rate = %d\n", rb_ptr->rb_rate);
         
 	// This check here prevents overflow if too much time has passed
 	if (time_diff > 1000000) { // More than 1 second has passed
@@ -56,6 +60,8 @@ unsigned int tokens;
 *
 * Storage QoS can send function - called from kernel space to verify token availability
 *
+* @author Patrick Powell
+* 
 * @return bool true if request can be sent
 *
 */
@@ -69,16 +75,21 @@ int qos_can_send (struct ratebucket *rb_ptr)
 	}
 	// Out of tokens. Update ratebucket and try again
 	update_tokens(rb_ptr);
+	if (rb_ptr->rb_tokens > 0) {
+		rb_ptr->rb_tokens--;
+		return 1;
+	}
 
 	return 0;
 }
 
 
-// For completeness, will check for interrupted call.
 /**
 *
-* Storage QoS throttle function - Throttling function. Will return when caller can proceed.
+* Storage QoS throttle function - Throttling function.  Checks for interrupted call.  Will return when caller can proceed.
 *
+* @author Patrick Powell
+* 
 * @return void
 *
 */
@@ -99,6 +110,17 @@ void qos_throttle (const char *path, int req)
 	}
 	return;
 }
+
+
+/**
+*
+* Storage QoS increment queue function -   increments request type count.
+*
+* @author Patrick Powell
+* 
+* @return void
+*
+*/
 
 void inc_queue(int index, int req)
 {
@@ -129,6 +151,8 @@ void inc_queue(int index, int req)
 *
 * Get token bucket for specific mountpoint
 *
+* @author Patrick Powell
+* 
 * @return void
 *
 */
@@ -142,22 +166,22 @@ int get_bucket(const char *path)
 	if (strcmp(com_sla_list->slas[0].path, "") == 0) {
 		com_unlock_sla();
 		
+		qq_log_critical("Could not release lock file! Fatal error.");
+		qq_log_debug(strerror(errno));
+		
 		return -1;
 	}
 	
-	while (pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
+	while (pos<COM_MAX_SERVERS && strcmp( com_sla_list->slas[pos].path, path ) != 0 )
     {
-		printf("\n---sla[%d] = %s (%d)\n", pos, path, strlen(path));
-		printf("---com_sla_list->slas[%d] = %s (%d)\n", pos, com_sla_list->slas[pos].path, strlen(path));
 		pos++;
 	}
-	
-	printf("\n---original_path = %s (%d)\n", pos, path, strlen(path));
-	printf("---rb_mounts[%d].path = %s (%d)\n", pos, rb_mounts[pos].rb_path, strlen(rb_mounts[pos].rb_path));
-	printf("---com_sla_list->slas[%d].path = %s (%d)\n", pos, com_sla_list->slas[pos].path, strlen(com_sla_list->slas[pos].path));
 		
-	if(pos == 4 && strcmp( com_sla_list->slas[pos].path, path ) != 0) {
+	if(pos == COM_MAX_SERVERS-1 && strcmp( com_sla_list->slas[pos].path, path ) != 0) {
 		com_unlock_sla();
+		
+		qq_log_critical("Could not release lock file! Fatal error.");
+		qq_log_debug(strerror(errno));
 		
 		return -1;
 	}
@@ -168,6 +192,7 @@ int get_bucket(const char *path)
 	
 	strcpy(rb.rb_path, path);
 	rb.rb_rate = com_sla_list->slas[pos].iops_max;
+	// cap tokens at 10% of rate
 	rb.rb_token_cap = rb.rb_rate / 10;
 	
 	com_unlock_sla();
@@ -179,6 +204,8 @@ int get_bucket(const char *path)
 *
 * Add token bucket for specific mountpoint
 *
+* @author Patrick Powell
+* 
 * @return void
 *
 */
@@ -187,10 +214,10 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 {
 	int pos = 0;
 	
-	while ((pos<5 && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
+	qq_log_info("Adding token bucket.");
+	
+	while ((pos<COM_MAX_SERVERS && strcmp( com_sla_list->slas[pos].path, path ) != 0) || strcmp( com_sla_list->slas[pos].path, "" ) != 0 )
     pos++;
-
-	printf("\n---add_bucket() - pos = %d, index = %d\n", pos, index);
 	
 	strcpy(rb_mounts[pos].rb_path, path);
 	rb_mounts[pos].rb_rate = com_sla_list->slas[pos].iops_max;
@@ -202,6 +229,8 @@ void add_bucket(const char *path, unsigned int index, unsigned int rate)
 *
 * Get time since system boot
 *
+* @author Patrick Powell
+* 
 * @return long system uptime
 *
 */
@@ -213,6 +242,7 @@ unsigned long qos_get_uptime(void)
 	
 	unsigned long seconds;
 
+	// remove 30 years from time index
 	seconds = SEC_PER_YEAR * 30;
 	
 	seconds = t_info.tv_sec - seconds;
@@ -226,17 +256,20 @@ unsigned long qos_get_uptime(void)
 *
 * Main function
 *
+* @author Patrick Powell
+* 
 * @return 1 when finished
 *
 */
 
 int qos_init(const char *path) 
 {
-	printf("\ninit_mem");
 	com_init_mem();
-	printf("\nget_bucket");
+	
 	get_bucket(path);
-	printf("\nreturn\n");
+	
+	qq_log_info("Initializing QoS throttling.");
+	
 	return 1;
 }
 
@@ -244,6 +277,8 @@ int qos_init(const char *path)
 *
 * Release function - release shared memory, called when qqfs unmounts
 *
+* @author Patrick Powell
+* 
 * @return 1 when finished
 *
 */
@@ -251,6 +286,8 @@ int qos_init(const char *path)
 int qos_release(void)
 {
 	com_close_mem();
+	
+	qq_log_info("Releasing QoS throttling.");
 	
 	return 1;
 }
