@@ -8,21 +8,21 @@ echo ""
 
 #sudo pacman -S build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool
 
-#sudo pacman -S install pkg-config libssl-dev
+sudo pacman -S install pkg-config libssl-dev
 
-#git clone https://github.com/s3fs-fuse/s3fs-fuse
+git clone https://github.com/s3fs-fuse/s3fs-fuse
 
-#cd s3fs-fuse/
+cd s3fs-fuse/
 
-#sudo sh ./autogen.sh
+sudo sh ./autogen.sh
 
-#sudo ./configure --prefix=/usr --with-openssl
+sudo ./configure --prefix=/usr --with-openssl
 
-#sudo make
+sudo make
 
-#sudo make install
+sudo make install
 
-#cd ../
+cd ../
 
 #### End FUSE install
 #### Install QQFS
