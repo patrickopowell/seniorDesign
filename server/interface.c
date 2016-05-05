@@ -113,7 +113,7 @@ int getClient()
         long max = parser->F7(client_string);
         long storage_type = parser->F4(client_string);
         //// Use the data to create a Client. /////
-        client = createClient(id, curr_usage, min, max, client_addr, storage_type);
+        client = createClient(new_sock, sin_size, client_addr, id, curr_usage, min, max, storage_type);
         list->F11(&head, *client); // push client into front of list
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("Pushing new SLA to all clients... \n");
@@ -137,7 +137,6 @@ void makeSLA( int protocol_version, long client_id, long storage_type){
     int thru_max = getMaxThru();
     int thru_min = getMinThru();
     int SLA_unused = getUnused();
-    //char SLA[1024];
 	snprintf(SLA, sizeof(SLA), \
 	    "{\"protocol_version_number\":%d, \
 	        \"version\":%lu, \
@@ -149,21 +148,25 @@ void makeSLA( int protocol_version, long client_id, long storage_type){
 	        \"throughput_min\":%d, \
 	        \"SLA_unused\":%d}",
 	    protocol_version, SLA_version, client_id, storage_type, iops_max, iops_min, thru_max, thru_min, SLA_unused);
-    //return SLA;
 }
 
-void pushSLA()
-{
-	//int len = list->F14(head);
+void pushSLA(){
 	long cli_ID = NULL;
 	long storage_type = NULL;
 	Node* current = head;
-	while (current != NULL) {
-		cli_ID = (current->c).id;
-		storage_type = (current->c).storage_type;
-		makeSLA(1, cli_ID, storage_type);
-		send(new_sock, SLA, sizeof(SLA), 0); // just a random string for testing.
-		current = current->next;
+	while(current != NULL){
+		//////////////////////////////////////////////
+		int temp_sock = (current->c).sockfd;
+		socklen_t temp_size = (current->c).address_size;
+		struct sockaddr_in temp_addr = (current->c).address;
+		if (connect(temp_sock, (struct sockaddr *)&temp_addr,  temp_size) == 0){
+		//////////////////////////////////////////////
+			cli_ID = (current->c).id;
+			storage_type = (current->c).storage_type;
+			makeSLA(1, cli_ID, storage_type);
+			send(temp_sock, SLA, sizeof(SLA), 0);
+			current = current->next;
+		}
 	}
 }
 
@@ -174,15 +177,14 @@ void closeProgram(){
 	free(parser);
 }
 
-
 int main(void)
 {
     setup();
-    /*while(1){
+    while(1){
 		if(getClient()){
 			pushSLA();
 		}
-    }*/
+    }
     closeProgram();
     return 0;
 }

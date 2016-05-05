@@ -10,17 +10,19 @@ typedef enum { false, true } bool;
 #ifndef CLIENT_H
 #define CLIENT_H
 
-typedef struct {
-	long storage_type;
+typedef struct Client{
+	int sockfd;
+	socklen_t address_size;
 	struct sockaddr_in address;
+	long storage_type;
 	long id;
 	long current_usage;
 	bool above;
-	int min;
-	int max;
+	long min;
+	long max;
 } Client;
 
-Client *createClient(long, long, int, int, struct sockaddr_in, long);
+Client *createClient(int, socklen_t, struct sockaddr_in, long, long, int, int, long);
 
 
 //Client createClient(long, long, int, int, struct sockaddr_in *);

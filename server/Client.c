@@ -9,6 +9,8 @@ typedef void (*f1)(long);
 typedef void (*f2)(bool);
 
 typedef struct Client{
+	int sockfd;
+	socklen_t address_size;
 	struct sockaddr_in address;
 	long storage_type;
 	long id;
@@ -21,10 +23,12 @@ typedef struct Client{
 /**
  * Caller must free whatever this function returns.
  */
-Client *createClient(long ID, long curr, int MIN, int MAX, struct sockaddr_in address, long storage_type){
+Client *createClient(int sockfd, socklen_t address_size, struct sockaddr_in address, long ID, long curr, int MIN, int MAX, long storage_type){
 	Client *c1 = (Client *)malloc(sizeof(Client));
-	c1->storage_type = storage_type;
+	c1->sockfd = sockfd;
+	c1->address_size = address_size;
 	c1->address = address;
+	c1->storage_type = storage_type;
 	c1->id = ID;
 	c1->current_usage = curr;
 	c1->min = MIN;
