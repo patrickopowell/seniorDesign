@@ -30,6 +30,9 @@ void setup_clean_kill()
 	sigemptyset(&(act.sa_mask));
 	act.sa_flags = 0;
 	sigaction(SIGINT, &act, 0);
+	sigaction(SIGTERM, &act, 0);
+	sigaction(SIGHUP, &act, 0);
+	sigaction(SIGQUIT, &act, 0);
 }
 
 int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, char *qqstorage_id)
