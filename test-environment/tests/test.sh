@@ -13,7 +13,7 @@ do
 	sleep 2
 	\cp -f $fname ../test_misc_dir/
 done
-killall -SIGINT qqclient
+killall -SIGTERM qqclient
 sleep 3
 umount test_base_dir
 rm -rf test_misc_dir
