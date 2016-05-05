@@ -6,6 +6,10 @@ echo ""
 
 #### Install QQFS
 
+sudo rm -f /usr/bin/qqfs
+
+sudo rm -f /usr/local/bin/qqfs
+
 sudo bash ./autogen.sh
 
 sudo ./configure
