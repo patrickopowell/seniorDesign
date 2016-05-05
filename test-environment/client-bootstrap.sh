@@ -19,7 +19,7 @@ fi
 printf 'Force updating system...\n'
 pacman -Syyu --noconfirm
 printf 'Installing development packages...\n'
-pacman -S --noconfirm --needed base-devel linux-headers kmod git fuse
+pacman -S --noconfirm --needed base-devel linux-headers kmod git fuse libfuse-dev automake libtool
 printf 'Manual package installation...\n'
 cd /vagrant/
 mkdir autobuild
