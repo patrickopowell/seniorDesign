@@ -20,6 +20,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h> // for closing the sockets...
 
 #define PORT_ONE 15555 // The server port clients will initially connect to.
 #define FOREIGN_PORT 15555 // The client port we are sending SLA info to.
@@ -43,10 +44,11 @@ int listening = NULL;
 	
 int SLA_unused = NULL;
 
-LinkedList *list; // = createList();
-Parser *parser; // = createParser();
+/* Global variables. They are initialized in the setup() function. */
+LinkedList *list;
+Parser *parser;
 Client *client;
-Node *head; // = (Node *)malloc(sizeof(Node));
+Node *head;
 
 
 /**
@@ -93,7 +95,9 @@ void setup()
 
 /*****************************************************************************************************
  * Accepts a connection. Reads information from the client for SLA negotiation.
- * 
+ * Each successful connection should result in a new Client (Client.c) being added
+ * to the linked list (data_structures.c). Information created in this connection
+ * is added to the client in the list.
  ****************************************************************************************************/
 int getClient()
 {
@@ -117,6 +121,7 @@ int getClient()
         list->F11(&head, *client); // push client into front of list
         printf("Server: got connection from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("Pushing new SLA to all clients... \n");
+        //close(new_sock);
         return 1; // success
     }
 }
@@ -150,6 +155,13 @@ void makeSLA( int protocol_version, long client_id, long storage_type){
 	    protocol_version, SLA_version, client_id, storage_type, iops_max, iops_min, thru_max, thru_min, SLA_unused);
 }
 
+/****************************************************************
+ * Push an SLA update to all connected clients.
+ * The socket information associated with each client should
+ * be contained in the Client struct (defined in Client.c).
+ * That information is extracted and used in the send()
+ * function, one client at a time.
+ ***************************************************************/
 void pushSLA(){
 	long cli_ID = NULL;
 	long storage_type = NULL;
@@ -159,7 +171,7 @@ void pushSLA(){
 		int temp_sock = (current->c).sockfd;
 		socklen_t temp_size = (current->c).address_size;
 		struct sockaddr_in temp_addr = (current->c).address;
-		if (connect(temp_sock, (struct sockaddr *)&temp_addr,  temp_size) == 0){
+		if (connect(temp_sock, (struct sockaddr *)&temp_addr, temp_size) == 0){
 		//////////////////////////////////////////////
 			cli_ID = (current->c).id;
 			storage_type = (current->c).storage_type;
@@ -170,6 +182,10 @@ void pushSLA(){
 	}
 }
 
+/**************************************************************
+ * Free all of the dynamically allocated memory
+ * so that we don't have a memory leak.
+ *************************************************************/
 void closeProgram(){
 	list->ds_freeList(head);
 	free(list->head);
@@ -177,14 +193,32 @@ void closeProgram(){
 	free(parser);
 }
 
-int main(void)
-{
+/**************************************************************
+ * Go through the clients and close their associated sockets
+ * so that we don't have a socket leak.
+ *************************************************************/
+void closeConnections(){
+	Node* current = head;
+	while(current != NULL){
+		close((current->c).sockfd);
+		current = current->next;
+	}
+}
+
+/*********************************************************************
+ * This is the main program.
+ * 1. It initializes the sockets with the setup() function.
+ * 2. It continually waits for clients to make connection requests.
+ * 3. If it gets a connection, it sends an SLA update to all clients.
+ ********************************************************************/
+int main(void){
     setup();
     while(1){
 		if(getClient()){
 			pushSLA();
 		}
     }
+    closeConnections();
     closeProgram();
     return 0;
 }
