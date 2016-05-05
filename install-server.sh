@@ -1,5 +1,5 @@
 #!/bin/bash
-cd qqserver
+cd server
 printf 'Running qqserver install script!\n'
-qqserver-install.sh
+qqserver_install.sh
 cd ..
