@@ -1,24 +1,15 @@
-/* Set the number of connected clients. */
-void setNumClients(int);
+//#include <stdio.h>
+
+/* Sets the head node for a linked list. */
+void setHead(Node *);
 /* Increment the number of connected clients. */
 void incrementNumClients(void);
 /* Decrement the number of connected clients. */
 void decrementNumClients(void);
-/* Set the maximum bandwidth capacity. */
-void setBandwidth(int);
-/* Set arbitrary maximum bandwidth of client. */
-void setArbitrary(int);
-/* Set bandwidth being used. */
-void setUsage(int);
-/* Set SLA min bandwidth guaranteed. */
-void setSLA_min(int);
-/* Set unused bandwidth. */
-void setUnused(int);
-
+/* Increment SLA version. */
 void increment_SLA();
+/* Return the SLA version. */
 long getSLA_version();
-
-
 /* Return the number of connected clients. */
 int getNumClients(void);
 /* Return the maximum bandwidth capacity. */
@@ -26,9 +17,7 @@ long getBandwidth(void);
 /* Return arbitrary maximum bandwidth of client. */
 long getArbitrary(void);
 /* Return bandwidth being used. */
-long getUsage(void);
-/* Return SLA min bandwidth guaranteed. */
-long getSLA_min(void);
+long getUsage(Node *);
 /* Return unused bandwidth. */
 long getUnused(void);
 

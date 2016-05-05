@@ -59,6 +59,7 @@ void setup()
 	list = createList();
 	parser = createParser();
 	head = (Node *)malloc(sizeof(Node));
+	setHead(head); // sets the head for monitor.c
 
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(PORT_ONE);
@@ -137,21 +138,21 @@ int getClient()
  ******************************************************************************************************/
 void makeSLA( int protocol_version, long client_id, long storage_type){
 	long SLA_version = getSLA_version();
-    int iops_max = getMaxIOPS();
-    int iops_min = getMinIOPS();
-    int thru_max = getMaxThru();
-    int thru_min = getMinThru();
-    int SLA_unused = getUnused();
+    long iops_max = getMaxIOPS();
+    long iops_min = getMinIOPS();
+    long thru_max = getMaxThru();
+    long thru_min = getMinThru();
+    long SLA_unused = getUnused();
 	snprintf(SLA, sizeof(SLA), \
 	    "{\"protocol_version_number\":%d, \
 	        \"version\":%lu, \
 	        \"client_id\":%lu, \
 	        \"storage_type\":%lu, \
-	        \"iops_max\":%d, \
-	        \"iops_min\":%d, \
-	        \"throughput_max\":%d, \
-	        \"throughput_min\":%d, \
-	        \"SLA_unused\":%d}",
+	        \"iops_max\":%lu, \
+	        \"iops_min\":%lu, \
+	        \"throughput_max\":%lu, \
+	        \"throughput_min\":%lu, \
+	        \"SLA_unused\":%lu}",
 	    protocol_version, SLA_version, client_id, storage_type, iops_max, iops_min, thru_max, thru_min, SLA_unused);
 }
 
@@ -179,6 +180,7 @@ void pushSLA(){
 			send(temp_sock, SLA, sizeof(SLA), 0);
 			current = current->next;
 		}
+		close(temp_sock);
 	}
 }
 
