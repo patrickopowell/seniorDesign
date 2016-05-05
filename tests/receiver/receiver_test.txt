@@ -1,0 +1,2 @@
+clear
+qemu_system_x86_64 -cdrom [install_iso] -boot menu=on -drive file=,format=qcow2 -monitor stdio -vnc :1 -m 256
