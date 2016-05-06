@@ -1,12 +1,23 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Receiver functionality for receiving, parsing, and passing of SLAs from QQServer.
+ * Places relevant SLA information into shared memory for QQFS's consumption.
+ * Communicates with QQServer over TCP.
+ */
+
 #include "receiver.h"
 
 /**
-	Listen for SLA connections to drop in from the qq server.
-	Receive them, error check, and punt those babies into the kernel.
-	That's it.
-	Needs to be atomic.
-*/
-
+ * Listens for new SLAs.
+ * When received, parses them into a usable protocol struct.
+ * Extracts what is relevant to QQFS from the protocol and passes that into shared memory.
+ * Modifies QQFS instance tracking with information such as SLA Version, etc. that is a shared
+ * value in both SLAs and Client Feedback.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void *qq_receiver_start(void *in)
 {
 	qq_log_info("Starting Receiver.");
@@ -47,6 +58,7 @@ void *qq_receiver_start(void *in)
 		}
 		qq_log_info("Receiving SLA.");
 		int accept_fd = accept(receiver_socket, (struct sockaddr *)&server_addr, &addr_size);
+		memset(recvbuffer, 0, sizeof recvbuffer);
 		int received = 0;
 		do {
 			int nbytes = recv(accept_fd, recvbuffer+received, BUFFERLENGTH-received, 0);

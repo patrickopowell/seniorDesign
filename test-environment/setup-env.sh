@@ -1,4 +1,7 @@
 #!/bin/bash
+# Generate a new Vagrant environment.
+# Dynamically generate new Vagrantfile and set up client machines.
+# @author Remington Campbell <racampbe@ncsu.edu
 printf 'Configuring Vagrant environment...\n'
 vagrant_dir='/qq/vagrant_env/'
 vagrant_image_dir='/qq/vagrant_images/'

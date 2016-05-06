@@ -1,3 +1,10 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Definition of common protocol used between
+ * QQClient and QQServer for communciation.
+ */
 #ifndef PROTOCOL
 #define PROTOCOL_VER 1
 struct client_feedback {

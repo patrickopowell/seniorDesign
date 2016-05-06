@@ -1,6 +1,7 @@
 #!/bin/bash
-# @author Remington Campbell <rem.campbell@gmail.com>
-# Assumes Arch Linux
+# Client bootstrap script to install dependencies and QualiQueue.
+# Assumes Arch Linux.
+# @author Remington Campbell <racampbe@ncsu.edu
 printf 'Downloading ranked mirrors...\n'
 if [ -f /etc/pacman.d/mirrorlist ]; then
   cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist_$(date +%Y%m%d%H%M)

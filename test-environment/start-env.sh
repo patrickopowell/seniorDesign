@@ -1,4 +1,6 @@
 #!/bin/bash
+# Start an environment that has been halted or suspended.
+# @author Remington Campbell <racampbe@ncsu.edu
 vagrant_dir='/qq/vagrant_env/'
 vagrant_image_dir='/qq/vagrant_images/'
 vm_dir='/qq/vm_images'

@@ -1,5 +1,21 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Parser functionality for extracting, parsing, and ending Client Feedback to QQServers.
+ * Extracts storage stats from shared memory with QQFS.
+ * Determines whether or not to send client feedback based on cumulative statistics.
+ * Communicates with QQServer over TCP.
+ */
+
 #include "parser.h"
 
+/**
+ * Parser entry point.
+ * Check for storage statistics every second and send them as client feedback.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void *qq_parser_start(void *in)
 {
 	qq_log_info("Starting Parser.");
@@ -28,6 +44,11 @@ void *qq_parser_start(void *in)
 	return 0;
 }
 
+/**
+ * Initializes the connection to the QQServer to be used for sending client feedback.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_init_connection(struct qqfs_instance *instance)
 {
 	struct addrinfo hints, *res;
@@ -51,6 +72,12 @@ int qq_init_connection(struct qqfs_instance *instance)
 	return sockfd;
 }
 
+/**
+ * Constructs an understood handshake to be sent to the QQServer indicating that
+ * this is a new client.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_send_handshake(struct qqfs_instance *instance)
 {
 	struct client_feedback *cf = calloc(1, sizeof(struct client_feedback));
@@ -68,6 +95,12 @@ void qq_send_handshake(struct qqfs_instance *instance)
 	free(cf);
 }
 
+/**
+ * Combine QQFS instance information and storage statstics to form client feedback.
+ * Send this client feedback.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 {
 	struct client_feedback *cf = calloc(1, sizeof(struct client_feedback));
@@ -85,6 +118,11 @@ void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 	free(cf);
 }
 
+/**
+ * Send the client feedback to the specified QQServer.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
 {
 	char *cf_json = qq_encode_cf(cf);
@@ -102,6 +140,11 @@ void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
 	free(cf_json);
 }
 
+/**
+ * Close open connections to the QQServer.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_close_connections()
 {
 	int num_servers = qqfs_instance_list->count;

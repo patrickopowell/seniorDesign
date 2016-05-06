@@ -1,5 +1,7 @@
 #!/bin/bash
-# Assumes RHEL or derivatives
+# Test environment prerequisite installation.
+# Assumes RHEL7 or derivatives.
+# @author Remington Campbell <racampbe@ncsu.edu
 printf 'Installing test environment components...\n'
 vagranturl=https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.rpm
 repourl=http://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo
