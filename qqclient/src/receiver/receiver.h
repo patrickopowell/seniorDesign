@@ -1,10 +1,10 @@
 /**
- * CSC 492 - End-to-End Storage qq
- * Client User Mode
- * @authors Remington Campbell
- * In charge of sending and receiving data to the client kernel space module as well as to the qq server located at the storage endpoint.
- * Communicates to the client kernel module by [undetermined, syscall?].
- * Communicates to the qq server via TCP/IP connection
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Receiver functionality for receiving, parsing, and passing of SLAs from QQServer.
+ * Places relevant SLA information into shared memory for QQFS's consumption.
+ * Communicates with QQServer over TCP.
  */
 
 #include <sys/socket.h>

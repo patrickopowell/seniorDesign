@@ -1,0 +1,3 @@
+Queue data on the client side is difficult to compute in terms of size relative to time.  It is easier to provide
+accurate data on what has already happened, such as how many suspensions occured, or how often suspending is happening
+in a given second.

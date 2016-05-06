@@ -1,4 +1,6 @@
 #!/bin/bash
+# Log into each client and start their test scripts.
+# @author Remington Campbell <racampbe@ncsu.edu
 printf 'Starting testing...\n'
 if [ $# -lt 4 ]; then
 	printf 'start-test.sh NUM_CLIENTS MOUNT_ID QQSERVER_IP QQSTORAGE_ID\n'

@@ -1,10 +1,3 @@
-/**
- * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
- *
- * Abstraction of logging methods for usage in QualiQueue system.
- * Currently utilizes syslog.
- */
 #include <syslog.h>
 
 void qq_setup_logging(const char *id);

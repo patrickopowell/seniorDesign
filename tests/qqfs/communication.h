@@ -1,10 +1,3 @@
-/**
- * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
- *
- * Library of common methods that should be used by both QQClient and QQFS
- * for communication as their shared memory communication channels.
- */
 #include <unistd.h>
 #include <stdbool.h>
 #include <string.h>

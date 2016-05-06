@@ -1,5 +1,15 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Entry point of QQClient program.
+ * QQClient is responsible for starting and managing QQFS instances
+ * as part of the QualiQueue system - configured by a QQServer.
+ */
+
 #include "main.h"
 
+/** ARGP SPECIFICATION **/
 const char *argp_program_version = "qqclient-0.1";
 const char *argp_program_bug_address = "<racampbe@ncsu.edu>";
 static char doc[] = "qqclient -- Instantiate QualiQueue on a location.";
@@ -9,6 +19,12 @@ static struct argp_option options[] = {
 };
 static struct argp argp = {options, parse_opt, args_doc, doc};
 
+/**
+ * Main entry point for QQClient.
+ * Sets up OS signal handling and handles instance initialiation and cleanup.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -22,6 +38,8 @@ int main(int argc, char *argv[])
 /**
  * Setup clean kill hook on ctrl+c, etc.
  * On sigaction, perform runhandler(int) method.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
  */
 void setup_clean_kill()
 {
@@ -35,6 +53,15 @@ void setup_clean_kill()
 	sigaction(SIGQUIT, &act, 0);
 }
 
+/**
+ * Set up the single instance QualiQueue application.
+ * If an instance is already running, start/insert QQFS instance into the existing, managed
+ * shared memory of QQClient, then exit.
+ * Otherwise, initalize QQClient-specific shared memory and start the QQFS instance.
+ * Starting QQFS is accomplished via system calls.
+ * 
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, char *qqstorage_id)
 {
 	qq_setup_logging("qqclient");
@@ -93,6 +120,12 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
 	return lockid;
 }
 
+/**
+ * Cleanup QQClient managed system resources.
+ * Unmount QQFS instances, close all shared memory, and unlock lockfile.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_destroy_instance(int lockid)
 {
 	qq_log_info("Destroying qqclient instance.");
@@ -103,6 +136,12 @@ void qq_destroy_instance(int lockid)
 	flock(lockid, LOCK_UN);
 }
 
+/**
+ * Unmount all managed QQFS instances.
+ * Accomplished via system calls.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_unmount_instances()
 {
 	qq_log_info("Detaching QQFS instances from destinations.");
@@ -119,13 +158,22 @@ void qq_unmount_instances()
 
 /**
  * Sets running to 0 to indicate threads should quit.
- * Provides a clean death.
+ * Provides a clean death indicator to all threads.
+ * Can also be used to intercept and trigger events based on signal received.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
  */
 void run_handler(int sig)
 {
 	running = 0;
 }
 
+/**
+ * Parse arguments/options passed to QQClient.
+ * Handled by argp.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
 	struct arguments *arguments = state->input;

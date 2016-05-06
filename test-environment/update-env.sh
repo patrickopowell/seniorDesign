@@ -1,4 +1,7 @@
 #!/bin/bash
+# Update client installations of QualiQueue components.
+# Don't need to start an entirely new environment.
+# @author Remington Campbell <racampbe@ncsu.edu
 if [ $# -lt 1 ]; then
 	printf 'start-test.sh NUM_CLIENTS\n'
 	exit 1

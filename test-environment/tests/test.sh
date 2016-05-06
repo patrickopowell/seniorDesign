@@ -1,4 +1,8 @@
 #!/bin/bash
+# Mount storage endpoint, apply QualiQueue.
+# Read/write randomly sized amounts of data (1M intervals).
+# Copy log into shared directory for parsing.
+# @author Remington Campbell <racampbe@ncsu.edu
 if [ $# -lt 4 ]; then
 	printf 'start-test.sh NUM_CLIENTS MOUNT_ID QQSERVER_IP QQSTORAGE_ID\n'
 	exit 1

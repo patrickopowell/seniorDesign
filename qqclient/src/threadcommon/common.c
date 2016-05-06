@@ -1,13 +1,33 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Library of common methods that should be accessible by all threads in QQClient.
+ */
 #include "common.h"
 
+// Scope-limited and persistent key and lock.
 static key_t mem_key;
 static sem_t *mem_lock;
 
+/**
+ * Method for threads to determine if they should continue running.
+ * If shutdown necessary, return 0.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int check_running()
 {
 	return running;
 }
 
+/**
+ * Initialize shared memory to be used exclusively by QQClient.
+ * This is to afford the single instance nature of QQClient.
+ * Subsequent executions will read/modify this shared memory.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_init_mem()
 {
 	int qq_mem_status = qq_init_qqmap_mem();
@@ -23,6 +43,11 @@ int qq_init_mem()
 	}
 }
 
+/**
+ * Map shared memory of QQClient into address space.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_init_qqmap_mem()
 {
 	mem_key = ftok(QQCLIENT_MEM, 1);
@@ -43,6 +68,11 @@ int qq_init_qqmap_mem()
 	return 0;
 }
 
+/**
+ * Open QQClient semaphore for controlling access to shared memory.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_init_qqmap_sem()
 {
 	mem_lock = sem_open(QQCLIENT_SEM, O_CREAT, 0600, 1);
@@ -54,22 +84,44 @@ int qq_init_qqmap_sem()
 	return 0;
 }
 
+/**
+ * Close shared memory and semaphore.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_close_mem()
 {
 	sem_close(mem_lock);
 	shmdt(qqfs_instance_list);
 }
 
+/**
+ * Lock the QQClient semaphore.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_lock()
 {
 	sem_wait(mem_lock);
 }
 
+/**
+ * Unlock the QQClient semaphore.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 void qq_unlock()
 {
 	sem_post(mem_lock);
 }
 
+/**
+ * Get the QualiQueue instance based on the export path.
+ * Copy the instance into the instance_dest memory location.
+ * Return QQCLIENT_ELEMENT_NFOUND if dne.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest)
 {
 	int return_val = 0;
@@ -93,6 +145,14 @@ int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest)
 	return return_val;
 }
 
+/**
+ * Create a new tracking structure for a running QQFS instance.
+ * Copy instance_src structure into shared memory.
+ * Return QQCLIENT_DUP_EXPORT if the export path is already managed by QQFS.
+ * Return QQCLIENT_MEM_OOS if there is no more shared memory available. 
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 {
 	int return_val = 0;
@@ -123,6 +183,13 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 	return return_val;
 }
 
+/**
+ * Update an existing tracking structure for a running QQFS instance.
+ * Copy instance_src into the intended instance memory location.
+ * Return QQCLIENT_ELEMENT_NFOUND if no instance could be found matching the instance.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
 {
 	int return_val = 0;
@@ -147,7 +214,11 @@ int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
 	return return_val;
 }
 
-
+/**
+ * Get the number of tracked instances by QQClient.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_get_num_qqfs_instances()
 {
 	int num_instances = 0;
@@ -157,6 +228,13 @@ int qq_get_num_qqfs_instances()
 	return num_instances;
 }
 
+/**
+ * Afford easy accessing of instances based on index in shared memory.
+ * Return QQCLIENT_ELEMENT_NFOUND if out of range or dne.
+ * Copy instance into instance_dest memory location.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
 {
 	int return_val = 0;
@@ -170,6 +248,13 @@ int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
 	return return_val;
 }
 
+/**
+ * Get the QualiQueue instance based on the qqserver_ip and qqstorage_id value pair.
+ * Copy the instance into the instance_dest memory location.
+ * Return QQCLIENT_ELEMENT_NFOUND if dne.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_get_qqfs_instance_by_pair(char *qqserver_ip, int qqstorage_id, struct qqfs_instance *instance_dest)
 {
 	int return_val = 0;

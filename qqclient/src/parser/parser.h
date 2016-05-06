@@ -1,7 +1,7 @@
 /**
  * CSC 492 - End-to-End Storage qq
  * Client User Mode
- * @authors Remington Campbell
+ * @authors Remington Campbell <racampbe@ncsu.edu
  * In charge of sending and receiving data to the client kernel space module as well as to the qq server located at the storage endpoint.
  * Communicates to the client kernel module by [undetermined, syscall?].
  * Communicates to the qq server via TCP/IP connection

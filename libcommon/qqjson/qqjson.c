@@ -1,17 +1,36 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Decodes and encodes protocol formats into usable structs.
+ * Utilizes the Jansson C JSON parsing library.
+ * For common usage between client and server.
+ */
 #include "qqjson.h"
 
+/**
+ * The format strings utilized by Jansson.
+ * Specifies key-value pairs in a compact manner.
+ */
+// SLA format string
 const char *sla_fmt = "{s:i, s:i, s:s, s:i, s:i, s:i, s:i, s:i, s:i, s:i}";
+// Client Feedback format string
 const char *cf_fmt = "{s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i, s:i}";
 
 /**
- * Converts JSON object to string for communication.
+ * Converts JSON object to string.
  */
 char *qq_json_to_string(json_t *obj) {
 	return json_dumps(obj, 0);
 }
 
-/** SLA PARSING **/
-
+/**
+ * Decode an SLA that is in string, JSON format into an SLA struct.
+ * Return QQJSON_NOT_JSON if not in JSON format.
+ * Return QQJSON_VALID if valid JSON.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_decode_sla(char *sla, struct sla *sla_dest)
 {
 	json_error_t error;
@@ -35,6 +54,12 @@ int qq_decode_sla(char *sla, struct sla *sla_dest)
 	return QQJSON_VALID;
 }
 
+/**
+ * Encode an SLA in struct format into a JSON string.
+ * Must free returned pointer after usage!
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 char *qq_encode_sla(struct sla *sla)
 {
 	json_t *sla_json = json_pack(sla_fmt,
@@ -53,6 +78,13 @@ char *qq_encode_sla(struct sla *sla)
 	return json_str;
 }
 
+/**
+ * Decode client feedback that is in string, JSON format into a client feedback struct.
+ * Return QQJSON_NOT_JSON if not in JSON format.
+ * Return QQJSON_VALID if valid JSON.
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 int qq_decode_cf(char *cf, struct client_feedback *cf_dest)
 {
 	json_error_t error;
@@ -76,6 +108,12 @@ int qq_decode_cf(char *cf, struct client_feedback *cf_dest)
 	return QQJSON_VALID;
 }
 
+/**
+ * Encode client feedback in struct format into a JSON string.
+ * Must free returned pointer after usage!
+ *
+ * @author Remington Campbell <racampbe@ncsu.edu
+ */
 char *qq_encode_cf(struct client_feedback *cf)
 {
 	json_t *cf_json = json_pack(cf_fmt,

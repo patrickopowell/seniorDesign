@@ -1,3 +1,11 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * The common header that is shared between all QQClient code files.
+ * Specifies libraries, methods, and variables utilized by most of QQClient.
+ */
+
 #ifndef COMMON_INCLUDE
 #include <sys/types.h>
 #include <sys/socket.h>

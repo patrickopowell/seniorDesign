@@ -1,3 +1,11 @@
+/**
+ * QualiQueue - Spring 2016
+ * @author Remington Campbell <racampbe@ncsu.edu
+ *
+ * Decodes and encodes protocol formats into usable structs.
+ * Utilizes the Jansson C JSON parsing library.
+ * For common usage between client and server.
+ */
 #ifndef JANSSON_INCLUDE
 #include <jansson.h>
 #include "../protocol.h"

@@ -1,31 +1,11 @@
-/**
- * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
- *
- * Library of common methods that should be used by both QQClient and QQFS
- * for communication as their shared memory communication channels.
- */
-
 #include "communication.h"
 
-// Storage statistics/sla shared memory identifiers
 static key_t stat_key;
 static key_t sla_key;
 
-// Storage statistics/sla semaphores
 static sem_t *stat_lock;
 static sem_t *sla_lock;
 
-/**
- * Initialize shared memory to be used by both QQClient and QQFS.
- * Creates a statistics shared memory channel.
- * Creates an SLA shared memory channel.
- * Communication on channels is simplex:
- * QQClient-Receiver -(SLA memory)-> QQFS
- * QQClient-Parser <-(Stat memory)- QQFS
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_init_mem()
 {
         int stat_mem_status = com_init_stat_mem();
@@ -53,22 +33,12 @@ int com_init_mem()
         }
 }
 
-/**
- * Close common memory structures.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_close_mem()
 {
         com_close_stat();
         com_close_sla();
 }
 
-/**
- * Initialize the shared memory for tracking storage statistics.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_init_stat_mem()
 {
         stat_key = ftok(COM_STAT_MEM, 1);
@@ -89,11 +59,6 @@ int com_init_stat_mem()
         return 0;
 }
 
-/**
- * Initialize the semaphore for accessing storage statistics.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_init_stat_sem()
 {
         stat_lock = sem_open(COM_STAT_LOCK, O_CREAT, 0600, 1);
@@ -105,31 +70,16 @@ int com_init_stat_sem()
         return 0;
 }
 
-/**
- * Lock the storage statistics access semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_lock_stat()
 {
         sem_wait(stat_lock);
 }
 
-/**
- * Unlock the storage statistics access semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_unlock_stat()
 {
         sem_post(stat_lock);
 }
 
-/**
- * Initialize the shared memory for specifying SLAs.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_init_sla_mem()
 {
         sla_key = ftok(COM_SLA_MEM, 1);
@@ -150,11 +100,6 @@ int com_init_sla_mem()
         return 0;
 }
 
-/**
- * Initialize the semaphore for accessing SLAs.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_init_sla_sem()
 {
         sla_lock = sem_open(COM_SLA_LOCK, O_CREAT, 0600, 1);
@@ -166,54 +111,28 @@ int com_init_sla_sem()
         return 0;
 }
 
-/**
- * Lock the SLA access semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_lock_sla()
 {
         sem_wait(sla_lock);
 }
 
-/**
- * Unlock the storage statistics access semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_unlock_sla()
 {
         sem_post(sla_lock);
 }
 
-/**
- * Close the storage statistics shared memory and semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_close_stat()
 {
         sem_close(stat_lock);
         shmdt(com_stat_list);
 }
 
-/**
- * Close the statistics SLA memory and semaphore.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 void com_close_sla()
 {
         sem_close(sla_lock);
         shmdt(com_sla_list);
 }
 
-/**
- * Get an SLA based on its path identifier.
- * Copy the found SLA into the memory location of sla_dest.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_get_sla(char *path, struct sla_info *sla_dest)
 {
         int return_val = 0;
@@ -237,13 +156,6 @@ int com_get_sla(char *path, struct sla_info *sla_dest)
         return return_val;
 }
 
-/**
- * Set the storage SLA based on the specified path identifier.
- * Updates, or adds new SLA into memory structure if unidentifiable.
- * Return COM_MEM_OOS if no more shared memory is available.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_set_sla(char *path, struct sla_info *sla_src)
 {
         int return_val = 0;
@@ -275,12 +187,6 @@ int com_set_sla(char *path, struct sla_info *sla_src)
         return return_val;
 }
 
-/**
- * Get storage stats based on the relevant path identifier.
- * Copy the found statistics into the memory location of stat_dest.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_get_stat(char *path, struct stat_info *stat_dest)
 {
         int return_val = 0;
@@ -304,13 +210,6 @@ int com_get_stat(char *path, struct stat_info *stat_dest)
         return return_val;
 }
 
-/**
- * Set the storage statistics based on the specified path identifier.
- * Updates, or adds new statistics into memory structure if unidentifiable.
- * Return COM_MEM_OOS if no more shared memory is available.
- *
- * @author Remington Campbell <racampbe@ncsu.edu
- */
 int com_set_stat(char *path, struct stat_info *stat_src)
 {
         int return_val = 0;
