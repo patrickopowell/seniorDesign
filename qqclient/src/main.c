@@ -1,6 +1,6 @@
 /**
  * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  *
  * Entry point of QQClient program.
  * QQClient is responsible for starting and managing QQFS instances
@@ -23,7 +23,7 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
  * Main entry point for QQClient.
  * Sets up OS signal handling and handles instance initialiation and cleanup.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int main(int argc, char *argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
  * Setup clean kill hook on ctrl+c, etc.
  * On sigaction, perform runhandler(int) method.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void setup_clean_kill()
 {
@@ -60,7 +60,7 @@ void setup_clean_kill()
  * Otherwise, initalize QQClient-specific shared memory and start the QQFS instance.
  * Starting QQFS is accomplished via system calls.
  * 
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, char *qqstorage_id)
 {
@@ -124,7 +124,7 @@ int qq_setup_instance(char *base_path, char *export_path, char *qqserver_ip, cha
  * Cleanup QQClient managed system resources.
  * Unmount QQFS instances, close all shared memory, and unlock lockfile.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_destroy_instance(int lockid)
 {
@@ -140,7 +140,7 @@ void qq_destroy_instance(int lockid)
  * Unmount all managed QQFS instances.
  * Accomplished via system calls.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_unmount_instances()
 {
@@ -161,7 +161,7 @@ void qq_unmount_instances()
  * Provides a clean death indicator to all threads.
  * Can also be used to intercept and trigger events based on signal received.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void run_handler(int sig)
 {
@@ -172,7 +172,7 @@ void run_handler(int sig)
  * Parse arguments/options passed to QQClient.
  * Handled by argp.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
