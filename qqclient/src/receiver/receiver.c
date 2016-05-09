@@ -1,6 +1,6 @@
 /**
  * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  *
  * Receiver functionality for receiving, parsing, and passing of SLAs from QQServer.
  * Places relevant SLA information into shared memory for QQFS's consumption.
@@ -16,7 +16,7 @@
  * Modifies QQFS instance tracking with information such as SLA Version, etc. that is a shared
  * value in both SLAs and Client Feedback.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void *qq_receiver_start(void *in)
 {

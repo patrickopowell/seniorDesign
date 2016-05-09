@@ -1,6 +1,6 @@
 /**
  * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  *
  * Library of common methods that should be accessible by all threads in QQClient.
  */
@@ -14,7 +14,7 @@ static sem_t *mem_lock;
  * Method for threads to determine if they should continue running.
  * If shutdown necessary, return 0.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int check_running()
 {
@@ -26,7 +26,7 @@ int check_running()
  * This is to afford the single instance nature of QQClient.
  * Subsequent executions will read/modify this shared memory.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_init_mem()
 {
@@ -46,7 +46,7 @@ int qq_init_mem()
 /**
  * Map shared memory of QQClient into address space.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_init_qqmap_mem()
 {
@@ -71,7 +71,7 @@ int qq_init_qqmap_mem()
 /**
  * Open QQClient semaphore for controlling access to shared memory.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_init_qqmap_sem()
 {
@@ -87,7 +87,7 @@ int qq_init_qqmap_sem()
 /**
  * Close shared memory and semaphore.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_close_mem()
 {
@@ -98,7 +98,7 @@ void qq_close_mem()
 /**
  * Lock the QQClient semaphore.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_lock()
 {
@@ -108,7 +108,7 @@ void qq_lock()
 /**
  * Unlock the QQClient semaphore.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_unlock()
 {
@@ -120,7 +120,7 @@ void qq_unlock()
  * Copy the instance into the instance_dest memory location.
  * Return QQCLIENT_ELEMENT_NFOUND if dne.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest)
 {
@@ -151,7 +151,7 @@ int qq_get_qqfs_instance(char *export_path, struct qqfs_instance *instance_dest)
  * Return QQCLIENT_DUP_EXPORT if the export path is already managed by QQFS.
  * Return QQCLIENT_MEM_OOS if there is no more shared memory available. 
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
 {
@@ -188,7 +188,7 @@ int qq_set_qqfs_instance(struct qqfs_instance *instance_src)
  * Copy instance_src into the intended instance memory location.
  * Return QQCLIENT_ELEMENT_NFOUND if no instance could be found matching the instance.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
 {
@@ -217,7 +217,7 @@ int qq_update_qqfs_instance(struct qqfs_instance *instance_src)
 /**
  * Get the number of tracked instances by QQClient.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_get_num_qqfs_instances()
 {
@@ -233,7 +233,7 @@ int qq_get_num_qqfs_instances()
  * Return QQCLIENT_ELEMENT_NFOUND if out of range or dne.
  * Copy instance into instance_dest memory location.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
 {
@@ -253,7 +253,7 @@ int qq_get_qqfs_instance_by_idx(int index, struct qqfs_instance *instance_dest)
  * Copy the instance into the instance_dest memory location.
  * Return QQCLIENT_ELEMENT_NFOUND if dne.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_get_qqfs_instance_by_pair(char *qqserver_ip, int qqstorage_id, struct qqfs_instance *instance_dest)
 {

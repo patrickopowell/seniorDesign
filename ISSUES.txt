@@ -1,0 +1,30 @@
+Full QualiQueue system untested. Figured out how it would work ~2 weeks before due date. Not all components finished.
+
+* QQClient & QQServer
+Unsure how to develop unit tests that integrate both their interactions. Complicated, requires consideration of whether even want to do that or just strict adherence to strict guidelines that dictate interaction and then individual test cases written per application (not developed).
+
+* QQClient & QQFS
+I don't think we properly destroy shared memory, just detach from address space. Need to issue shm destruction of shared memory segment itself. Otherwise there will be issues with new instances, etc.
+
+* QQServer
+Should probably be restructured. Separation of core logic of server such as sending SLAs and receiving client feedback is not decoupled from the underlying algorithm that would interpret when to do so etc. Decoupling this logic cleanly and completely will make it very easy to swap in and out algorithms for the server.
+Server code has minimal unit tests.
+Current algorithm very basic, does not use prioritization, etc. Does not consider any part of the client feedback.
+Statically defined variables etc. Should definitely use a configuration file instead.
+Methods names are ambiguous to purpose in several locations. Named FX, with X being a number. Will be infuriating to maintain if not changed (very sorry). Uses documentation to clarify what functions do instead of the function names themselves making sense.
+Variable naming is a mixture of underscores and camel case, not an issue per say but isn't pretty.
+Untested in a live environment, no idea if it actually works because "finished" day of due date.
+Does not use libcommon/qqjson for serialization/deserialization of SLAs/Client Feedback JSON. Uses custom code to extract values. Inflexible, potential for bugs, not common across QQClient and QQServer so protocol changes more difficult.
+
+* QQClient
+No unit tests, finished very close to due date.
+Should work overall. Receiver could use a little more fleshing out.
+QQServer & QQClient might not match up in how they handle networking. I think QQClient keeps a connection open for sending client feedback but closes when receiving SLAs, definitely would be an issue in their interaction.
+Untested in live environment, didn't have the server in time.
+
+* QQFS
+QQFS may not effectively throttle. Determined on the last day that FUSE incurs a performance hit of ~10x which was what was assumed to be throttling in action until realized that logic didn't make any sense because retrieving throttling values from shared memory would equal zero, and then no operations should ever happen. Throttle=0 should mean no throttling. Need to verify if that's the case, otherwise algorithm is likely incorrect.
+Need a more time-sensitive feedback loop. Just sleeps a second when out of tokens, doesn't account for exact time intervals of exactly one second using differences in time since last update etc. So if operations happen over several seconds....then runs out of tokens, will wait a second regardless of the fact that it has been several seconds and that they should be refreshed. Event based application using FUSE so that's why it has to be done that way.
+
+* Test Environment
+Not fully tested. Didn't have full system in time to verify if running the system tests was effective.

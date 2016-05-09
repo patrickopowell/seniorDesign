@@ -1,6 +1,6 @@
 /**
  * QualiQueue - Spring 2016
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  *
  * Parser functionality for extracting, parsing, and ending Client Feedback to QQServers.
  * Extracts storage stats from shared memory with QQFS.
@@ -14,7 +14,7 @@
  * Parser entry point.
  * Check for storage statistics every second and send them as client feedback.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void *qq_parser_start(void *in)
 {
@@ -47,7 +47,7 @@ void *qq_parser_start(void *in)
 /**
  * Initializes the connection to the QQServer to be used for sending client feedback.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 int qq_init_connection(struct qqfs_instance *instance)
 {
@@ -76,7 +76,7 @@ int qq_init_connection(struct qqfs_instance *instance)
  * Constructs an understood handshake to be sent to the QQServer indicating that
  * this is a new client.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_send_handshake(struct qqfs_instance *instance)
 {
@@ -99,7 +99,7 @@ void qq_send_handshake(struct qqfs_instance *instance)
  * Combine QQFS instance information and storage statstics to form client feedback.
  * Send this client feedback.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 {
@@ -121,7 +121,7 @@ void qq_send_stat(struct qqfs_instance *instance, struct stat_info *stat)
 /**
  * Send the client feedback to the specified QQServer.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
 {
@@ -143,7 +143,7 @@ void qq_send_cf(struct qqfs_instance *instance, struct client_feedback *cf)
 /**
  * Close open connections to the QQServer.
  *
- * @author Remington Campbell <racampbe@ncsu.edu
+ * @author Remington Campbell <racampbe@ncsu.edu>
  */
 void qq_close_connections()
 {
